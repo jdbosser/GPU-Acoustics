@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link id="favicon" rel="icon" href="https://glitch.com/embed/favicon.ico?v=3" type="image/x-icon">
+  <link id="apple-touch-icon" rel="apple-touch-icon" sizes="180x180" href="https://glitch.com/embed/apple-touch-icon.png?v=3">
+  <link id="oembed" rel="alternate" type="application/json+oembed" href="https://api.glitch.com/projects/three-cube-experiment/oembed" title="three-cube-experiment oembed link">
+  <link rel="stylesheet" type="text/css" href="a_data_002/3a8e55c6-b1f3-4659-99eb-125ae72bd084.css">
+  
+  <link class="theme" type="text/css" href="https://glitch.com/embed/themes/cosmos.version.6283138f490e786e8e9e.css">
+  
+  <link class="theme" rel="stylesheet" type="text/css" href="a_data_002/sugar.css">
+  
+
+  <script async="" src="a_data_002/linting.js"></script><script type="text/javascript" async="" src="a_data_002/w_002.js"></script><script type="text/javascript" async="" src="a_data_002/w.js"></script><script src="a_data_002/css.js"></script><script src="a_data_002/javascript.js"></script><script src="a_data_002/xml.js"></script><script src="a_data_002/htmlmixed.js"></script><script type="text/javascript" async="" src="a_data_002/analytics.js"></script><script>
+    (function () {
+      try {
+        var path = document.location.hash.split("?")[0].split("/");
+        var domain = path[1];
+
+        var NOT_DOMAINS = [
+          "new-project",
+          "sign-in",
+          "facebook",
+          "sign-out",
+          "sign-up",
+          "email-login"
+        ];
+
+        if (domain.length === 0 || path.length !== 2 || NOT_DOMAINS.includes(domain)) {
+          return;
+        }
+
+        (new Image()).src = "//api." + document.location.host + "/" + domain + "/preempt";
+      } catch (e) { }
+    })()
+  </script>
+
+  <meta name="linting-version" content="cc9e2ddf03bddde9aca6a4309131223c">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src
+      'self';
+    connect-src
+      'self'
+      http://localhost:8000
+      http://localhost:8001
+      ws://localhost:8001
+      api.glitch.com api.glitch.development api.staging.glitch.com
+      wss://api.glitch.com wss://api.glitch.development wss://api.staging.glitch.com wss://glitch.development
+      https://*.woopra.com
+      api.segment.io
+      api.github.com
+      libraries.io
+      s3.amazonaws.com
+      https://securetoken.googleapis.com
+      https://www.googleapis.com
+      
+      https://settings.luckyorange.net wss://visitors.live wss://*.visitors.live https://pubsub.googleapis.com https://api.luckyorange.com;
+    font-src
+      cloud.webtype.com;
+    frame-src
+      https://*.glitch.me https://*.glitch.staging.me https://*.glitch.development
+      https://accounts.google.com
+      https://content-firebase.googleapis.com/
+      blob:
+      data:
+      'self';
+    img-src
+      http://localhost:8000
+      https://*
+      blob:
+      data:
+      
+     	https://d10lpsik1i8c69.cloudfront.net;
+    media-src
+      http://localhost:8000
+      https://*
+      blob:
+      data:;
+    object-src
+      blob:
+      data:
+      'self';
+    script-src
+      'self'
+      http://cdn.segment.com
+      http://*.woopra.com
+      
+      https://apis.google.com
+      https://cdnjs.cloudflare.com
+      https://cdn.segment.com
+      https://ajax.googleapis.com
+      https://*.woopra.com
+      'sha256-aROmP5KBVON8dHdF7kTobxNwhI67hJuBpk+jNh/jbM4='
+      'sha256-lIXJkTrfgeKmujhwsIkqzNbMkplZdPFm1ERXsf46uOw='
+      'sha256-+4l9lhP1UV/0AkyBaWekYrPjOAwL8g5JIOD76yrrOHE='
+      'sha256-To0Iwo79L42agXa29pvaAn64gM4rwT1BflbRPGdqcUg='
+      
+      http://www.luckyorange.com https://d10lpsik1i8c69.cloudfront.net;
+    style-src
+      'self'
+      'unsafe-inline'
+      https://cloud.webtype.com
+      
+     	https://d10lpsik1i8c69.cloudfront.net;
+    worker-src
+      
+      blob:
+  ">
+
+  <title>index.html – three-cube-experiment</title>
+  <noscript>
+    <title>Glitch</title>
+  </noscript>
+
+  <meta name="description" content="Combining automated deployment, instant hosting &amp; collaborative editing, Glitch gets you straight to coding so you can build full-stack web apps, fast">
+  <meta name="keywords" content="developer, javascript, nodejs, editor, ide, development, online, web, code editor, html, css">
+
+  <!-- facebook open graph tags -->
+  <meta name="og:type" content="website">
+  <meta name="og:url" content="https://glitch.com">
+  <meta name="og:title" content="Glitch">
+  <meta name="og:description" content="Combining automated deployment, instant hosting &amp; collaborative editing, Glitch gets you straight to coding so you can build full-stack web apps, fast">
+  <meta name="og:image" content="https://glitch.com/edit/images/logos/glitch/social-card@2x.png">
+  <!-- twitter card tags (stacks with og: tags) -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@glitch">
+  <meta name="twitter:title" content="Glitch">
+  <meta name="twitter:description" content="Combining automated deployment, instant hosting &amp; collaborative editing, Glitch gets you straight to coding so you can build full-stack web apps, fast">
+  <meta name="twitter:image" content="https://glitch.com/edit/images/logos/glitch/social-card@2x.png">
+  <meta name="twitter:image:alt" content="Glitch Logo">
+  <meta name="twitter:url" content="https://glitch.com">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <script>
+    if (!window.Promise) document.write('<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.35.0/es6-shim.min.js"><\/script>');
+  </script>
+  <script>
+    !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="4.0.0"; }}();
+  </script>
+
+</head>
+<body class="embedded">
+  <noscript>
+    <h1>
+      To use Glitch, please enable JavaScript
+    </h1>
+  </noscript>
+
+  <script src="a_data_002/jquery.js"></script>
+  <script>
+    if (typeof jQuery === 'undefined') document.write('<script type="text/javascript" src="./jquery-3.1.1.min.js"><\/script>');
+  </script>
+  <script src="a_data_002/index.js"></script><div id="application" class=""><header class="hidden"><nav><div id="header-project" class="header-project nav-item opens-pop-over" data-tooltip="Project options" data-tooltip-left="true"><div class="context"><span class="project-name-loader hidden"><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></span><img class="project-avatar-image" src="a_data_002/3e867aba-9312-4b1a-955f-65c1307b9475.png"><span class="project-name">three-cube-experiment</span></div><span class="down-arrow icon"></span></div><div class="show-app-wrapper"><div id="show-app" class="show-app icon nav-item opens-pop-over" data-tooltip="Your app" data-app-url="https://three-cube-experiment.glitch.me"><span class="show-app-icon icon"></span><span class="show-text">Show</span><span class="down-arrow icon"></span></div><dialog class="pop-over show-app-pop hidden"><section class="actions"><div class="show-app-pop-button-container"><a id="show-app-new-window" class="show-app-pop-button" rel="noopener" target="_blank" tabindex="1" href="https://three-cube-experiment.glitch.me/"><div class="show-app-pop-button-image show-app-pop-image-live-app"></div><div class="show-app-pop-button-title">In a New Window
+</div></a><div class="show-app-pop-button active" tabindex="0"><div class="show-app-pop-button-image show-app-pop-image-editor-preview"></div><div class="show-app-pop-button-title">Next to The Code
+</div></div></div></section></dialog></div><div class="project-search-wrapper"><input id="project-search-input" class="search-input opens-pop-over" type="text" name="search" autocomplete="off" placeholder="index.html"><span class="__reactlet"></span></div><div class="right-options hidden-on-small-viewport"><div class="user-is-logging-in hidden"><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></div><div id="account-pop-button" class="action opens-pop-over hidden" data-tooltip="User options"><div class="avatar icon anon-avatar" style="
+        background-color: #98f9d7;
+      "></div><span class="down-arrow icon"></span></div><a class=""><button id="sign-in-button" class="sign-in-button">Sign in
+</button></a><div class="action opens-pop-over" data-tooltip="Glitch options" data-tooltip-right="true"><span class="glitch-logo icon production"></span><span class="down-arrow icon"></span></div></div><div class="right-options small-viewport-only small-viewport-options"><div class="action opens-pop-over"><span class="glitch-logo icon production"></span><span class="down-arrow icon"></span></div></div></nav><dialog class="pop-over project-pop hidden"><section class="info"><div class="project-info-container"><img class="project-avatar-image opens-pop-over cursor-default" src="a_data_002/3e867aba-9312-4b1a-955f-65c1307b9475.png"><div class="project-avatar-loader hidden"><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></div><div class="project-info-meta"><div class="input-wrap"><input class="project-name" disabled="true" maxlength="50" value="three-cube-experiment"><span class="project-name-loader hidden"><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></span><div class="field-error-message hidden"></div></div><p class="content-editable read-only">Threejs experiments with a cube</p></div></div></section><section class="actions"><div class="button-wrap"><button id="new-project">New Project
+<div class="emoji sparkles"></div></button></div><div class="button-wrap"><a href="https://glitch.com/edit/#!/remix/three-cube-experiment"><button id="remix-project"><span>Remix Project
+</span><div class="emoji microphone"></div></button></a></div><div class="button-wrap"><button id="switch-project">Switch Project
+<div class="emoji hibiscus"></div></button></div></section><section class="actions hidden"><div class="button-wrap hidden"><label class="button button-small button-secondary"><input type="checkbox"><span>Not for Kids</span><span class="emoji see-no-evil-monkey"></span></label></div><div class="button-wrap"><label class="button button-small button-secondary" role="button" title="Project Privacy" tabindex="0"><input class="pointer-events-none" type="checkbox" tabindex="-1"><span class="public-icon"></span><span>Make This Project Private
+</span></label></div></section><section class="info"><h1>Editor Settings
+</h1></section><section class="actions"><div class="button-wrap"><button class="button-small button-secondary">Change Theme
+<span class="emoji crescent-moon"></span></button></div><div class="button-wrap hidden"><label class="button button-small button-secondary" tabindex="0"><input type="checkbox" tabindex="-1" checked="checked"><span>Refresh App on Changes
+</span></label></div><div class="button-wrap"><label class="button button-small button-secondary" tabindex="0"><input type="checkbox" tabindex="-1"><span>Wrap Text
+</span></label></div><div class="button-wrap"><button class="button-small button-secondary">Keyboard Shortcuts
+<div class="emoji musical-keyboard"></div></button></div></section><section class="danger-zone disabled hidden"><div class="button-wrap"><button id="delete-project"><span>Delete This Project
+</span><div class="emoji bomb"></div></button></div></section></dialog><dialog class="pop-over projects-select-pop hidden"><section class="info clickable-label"><div class="back icon"></div><h1>Your Projects
+<div class="emoji hibiscus"></div></h1></section><section class="info"><div class="input-wrap"><input id="project-search" class="search-input" placeholder="search projects"></div></section><section class="actions results-list"><ul class="results"><a class="active" href="https://glitch.com/edit/#!/three-cube-experiment" data-test-project-type="three-cube-experiment"><li class="result"><img class="avatar" src="a_data_002/3e867aba-9312-4b1a-955f-65c1307b9475.png"><div class="result-name" title="three-cube-experiment">three-cube-experiment</div><div class="result-description">Threejs experiments with a cube</div></li></a></ul><div class="projects-list-loading"><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></div></section></dialog><dialog class="pop-over project-avatar-pop hidden"><section class="info clickable-label"><div class="back icon"></div><h1>Project Avatar
+</h1></section><section class="actions"><img class="avatar-image" src="a_data_002/3e867aba-9312-4b1a-955f-65c1307b9475.png"><div class="button-wrap"><button>Random
+<div class="emoji bouquet"></div></button></div><div class="button-wrap"><button>Upload
+<div class="emoji arrow-up"></div></button></div></section></dialog><dialog class="pop-over new-project-pop hidden"><section class="info clickable-label"><div class="back icon"></div><h1>New Project
+<span class="emoji sparkles"></span></h1></section><section class="actions results-list"><ul class="results"><a class="" href="https://glitch.com/edit/#!/remix/hello-webpage" data-test-project-type="hello-webpage"><li class="result"><img class="avatar" src="a_data_002/929980a8-32fc-4ae7-a66f-dddb3ae4912c.png"><div class="result-name" title="hello-webpage">hello-webpage</div><div class="result-description">Your very own basic web page, ready for you to customize.</div></li></a><a class="" href="https://glitch.com/edit/#!/remix/hello-express" data-test-project-type="hello-express"><li class="result"><img class="avatar" src="a_data_002/a0fcd798-9ddf-42e5-8205-17158d4bf5bb.png"><div class="result-name" title="hello-express">hello-express</div><div class="result-description">A simple Node app built on Express, instantly up and running.</div></li></a><a class="" href="https://glitch.com/edit/#!/remix/hello-sqlite" data-test-project-type="hello-sqlite"><li class="result"><img class="avatar" src="a_data_002/cb519589-591c-474f-8986-a513f22dbf88.png"><div class="result-name" title="hello-sqlite">hello-sqlite</div><div class="result-description">A simple Node app with a SQLite database to hold app data.</div></li></a></ul></section><section class="info"><div class="button-wrap"><button>Clone from Git Repo
+</button></div></section></dialog><dialog class="pop-over account-pop hidden"><a href="https://glitch.com/user/5312437"><section class="profile-summary"><div class="profile-wrap"><div class="avatar icon anon-avatar" style="background-color: rgb(152, 249, 215); border-color: rgb(115, 247, 201);"></div><div class="user-info"><h1>Anonymous</h1><p class="login">@null</p></div></div></section></a><section class="hidden"><p></p></section><section class="info"><p>Upload your own avatar image to stand out
+</p><a href="https://glitch.com/user/5312437"><button>Edit Profile
+</button></a></section><section class=""><p>You've been thanked undefined times <div class="emoji sparkling-heart"></div></p></section><section class="info hidden"><h1>Your Teams
+</h1></section><section class="actions hidden"><div class="grouped-avatars"></div></section><section class="actions"><div class="button-wrap"><button id="sign-out" class="button-small button-secondary">Sign Out
+<div class="emoji balloon"></div></button></div></section></dialog><span class="__reactlet"></span><dialog class="pop-over small-viewport-options-pop hidden"><section class="info"><h1>Hello
+<span> Friend</span></h1></section><section class="actions sign-up"><p>Access all your projects anywhere
+</p><div class="button-wrap"><a><button>Sign In
+</button></a></div><p>or
+<a href="#">Sign up
+</a></p></section><section class="actions"><button><span>Glitch
+</span><span class="emoji glitch-logo"></span></button></section></dialog><dialog class="pop-over sign-in-email-pop hidden"><section class="info clickable-label"><div class="back icon"></div><h1>Sign in with Email
+<span class="emoji email"></span></h1></section><section class="actions"><form class=""><div class="input-wrap"><input type="email" placeholder="space@jam.com"><div class="field-error-message hidden"></div></div><button><span>Send Sign In
+</span><span class="hidden"><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></span></button></form></section><section class="actions hidden"><div class="status-badge"><div class="status success">Almost Done
+</div></div><p><span>Finish signing in from the email sent to
+</span><span></span></p></section><section class="info"><button>Use a sign in code
+</button></section></dialog><dialog class="pop-over sign-in-code-pop hidden"><section class="info clickable-label"><div class="back icon"></div><h1>Use a sign in code
+</h1></section><section class="actions"><form><p class="action-description">Paste your temporary sign in code below
+</p><div class="input-wrap"><input placeholder="cute-unique-cosmos"><div class="field-error-message hidden">Code not found or already used. Try signing in with email.
+</div></div><button>Sign In
+<span class="hidden"><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></span></button></form></section><section class="info"><button>Sign in with Email
+<div class="emoji email"></div></button></section></dialog></header><main id="editor" class=""><div class="editor-container hidden"><section id="sidebar" class="sidebar"><section class="sidebar-people-wrap hidden"><div class="sidebar-people grouped-avatars"><span class="collaborators opens-pop-over"><span class="person person-current-user" data-tooltip-persistent="true" data-tooltip-left="true" data-tooltip-notification="true" data-tooltip-clickable="true"><div data-tooltip="Anonymous" data-tooltip-left="true"><div class="avatar icon anon-avatar online-active-user" style="background-color: #caa7f2;"><span class="hidden"><div class="heart"></div><div class="heart heart-child"></div></span></div></div></span><span class="person " data-tooltip-persistent="true" data-tooltip-left="true" data-tooltip-notification="true" data-tooltip-clickable="true"><div data-tooltip="maniflames" data-tooltip-left="true"><div class="avatar icon" style="background-image: url(https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/user-avatar/55d950a0-c6e6-464a-91ff-2cd39c82f3d2-small.jpg);"><span class="hidden"><div class="heart"></div><div class="heart heart-child"></div></span></div></div></span></span><span class="collaborators opens-pop-over hidden"></span><span class="collaborators-buttons"><button id="share-project" class="share-project opens-pop-over"><div class="project-is-private hidden"><span class="private-icon"></span></div><span class="label">Share
+</span><span class="down-arrow icon"></span></button><dialog class="pop-over share-pop hidden"><section class="info"><h1>Link to Glitch
+</h1></section><section class="actions"><div class="share-link-generator"><div class="button-wrap"><div class="segmented-buttons"><button class="active">Project Page
+</button><button class="">Live App
+</button><button class="">Code
+</button></div></div><p><span class=""><p class="hidden"><span class="private-icon is-private"></span><span>Only project members or teams can view
+</span></p><p><input class="share-link project-page-url" copyable="true" readonly="true" data-copy-url="https://glitch.com/~three-cube-experiment" value="glitch.com/~three-cube-experiment"><button class="button-copy" data-clipboard-text="https://glitch.com/~three-cube-experiment">copy
+</button></p></span><span class="hidden"><input class="share-link app-url" copyable="true" readonly="true" data-copy-url="https://three-cube-experiment.glitch.me" value="three-cube-experiment.glitch.me"><button class="button-copy" data-clipboard-text="https://three-cube-experiment.glitch.me">copy
+</button></span><span class="hidden"><p class="hidden"><span class="private-icon is-private"></span><span>Only project members or teams can view
+</span></p><p class="hidden"><span class="secrets-sidebar-icon"></span><span>Non-members won't be able to see your .env file secrets
+</span></p><p><span class="hidden"><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></span><span class=""><input class="share-link editor-url" copyable="true" readonly="true" data-copy-url="https://glitch.com/edit/#!/three-cube-experiment" value="glitch.com/edit/#!/three-cube-experiment"><button class="button-copy" data-clipboard-text="https://glitch.com/edit/#!/three-cube-experiment">copy
+</button></span></p></span></p></div></section><section class="info hidden"><h1><span>Invite Others to Edit
+</span><span class="emoji rainbow"></span></h1></section><section class="actions hidden"><span class="hidden"><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></span><p class=""><input copyable="true" readonly="true" value="glitch.com/edit/#!/join/undefined"><button id="invite-url" class="button-copy" data-clipboard-text="https://glitch.com/edit/#!/join/undefined">copy
+</button></p></section><section class="info"><h1>On Your Website
+</h1></section><section class="actions"><div class="button-wrap"><button class="button-small button-secondary">Embed This Project
+<div class="emoji bento"></div></button></div><div class="button-wrap"><button class="button-small button-secondary">Share Buttons
+<div class="emoji love-hotel"></div></button></div></section></dialog><dialog class="pop-over share-buttons-pop hidden"><section class="info clickable-label"><div class="back icon"></div><h1>Share Buttons
+</h1></section><section class="actions"><div class="share-button-image-wrapper"><img src="a_data_002/2bdfb3f8-05ef-4035-a06e-2043962a3a13view-source2x.png" alt="Example of View Source button" height="33"></div><div class="input-wrap"><input copyable="true" value="&lt;!-- View Source Button --&gt;&lt;a href=&quot;https://glitch.com/edit/#!/three-cube-experiment&quot;&gt;  &lt;img src=&quot;https://cdn.glitch.com/2bdfb3f8-05ef-4035-a06e-2043962a3a13%2Fview-source%402x.png?1513093958802&quot; alt=&quot;view source&quot; height=&quot;33&quot;&gt;&lt;/a&gt;"><button class="button-copy" data-clipboard-text="&lt;!-- View Source Button --&gt;
+&lt;a href=&quot;https://glitch.com/edit/#!/three-cube-experiment&quot;&gt;
+  &lt;img src=&quot;https://cdn.glitch.com/2bdfb3f8-05ef-4035-a06e-2043962a3a13%2Fview-source%402x.png?1513093958802&quot; alt=&quot;view source&quot; height=&quot;33&quot;&gt;
+&lt;/a&gt;">copy
+</button></div><div class="share-button-image-wrapper"><img src="a_data_002/2bdfb3f8-05ef-4035-a06e-2043962a3a13remix2x.png" alt="Example of Remix This button" height="33"></div><div class="input-wrap"><input copyable="true" value="&lt;!-- Remix Button --&gt;&lt;a href=&quot;https://glitch.com/edit/#!/remix/three-cube-experiment&quot;&gt;  &lt;img src=&quot;https://cdn.glitch.com/2bdfb3f8-05ef-4035-a06e-2043962a3a13%2Fremix%402x.png?1513093958726&quot; alt=&quot;remix this&quot; height=&quot;33&quot;&gt;&lt;/a&gt;"><button class="button-copy" data-clipboard-text="&lt;!-- Remix Button --&gt;
+&lt;a href=&quot;https://glitch.com/edit/#!/remix/three-cube-experiment&quot;&gt;
+  &lt;img src=&quot;https://cdn.glitch.com/2bdfb3f8-05ef-4035-a06e-2043962a3a13%2Fremix%402x.png?1513093958726&quot; alt=&quot;remix this&quot; height=&quot;33&quot;&gt;
+&lt;/a&gt;">copy
+</button></div><div class="share-button-image-wrapper"><img src="a_data_002/2bdfb3f8-05ef-4035-a06e-2043962a3a13project-helper-menu2x.png" alt="Example of Project Helper menu" height="39"></div><div class="input-wrap"><input copyable="true" value="&lt;!-- Project Helper --&gt;&lt;!-- ✂️ Copy this script to your project's view: --&gt;  &lt;script src=&quot;https://button.glitch.me/button.js&quot;&gt;&lt;/script&gt;&lt;!-- ✂️ Copy this to wherever you want the button to show: --&gt;  &lt;div class=&quot;glitchButton&quot;&gt;&lt;/div&gt;"><button class="button-copy" data-clipboard-text="&lt;!-- Project Helper --&gt;
+&lt;!-- ✂️ Copy this script to your project's view: --&gt;
+  &lt;script src=&quot;https://button.glitch.me/button.js&quot;&gt;&lt;/script&gt;
+&lt;!-- ✂️ Copy this to wherever you want the button to show: --&gt;
+  &lt;div class=&quot;glitchButton&quot;&gt;&lt;/div&gt;">copy
+</button></div><div class="button-wrap"><a href="https://button.glitch.me/" target="_blank"><button class="button-small button-secondary"><span>More Info →
+</span></button></a></div></section></dialog></span><div class="join-people"><button class="join-project-button"><span class="label">Join
+</span></button></div><span class="viewers hidden">0 more 👀</span><div class="asking-for-help hidden" style="max-width:undefined"><span><span class="__reactlet"><span class="asking-for-help-loader"><div class="sparkles"><div class="left"><div class="sparkle"><div class="sparkle-child" style="background-color: rgb(72, 150, 214);"></div></div><div class="sparkle"><div class="sparkle-child" style="background-color: rgb(57, 117, 150);"></div></div><div class="sparkle"><div class="sparkle-child" style="background-color: rgb(117, 255, 197);"></div></div></div><div class="middle"><div class="sparkle"><div class="sparkle-child" style="background-color: rgb(143, 188, 214);"></div></div><div class="sparkle"><div class="sparkle-child" style="background-color: rgb(221, 198, 119);"></div></div><div class="sparkle"><div class="sparkle-child" style="background-color: rgb(97, 214, 47);"></div></div></div><div class="right"><div class="sparkle"><div class="sparkle-child" style="background-color: rgb(114, 198, 201);"></div></div><div class="sparkle"><div class="sparkle-child" style="background-color: rgb(230, 143, 252);"></div></div><div class="sparkle"><div class="sparkle-child" style="background-color: rgb(161, 252, 202);"></div></div></div></div><span class="asking-for-help-icon"><span class="ask-for-help-hand"></span><span class="ask-for-help-face"></span></span></span></span></span><p>Asking the community for help...
+</p><button class="hidden"><span class="label">Stop Asking
+</span></button><button class="join-people"><span class="label">Offer Help
+</span></button></div></div></section><div class="icon-collapse icon" tabindex="0"></div><div class="sidebar-status-when-collapsed"><span class="hidden"><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></span><span class="error hidden"></span><span class="warning hidden"></span><span class="off hidden"></span><span class="asking-for-help-loader hidden"><span class="ask-for-help-hand"></span><span class="ask-for-help-face"></span></span></div><section id="sidebar-file-controls" class="sidebar-file-controls hidden"><div class="button-wrap"><button id="new-file" class="new-file opens-pop-over hidden"><span class="label">New File
+</span><span class="down-arrow icon"></span></button><dialog class="pop-over new-file-pop hidden"><section class="actions"><form><div class="input-wrap"><input id="new-file-input" placeholder="cool-file.js" spellcheck="false" value="cool-file.js"></div><div class="button-wrap"><button id="add-file">Add This File
+<div class="emoji seedling"></div></button></div></form></section><section class="actions"><div class="button-wrap"><button class="button-small button-secondary">Upload a File
+<span class="emoji arrow-up"></span></button></div><div class="button-wrap"><button class="button-small button-secondary"><span>Add License File
+</span><span class="emoji balance-scale"></span><span class="hidden"><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></span></button></div><div class="button-wrap"><button class="button-small button-secondary"><span>Add Code of Conduct File
+</span><span class="emoji ferris-wheel"></span><span class="hidden"><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></span></button></div></section></dialog></div></section><section id="sidebar-files" class="sidebar-files"><div class="files"><div class="loader-ellipses hidden"></div><ul class="filetree"><li class="filetree-child assets-sidebar-icon other" tabindex="0">assets
+</li><li class="filetree-child file other hidden" tabindex="0" title=".glitch-assets"><div class="current-users"></div><div class="asking-for-help-icon icon hidden"></div><div class="rewind-state hidden"><div class="rewind-state-icon"><div class="mixed-lines-background"></div></div></div><div class="search-state hidden"><span class="status-badge"><div class="status warning">0<div class="search-in-badge icon"></div></div></span></div><div class="display-file-name"><span class="folder-path visible"></span><span class="filename"></span><span class="extension-type other">.glitch-assets</span></div><input class="file-rename-input hidden" spellcheck="false" value=".glitch-assets"><div class="options icon opens-pop-over hidden"></div></li><li class="filetree-child file info" tabindex="0" title="README.md"><div class="current-users"></div><div class="asking-for-help-icon icon hidden"></div><div class="rewind-state hidden"><div class="rewind-state-icon"><div class="mixed-lines-background"></div></div></div><div class="search-state hidden"><span class="status-badge"><div class="status warning">0<div class="search-in-badge icon"></div></div></span></div><div class="display-file-name"><span class="folder-path visible"></span><span class="filename">README</span><span class="extension-type info">.md</span></div><input class="file-rename-input hidden" spellcheck="false" value="README.md"><div class="options icon opens-pop-over hidden"></div></li><li class="filetree-child file active view" tabindex="0" title="index.html"><div class="current-users"></div><div class="asking-for-help-icon icon hidden"></div><div class="rewind-state hidden"><div class="rewind-state-icon"><div class="mixed-lines-background"></div></div></div><div class="search-state hidden"><span class="status-badge"><div class="status warning">0<div class="search-in-badge icon"></div></div></span></div><div class="display-file-name"><span class="folder-path visible"></span><span class="filename">index</span><span class="extension-type view">.html</span></div><input class="file-rename-input hidden" spellcheck="false" value="index.html"><div class="options icon opens-pop-over hidden"></div></li><li class="filetree-child file logic" tabindex="0" title="script.js"><div class="current-users"></div><div class="asking-for-help-icon icon hidden"></div><div class="rewind-state hidden"><div class="rewind-state-icon"><div class="mixed-lines-background"></div></div></div><div class="search-state hidden"><span class="status-badge"><div class="status warning">0<div class="search-in-badge icon"></div></div></span></div><div class="display-file-name"><span class="folder-path visible"></span><span class="filename">script</span><span class="extension-type logic">.js</span></div><input class="file-rename-input hidden" spellcheck="false" value="script.js"><div class="options icon opens-pop-over hidden"></div></li><li class="filetree-child file style" tabindex="0" title="style.css"><div class="current-users"></div><div class="asking-for-help-icon icon hidden"></div><div class="rewind-state hidden"><div class="rewind-state-icon"><div class="mixed-lines-background"></div></div></div><div class="search-state hidden"><span class="status-badge"><div class="status warning">0<div class="search-in-badge icon"></div></div></span></div><div class="display-file-name"><span class="folder-path visible"></span><span class="filename">style</span><span class="extension-type style">.css</span></div><input class="file-rename-input hidden" spellcheck="false" value="style.css"><div class="options icon opens-pop-over hidden"></div></li><li class="filetree-child file logic" tabindex="0" title="three.min.js"><div class="current-users"></div><div class="asking-for-help-icon icon hidden"></div><div class="rewind-state hidden"><div class="rewind-state-icon"><div class="mixed-lines-background"></div></div></div><div class="search-state hidden"><span class="status-badge"><div class="status warning">0<div class="search-in-badge icon"></div></div></span></div><div class="display-file-name"><span class="folder-path visible"></span><span class="filename">three.min</span><span class="extension-type logic">.js</span></div><input class="file-rename-input hidden" spellcheck="false" value="three.min.js"><div class="options icon opens-pop-over hidden"></div></li></ul></div></section><resizer></resizer></section><section class="project-loading hidden"><div class="welcome-message"><p class="loading">Fetching Project
+</p><p class="message">Adding third-party libs is easy in packages.json</p><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></div></section><section class="project-loading hidden"><div class="welcome-message"><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></div></section><aside class="notifications"><div class="notification notifyAutosave hidden">psst, Glitch autosaves 八(＾□＾*)
+</div><div class="notification notifyFileUploading hidden">File uploading...
+</div><div class="notification notifyUnfinished hidden">Feature not finished ＜(。_。)＞
+</div><div class="notification notifyConnectionError hidden">Hmm.. We're having trouble connecting. Try refreshing?
+</div><div class="notification notifyReconnected hidden">Connected
+</div><div class="notification notifyCopied hidden">Copied
+</div><div class="notification notifyCopyFailure hidden">Press Ctrl-C to copy</div><div class="notification notifyPackageUpdated hidden">Package Updated
+</div><div class="notification notifyPackageAdded hidden">Package Added
+</div><div class="notification notifyProjectSave hidden">Saving...
+</div><div class="notification notifyUploadFailure hidden">File upload failed. Try again in a few minutes?
+</div><div class="notification notifyProjectIsReadOnlyForCurrentUser hidden">Remix or Join to edit
+</div><div class="notification notifyInvalidFileName hidden">Names can't have .., $, ~, \, *, or start with /
+</div><div class="notification notifyInvalidFolderName hidden">Folder can't be named the same as an existing folder, start with /, or include .., $, ~, \, *
+</div><div class="notification notifyPreviewWindowOpened hidden">Opened in another tab or window
+</div><div class="notification notifyGenericError hidden">Arg, something went wrong. Try again? :@
+</div><div class="notification notifyJoinedProject hidden">You're now able to edit
+</div><div class="notification notifyJoinedProject hidden">You can now help out – Thanks!
+</div><div class="notification notifyLeftProject hidden">You've left this project
+</div><div class="notification notifyHelpersCantUseConsole hidden">For safety, project helpers can't use the console
+</div><div class="notification notifyUploadLocalFileOnly hidden">To add this file, you'll need to save it to your computer first
+</div><div class="notification notifyWelcomeImportedProjectUser hidden"><p>Your project is now on Glitch
+</p><div class="button-wrap"><a href="https://glitch.com/about/features/"><button>About Glitch
+<span class="emoji carp-streamer"></span></button></a></div></div><div class="notification notifyGithubImporting hidden"><span><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></span><span>Importing from
+</span><span>GitHub</span></div><div class="notification notifyGithubExporting hidden"><span><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></span><span>Exporting to
+</span><span>GitHub</span></div><div class="notification notifyGithubImportSuccess hidden">Import Successful
+</div><div class="notification notifyGithubExportSuccess hidden">Export Successful
+</div><div class="notification notifyUploading hidden">Uploading
+<span>asset
+</span><progress class="notify-progress" max="100"></progress></div><div class="notification notifyReconnecting hidden">Reconnecting
+<span class="loader-ellipses"></span></div><div class="notification notifyAnonProjectLimits hidden"><p>Sign in to keep your project
+</p><div class="button-wrap"><button>Sign In
+</button><button>Got it
+</button></div></div><div class="notification notifyAnonUserLimits hidden"><p>Sign in to access all your projects anywhere
+</p><div class="button-wrap"><button>Sign In
+</button><button>Got it
+</button></div></div><div class="notification notifyRemixToEdit"><div class="button-wrap"><button><span>Remix to Edit
+</span><span class="emoji microphone"></span></button></div><div class="button-wrap hidden"><button><span>Edit your Project Here
+</span></button></div></div><div class="notification notifyCanEdit hidden">You can now edit
+</div><div class="notification notifyOpenInFullEditor hidden"><p>Save this project by editing it fullscreen
+</p><div class="button-wrap"><button>Got it
+</button><button>Save Project
+<span class="emoji carp-streamer"></span></button></div></div><div class="notification notifyEditorIsEmbedRemixing hidden"><span><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></span><span>Remixing project
+</span></div><div class="notification notifyCanEditInEmbedRemixedEmbed hidden"><p>You can now edit here or fullscreen
+</p><div class="button-wrap"><button>Got it
+</button><button><span>Edit Fullscreen
+</span><span class="emoji carp-streamer"></span></button></div></div><div class="notification notifyDeletedProject hidden"><span>Deleted
+</span><span></span><img class="deleted-project-avatar" alt="deleted project avatar"><div class="button-wrap"><button><span>Undo
+</span><span class="emoji bomb"></span></button></div></div><div class="notification notifyEditorIsPreviewingRewind hidden"><div class="rewind-tape-container"><div class="rewind-tape"></div><div class="rewind-tape-reel left"></div><div class="rewind-tape-reel right"></div></div><span>Previewing rewind
+</span><div class="button-wrap cta-container hidden"><button class="button-small button-cta button-in-notification">Rewind Project
+<div class="rewind icon"></div></button></div><div class="button-wrap"><button>Cancel
+</button></div></div><div class="notification notifyEditorIsPreviewingRewindTyping hidden"><p>Rewind or cancel to edit
+</p></div><div class="notification notifyEditorRewoundProject hidden"><div class="rewind-tape-container rewound-tape"><div class="rewind-tape"></div><div class="rewind-tape-reel left"></div><div class="rewind-tape-reel right"></div></div><span></span></div><div class="notification notifyEditorIsRewindingProject hidden"><div class="rewind-tape-container"><div class="rewind-tape"></div><div class="rewind-tape-reel left"></div><div class="rewind-tape-reel right"></div></div><span><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></span></div><div class="notification notifyCloneError hidden"><p>Couldn't clone
+<span>false</span><span>, maybe it's private?
+</span></p><div class="button-wrap"><button>Grant access
+</button><button>Cancel
+</button></div></div><div class="notification notifyCanNowUseCustomDomains hidden"><p><span class="emoji sparkling-heart"></span><span>By helping others, you can now use
+</span></p><div class="button-wrap"><button><span>Custom Domains
+</span><span class="emoji globe-with-meridians"></span></button></div><div class="button-wrap"><button>Got it
+</button></div></div></aside><span class="__reactlet"><footer class="footer-options"></footer></span><footer class="footer-project-options"><section class="project-navigators"><div class="button-wrap hidden"><div class="segmented-buttons"><button alt="Select previous result"><div class="left-arrow icon"></div></button><button alt="Select next result"><div class="right-arrow icon"></div></button><button alt="Clear search"><div class="close-icon icon"></div></button><button class="search-box-value"><span></span><span class="status-badge"><div class="status warning">0<div class="search-in-badge icon"></div></div></span></button></div></div></section><section class="advanced-options"><div class="button-wrap hidden"><button class="rewind-button"><div class="rewind icon"></div></button></div><div class="button-wrap"><button id="tools-pop-button" class=""><span>Tools</span><div class="status-badge icon hidden"><div class="status loading hidden"><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></div><div class="status error hidden">Error
+</div><div class="status off hidden">Zzz
+</div><div class="status warning hidden">Debug
+</div></div><div class="status-badge icon hidden hidden"><div class="status ok">Warn
+</div></div><span class="up-arrow icon"></span></button><dialog class="pop-over tools-pop hidden"><section class="actions hidden"><p>Sign in to use these
+</p><div class="button-wrap"><a><button>Sign In
+</button></a></div><p>or
+<a href="#">Sign up
+</a></p></section><section class="actions hidden hidden"><p>You're not a member of this project. Join or Remix to use these
+</p><div class="button-wrap"><button><span>Join this Project
+</span></button></div><div class="button-wrap"><button><span>Remix Project
+</span><span class="emoji microphone"></span></button></div></section><section class="actions"><p>Edit fullscreen or Remix to use these
+</p><div class="button-wrap"><button><span>Edit Fullscreen
+</span><span class="emoji carp-streamer"></span></button></div><div class="button-wrap"><button><span>Remix Project
+</span><span class="emoji microphone"></span></button></div><div class="button-wrap hidden"><button><span>Edit your Project Here
+</span></button></div></section><section class="info"><h1>Container Tools
+</h1></section><section class="actions"><div class="button-wrap"><button class="disabled"><span>Logs
+</span><div class="emoji newspaper"></div><div class="status-badge icon hidden"><div class="status loading hidden"><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></div><div class="status error hidden">Error
+</div><div class="status off hidden">Zzz
+</div><div class="status warning hidden">Debug
+</div></div></button></div></section><section class="actions"><div class="button-wrap"><a class="disabled" href="https://glitch.com/edit/console.html?three-cube-experiment" target="_blank"><button class="button-small button-secondary"><span>Full Page Console →
+</span></button></a></div><div class="button-wrap"><button class="disabled button-small button-secondary"><span>Container Status
+</span><span class="hidden"><div class="status-badge icon hidden"><div class="status ok">Warn
+</div></div><div class="status-badge icon hidden"><div class="status ok">Ok
+</div></div><span class="hidden"><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></span></span></button></div></section><section class="info"><h1>Extras
+</h1></section><section class="actions"><div class="button-wrap"><button class="button-small button-secondary disabled">Custom Domains
+<div class="emoji globe-with-meridians"></div></button></div><div class="button-wrap"><button id="git-import-export" class="button-small button-secondary disabled"><span>Git, Import, and Export
+</span><span class="emoji tokyo-tower"></span></button></div></section></dialog><dialog class="pop-over git-import-export-pop hidden"><section class="info clickable-label"><div class="back icon"></div><h1>Git, Import, Export
+<div class="emoji tokyo-tower"></div></h1></section><section class="actions"><p>Edit fullscreen to use these
+</p><div class="button-wrap"><button><span>Edit Fullscreen
+</span><span class="emoji carp-streamer"></span></button></div></section><section class="info git-info"><p>Every Glitch project is also a Git repo
+</p><div class="button-wrap disabled"><div class="segmented-buttons"><button class="active">Read
+</button><button class="">Write
+</button></div></div><div class="input-wrap"><input copyable="true" value="https://api.glitch.com/git/three-cube-experiment"><button class="button-copy" data-clipboard-text="https://api.glitch.com/git/three-cube-experiment">copy
+</button></div><p class="write-container hidden"><a href="#">Sign In</a><span> </span><span>to access git push credentials
+</span></p><p class="write-container hidden hidden"><a href="#">Join this Project</a><span> </span><span>to access git push credentials
+</span></p><div class="write-container hidden hidden hidden"><div class="button-wrap"><button class="button-copy button-small" style="position: unset;" data-clipboard-text="null">Copy User Name
+</button></div><p>Password is an empty string
+</p></div></section><section class="actions hidden"><p class="hidden"><a class="repo-access grant" href="#">Add your GitHub account</a><span> </span><span>to import and export to a repo
+</span></p><div class="button-wrap"><button disabled="disabled">Import from GitHub
+<div class="emoji octocat"></div></button></div><div class="button-wrap"><button disabled="disabled">Export to GitHub
+<div class="emoji octocat"></div></button></div></section><section class="actions"><p class="hidden"><a href="#">Join this Project</a><span> </span><span>to download
+</span></p><p class=""><a href="#">Sign In</a><span> </span><span>to use these
+</span></p><p class="hidden"><span>For safety, project helpers can't download
+</span></p><div class="button-wrap disabled disabled"><a href="https://api.glitch.com/project/download/?authorization=60db33c2-f054-4cf4-b294-e96eac2dcf5e&amp;projectId=3e867aba-9312-4b1a-955f-65c1307b9475"><button id="download-project"><span>Download Project
+</span><div class="emoji turtle"></div></button></a></div></section></dialog><span class="__reactlet"></span></div></section></footer><section class="media-wrap hidden"></section><section class="assets-wrap hidden"><span class="__reactlet"><section class="assets-helper"></section></span><span class="__reactlet"><div class="assets-blank-slate"><div class="welcome-message"><p class="headline">No Assets Yet</p><p class="message">Drag files from your desktop to use them in your project</p></div></div></span></section><section class="editor-wrap"><span class="__reactlet"><section class="editor-helper"></section></span><article id="text-editor" class="text-editor"><div class="CodeMirror cm-s-default" style="width: 100%; height: 0px;"><div style="overflow: hidden; position: relative; width: 3px; height: 0px;"><textarea style="position: absolute; bottom: -1em; padding: 0px; width: 1px; height: 1em; outline: currentcolor none medium;" autocorrect="off" autocapitalize="off" spellcheck="false" tabindex="0" wrap="off"></textarea></div><div class="CodeMirror-vscrollbar" tabindex="-1" cm-not-content="true" style="display: block; bottom: 0px;"><div style="min-width: 1px; height: 51px;"></div></div><div class="CodeMirror-hscrollbar" tabindex="-1" cm-not-content="true" style="display: block; right: 0px; left: 0px;"><div style="height: 100%; min-height: 1px; width: 33px;"></div></div><div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll" tabindex="-1" draggable="true"><div class="CodeMirror-sizer" style="margin-left: 0px; min-width: 3px; padding-right: 0px; padding-bottom: 0px;"><div style="position: relative;"><div class="CodeMirror-lines" role="presentation" style="width: initial;"><div style="position: relative; outline: currentcolor none medium;" role="presentation"><div class="CodeMirror-measure"></div><div class="CodeMirror-measure"><pre class="CodeMirror-line" role="presentation"><span role="presentation">    <span class="cm-tag cm-bracket">&lt;</span><span class="cm-tag">div</span> <span class="cm-attribute">class</span>=<span class="cm-string">"glitchButton"</span> <span class="cm-attribute">style</span>=<span class="cm-string">"position:fixed;top:20px;right:20px;"</span><span class="cm-tag cm-bracket">&gt;&lt;/</span><span class="cm-tag">div</span><span class="cm-tag cm-bracket">&gt;</span></span></pre></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-cursors"></div><div class="CodeMirror-code" role="presentation" style="width: initial;"></div></div></div></div></div><div style="position: absolute; height: 30px; width: 1px; border-bottom: 0px solid transparent;"></div><div class="CodeMirror-gutters" style="left: 0px;"><div class="CodeMirror-gutter CodeMirror-lint-markers"></div><div class="CodeMirror-gutter CodeMirror-linenumbers" style="width: 1px;"></div><div class="CodeMirror-gutter CodeMirror-foldgutter"></div></div></div></div></article><article class="markdown-container hidden"><section class="license-summary hidden"><div class="license-column"><p class="column-title">Permissions
+</p><ul></ul></div><div class="license-column"><p class="column-title">Conditions
+</p><ul></ul></div><div class="license-column"><p class="column-title">Limitations
+</p><ul></ul></div></section><section class="markdown-content"></section></article></section></div><div id="app-preview" class="app-preview app-preview-transition is-embedded" style="width: 100%;"><resizer></resizer><div class="app-preview-helper hidden"><div class="icon-collapse icon"></div><div class="url-wrapper"><button class="opens-pop-over">Change URL</button><span class="__reactlet"></span></div><button><span class="icon refresh"></span></button><div class="close icon"></div></div><div class="resize-helper"></div><div class="iframe-wrapper"><iframe allow="geolocation; microphone; camera; midi; vr; encrypted-media" src="a_data_002/a."></iframe></div></div></main><footer id="logs-panel" class="logs-panel panel hidden"><resizer></resizer><header><h1>Logs
+</h1><div class="controls"><div class="button-wrap"><button class="clear-logs"><span>Clear
+</span><div class="emoji bomb"></div></button></div><div class="button-wrap hidden"><button class="button-debugger"><span>Debugger
+</span><div class="emoji lady-beetle"></div></button></div><div class="button-wrap hidden"><button><div class="emoji octagonal-sign"></div><div class="emoji lady-beetle"></div></button></div><div class="button-wrap"><button class="hidden"><span>Console
+</span><div class="emoji pager"></div></button></div><div class="close icon hidden"></div></div></header><div class="console-container hidden"></div><div class="logs-container"><section class="logs"></section></div></footer><footer id="container-stats-panel" class="container-stats-panel panel hidden"><resizer></resizer><header><h1>Container Stats
+</h1><div class="controls hidden"><div class="status-badge icon hidden"><div class="status ok">Warn
+</div></div><div class="status-badge icon"><div class="status ok">Ok
+</div></div></div><div class="loader"><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></div><div class="close icon"></div></header><section><p>Each Glitch project runs inside its own virtual machine container
+</p><article><div class="status-item"><div class="status-summary"><div class="status-badge icon"><div class="status ok">CPU
+</div></div><progress class="progress-inline ok" max="100"></progress></div><div class="status-details">0%</div><span class="loader-ellipses"></span></div><p class="hidden">This may be caused by large or inefficient processes, libraries or compilers
+</p></article><article><div class="status-item"><div class="status-summary"><div class="status-badge icon"><div class="status ok">Memory
+</div></div><progress class="progress-inline ok" max="100"></progress></div><div class="status-details">0%, NaN/NaNMB</div><span class="loader-ellipses"></span></div><p class="hidden">Large or inefficient processes, libraries or compilers that use too much RAM may get killed
+</p></article><article><div class="status-item"><div class="status-summary"><div class="status-badge icon"><div class="status ok">Disk
+</div></div><progress class="progress-inline ok" max="100"></progress></div><div class="status-details">0%, NaN/NaNMB</div><span class="loader-ellipses"></span></div><p class="hidden">You may have problems saving changes when your disk is full. Try removing unneeded files, and running
+<code>git prune; git gc</code><span> </span><span>from the Console
+</span></p></article><article><div class="status-item status-item-without-progress"><div class="status-summary"><div class="status-badge icon"><div class="status">Always On
+</div></div></div><div class="status-details">Disabled
+</div></div><p>To keep Glitch fast, projects sleep after 5 minutes if they are not used, and those running for more than 12 hours are stopped
+</p></article><article><p>In the future, you'll be able to upgrade resources and keep your app always on
+</p><p><a href="http://help-center.glitch.me/help/restrictions/">Details about Technical restrictions
+</a></p></article></section></footer><footer id="rewind-panel" class="rewind-panel panel hidden"><resizer></resizer><header><h1>Rewind
+</h1><div class="current-state-info"><div class="time-container"><div class="time">00:00:00</div><div class="labels"><div class="label">HR
+</div><div class="label">MIN
+</div><div class="label">SEC
+</div></div></div><div class="time-container hidden"><div class="time">00:00:00</div><div class="labels"><div class="label">MTH
+</div><div class="label day">DAY
+</div><div class="label">YR
+</div></div></div><div class="commit-message" title="––––"><span>––––</span><div class="loading-revision hidden"><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></div></div></div><div class="close icon"></div></header><section class="timeline"><div class="loading-rewinds hidden"><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></div><div class="rewind-graph"><div class="rewind-columns-container"><div class="rewind-column now"><div class="time cell"><span class="time-label">0
+</span></div><div class="cell-border"></div></div><playhead id="playhead"><div class="playhead-arrow icon"></div><div class="tail"></div></playhead></div></div><div class="instructions-container"><div class="instructions">Your timeline grows as you edit
+</div><div class="clock"></div></div></section></footer><div class="embed-helper "><a class="project-name" target="_blank" rel="noopener" href="https://glitch.com/~three-cube-experiment"><img class="project-avatar" alt="" src="a_data_002/3e867aba-9312-4b1a-955f-65c1307b9475.png"><span>three-cube-experiment</span></a><div class="preposition ">by
+</div><div class="collaborators "><span class="hidden"><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></span><div class="grouped-avatars "><span class="person" data-tooltip-persistent="true" data-tooltip-left="true" data-tooltip-notification="true"><div data-tooltip="maniflames" data-tooltip-top="true"><a href="https://glitch.com/@maniflames" aria-label="maniflames" target="_blank" rel="noopener"><div class="avatar icon" style="background-image: url(https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/user-avatar/55d950a0-c6e6-464a-91ff-2cd39c82f3d2-small.jpg);"></div></a></div></span></div></div><div class="share-project"><button class="opens-pop-over "><span class="label">Share
+</span></button><dialog class="pop-over embed-share-pop hidden"><section class="actions"><div class="share-link-generator"><div class="button-wrap"><div class="segmented-buttons"><button class="active">Project Page
+</button><button class="">Live App
+</button><button class="">Code
+</button></div></div><p><span class=""><p class="hidden"><span class="private-icon is-private"></span><span>Only project members or teams can view
+</span></p><p><input class="share-link project-page-url" copyable="true" readonly="true" data-copy-url="https://glitch.com/~three-cube-experiment" value="glitch.com/~three-cube-experiment"><button class="button-copy" data-clipboard-text="https://glitch.com/~three-cube-experiment">copy
+</button></p></span><span class="hidden"><input class="share-link app-url" copyable="true" readonly="true" data-copy-url="https://three-cube-experiment.glitch.me" value="three-cube-experiment.glitch.me"><button class="button-copy" data-clipboard-text="https://three-cube-experiment.glitch.me">copy
+</button></span><span class="hidden"><p class="hidden"><span class="private-icon is-private"></span><span>Only project members or teams can view
+</span></p><p class="hidden hidden"><span class="secrets-sidebar-icon"></span><span>Non-members won't be able to see your .env file secrets
+</span></p><p><span class="hidden"><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></span><span class=""><input class="share-link editor-url" copyable="true" readonly="true" data-copy-url="https://glitch.com/edit/#!/three-cube-experiment" value="glitch.com/edit/#!/three-cube-experiment"><button class="button-copy" data-clipboard-text="https://glitch.com/edit/#!/three-cube-experiment">copy
+</button></span></p></span></p></div></section></dialog></div><div class="switch-view"><button class="view-app hidden">View App
+</button><button class="view-source ">View Source
+</button></div><div class="fullscreen-button"><a class="button hidden" target="_blank" rel="noopener" aria-label="Open Source" href="https://glitch.com/edit/#!/three-cube-experiment"><span class="fullscreen emoji"></span></a><a class="button " target="_blank" rel="noopener" aria-label="Open App" href="https://three-cube-experiment.glitch.me/"><span class="fullscreen emoji"></span></a></div><div class="helper-icon"><a class="glitch-logo" target="_blank" rel="noopener" aria-label="three-cube-experiment" href="https://glitch.com/~three-cube-experiment"></a></div></div><div class="overlay-background hidden"><dialog class="overlay keyboard-shortcuts-overlay"><section class="info"><h1><span>Keyboard Shortcuts
+</span><span class="emoji musical-keyboard"></span></h1></section><section class="info"><h2>Global
+</h2><div class="shortcut">Show this list:
+<div class="shortcuts"><div class="key all-shortcut">?
+</div></div></div><div class="shortcut">Show app:
+<div class="shortcuts"><div class="key all-shortcut">Ctrl–Shift–R
+</div></div></div><div class="shortcut">Project search:
+<div class="shortcuts"><div class="key all-shortcut">Ctrl–P
+</div><div class="key all-shortcut">Ctrl–K
+</div><div class="key-all-shortcut">CTRL–;
+</div></div></div><div class="shortcut">Sidebar toggle:
+<div class="shortcuts"><div class="key all-shortcut">Ctrl–I
+</div></div></div><div class="shortcut">App Preview toggle:
+<div class="shortcuts"><div class="key all-shortcut">Ctrl–Shift–U
+</div></div></div><div class="shortcut">Rewind toggle:
+<div class="shortcuts"><div class="key all-shortcut">Ctrl–Shift–M
+</div></div></div><div class="shortcut">Close dialog:
+<div class="shortcuts"><div class="key all-shortcut">ESC
+</div></div></div></section><section class="info"><h2>Advanced
+</h2><div class="shortcut">Export to GitHub:
+<div class="shortcuts"><div class="key all-shortcut">Ctrl–Shift–E
+</div></div></div><div class="shortcut">Status and Logs toggle:
+<div class="shortcuts"><div class="key all-shortcut">Ctrl–Shift–L
+</div></div></div><div class="shortcut">Open console:
+<div class="shortcuts"><div class="key all-shortcut">Ctrl–Shift–X
+</div></div></div></section><section class="info"><h2>Text Editing
+</h2><div class="shortcut">Find text:
+<div class="shortcuts"><div class="key all-shortcut">Ctrl–F
+</div></div></div><div class="shortcut">Find and replace:
+<div class="shortcuts"><div class="key all-shortcut">Ctrl–Alt–F
+</div></div></div><div class="shortcut">Jump to line:
+<div class="shortcuts"><div class="key all-shortcut">Ctrl–G
+</div></div></div><div class="shortcut">Search Files and replace:
+<div class="shortcuts"><div class="key all-shortcut">Ctrl–Shift–F
+</div></div></div></section><section class="info"><p>(Text editing shortcuts are mostly like Sublime Text)
+</p></section></dialog></div><div class="overlay-background hidden"><dialog class="overlay project-is-suspended-overlay overlay-narrow"><section class="danger-zone"><h1>three-cube-experiment has been suspended</h1></section><section class="actions"><p>Reason: </p><p>If your app isn't actually malicious, let us know to restore it
+</p><div class="button-wrap"><a href="https://support.glitch.com/"><button><span>Contact Support
+</span><div class="emoji ambulance"></div></button></a></div></section><section class="info"><div class="button-wrap"><button><span>New Project
+</span><div class="emoji sparkles"></div></button></div><div class="button-wrap"><a><button>Sign In
+</button></a></div><p>or
+<a href="#">Sign up
+</a></p></section></dialog></div><span class="__reactlet"></span><div class="overlay-background hidden"><dialog class="overlay new-stuff-overlay overlay-narrow"><section class="info"><figure class="new-stuff-cat"></figure><h1>New Stuff
+</h1><div class="button-wrap"><label class="button"><input type="checkbox" checked="checked"><span>Keep showing me these
+</span></label></div></section></dialog></div><div class="overlay-background hidden"><dialog class="overlay share-embed-overlay"><section class="info"><h1><span>Embed App
+</span></h1></section><section class="section-wrapper"><div class="section-embed"><div class="glitch-embed-wrap"><iframe id="share-embed-iframe" class="glitch-embed-iframe" alt="code example in Glitch" src="a_data_002/a.htm" allow="geolocation; microphone; camera; midi; vr; encrypted-media"></iframe></div><p class="hidden"><span class="private-icon"></span><span>Only project members will be able to view
+</span></p></div><div class="section-embed-options"><div class="button-wrap"><div class="segmented-buttons"><button class="button-small active">Show App
+</button><button class="button-small">Show Code
+</button></div></div><p class="hidden">Change files or collapse the filetree to customize
+</p><div class="button-wrap"><label class="button button-small" tabindex="0"><input class="pointer-events-none" type="checkbox" tabindex="-1"><span>Hide Attribution
+</span></label></div><div class="button-wrap"><div class="segmented-buttons"><button class="button-small active">iframe
+</button><button class="button-small">Medium Link
+</button></div></div><div class="input-wrap"><textarea copyable="true" readonly="true">&lt;!-- Copy and Paste Me --&gt;
+&lt;div class="glitch-embed-wrap" style="height: 420px; width: 100%;"&gt;
+  &lt;iframe
+    allow="geolocation; microphone; camera; midi; vr; encrypted-media"
+    src="undefined"
+    alt="three-cube-experiment on Glitch"
+    style="height: 100%; width: 100%; border: 0;"&gt;
+  &lt;/iframe&gt;
+&lt;/div&gt;</textarea><button class="button-copy button-large" data-clipboard-text="&lt;!-- Copy and Paste Me --&gt;
+&lt;div class=&quot;glitch-embed-wrap&quot; style=&quot;height: 420px; width: 100%;&quot;&gt;
+  &lt;iframe
+    allow=&quot;geolocation; microphone; camera; midi; vr; encrypted-media&quot;
+    src=&quot;undefined&quot;
+    alt=&quot;three-cube-experiment on Glitch&quot;
+    style=&quot;height: 100%; width: 100%; border: 0;&quot;&gt;
+  &lt;/iframe&gt;
+&lt;/div&gt;">Copy Embed Code
+</button></div></div></section></dialog></div><div class="overlay-background hidden"><dialog class="overlay project-search-files"><section class="actions disabled"><form><div class="input-wrap"><input id="project-files-search" class="search-input" placeholder="search"></div><div class="input-wrap"><select class="search-input"><option value="All Files" selected="selected">All Files</option><option value="Current File – index.html">Current File – index.html</option><option value="Current Folder – ">Current Folder – </option><option value="Current Type – *.html">Current Type – *.html</option></select><div class="button-wrap search-option"><label class="button button-small button-secondary" data-tooltip="Case sensitive" tabindex="0"><input type="checkbox" tabindex="-1"><span>Aa
+</span></label></div></div><div class="button-wrap"><button><span>Search
+</span><span class="hidden"><span class="__reactlet"><div class="loader" data-testid="loader"><div class="moon"></div><div class="earth"></div><div class="asteroid"></div><div class="asteroid-dust"></div></div></span></span><div class="status-badge icon hidden"><div class="status warning"><span>0</span><div class="search-in-badge icon"></div></div></div></button></div></form></section><section class="info results-container hidden"></section><section class="info  hidden"><p>No Results for
+<span></span></p><div class="no-search-results-illustration"></div></section><section class="info  hidden"><p><span class="emoji musical-keyboard"></span><span> </span><span>Ctrl-Shift-F</span></p></section><section class="info"><p>For security reasons, only project members can search files
+</p><button class="">Sign In
+</button></section></dialog></div><div class="overlay-background hidden"><dialog class="overlay error-overlay"><section class="danger-zone"><h1>Unexpected Error
+</h1></section><section class="info"><p>(シ_ _)シ
+</p><p>An error has occurred, please try again or
+<a href="https://support.glitch.com/">contact us</a><span> </span><span>if the error persists.
+</span></p><textarea copyable="true" wrap="off">
+        undefined: undefined
+
+        undefined
+
+        
+      </textarea></section><section class="actions"><div class="button-wrap"><a href="http://status.glitch.com/"><button><span>System Status
+</span><div class="emoji traffic-light"></div></button></a></div><div class="button-wrap"><button><span>Try Again
+</span><div class="emoji crystal-ball"></div></button></div></section><section class="info"><p><a href="https://support.glitch.com/">Support
+</a></p></section></dialog></div><dialog class="pop-over sign-in-pop hidden" style=""><section class="info"><p><span class="emoji carp-streamer"></span><span> New to Glitch? Create an account by signing in.</span></p></section><section class="info"><p>By signing into Glitch, you agree to our
+<a href="https://glitch.com/legal/#tos" target="_blank"><span>Terms of Services</span></a><span> and </span><a style="word-break: break-word;" href="https://glitch.com/legal/#privacy"><span>Privacy Statement</span></a><span>.</span></p></section><section class="actions"><div class="button-wrap"><a><button id="button-facebook-sign-in">Sign in with Facebook
+<div class="emoji facebook"></div></button></a></div><div class="button-wrap"><a><button id="button-github-sign-in">Sign in with GitHub
+<div class="emoji octocat"></div></button></a></div><div class="button-wrap"><a><button id="button-google-sign-in">Sign in with Google
+<div class="emoji google"></div></button></a></div><div class="button-wrap"><button>Sign in with Email
+<div class="emoji email"></div></button></div></section><section class="info"><button>Use a sign in code
+</button></section></dialog><div class="emojiCache"><div class="icon ask-for-help"></div><div class="ask-for-help-hand"></div><div class="ask-for-help-face"></div><div class="emoji ambulance"></div><div class="emoji balloon"></div><div class="emoji bento"></div><div class="emoji bomb"></div><div class="emoji bouquet"></div><div class="emoji carp-streamer"></div><div class="emoji cat2"></div><div class="emoji chart-with-upwards-trend"></div><div class="emoji clap"></div><div class="emoji clock3"></div><div class="emoji construction-worker"></div><div class="emoji crescent-moon"></div><div class="emoji crystal-ball"></div><div class="emoji cyclone"></div><div class="emoji dancers"></div><div class="emoji email"></div><div class="emoji eyes"></div><div class="emoji eyeglasses"></div><div class="emoji female-technologist"></div><div class="emoji facebook"></div><div class="emoji ferris-wheel"></div><div class="emoji fire-engine"></div><div class="emoji framed-picture"></div><div class="emoji ghost"></div><div class="emoji hamburger"></div><div class="emoji heart-eyes"></div><div class="emoji hibiscus"></div><div class="emoji lady-beetle"></div><div class="emoji last-quarter-moon-with-face"></div><div class="emoji lock"></div><div class="emoji love-hotel"></div><div class="emoji microphone"></div><div class="emoji musical-keyboard"></div><div class="emoji newspaper"></div><div class="emoji octocat"></div><div class="emoji octagonal-sign"></div><div class="emoji facebook"></div><div class="emoji palm-tree"></div><div class="emoji love-letter"></div><div class="emoji microphone"></div><div class="emoji musical-keyboard"></div><div class="emoji octagonal-sign"></div><div class="emoji octocat"></div><div class="emoji pager"></div><div class="emoji palm-tree"></div><div class="emoji paperclip"></div><div class="emoji raised-hand"></div><div class="emoji raising-hand-woman"></div><div class="emoji rainbow"></div><div class="emoji repeat"></div><div class="emoji rewind"></div><div class="emoji rainbow"></div><div class="emoji raised-hand"></div><div class="emoji raising-hand-woman"></div><div class="emoji rose"></div><div class="emoji see-no-evil-monkey"></div><div class="emoji seedling"></div><div class="emoji selfie"></div><div class="emoji sparkles"></div><div class="emoji sparkling-heart"></div><div class="emoji splashing-sweat"></div><div class="emoji sunglasses"></div><div class="emoji sunny"></div><div class="emoji thumbsup"></div><div class="emoji tokyo-tower"></div><div class="emoji traffic-light"></div><div class="emoji truck"></div><div class="emoji turtle"></div><div class="emoji two"></div><div class="emoji two-women-holding-hands"></div><div class="emoji thumbsdown"></div><div class="emoji thumbsup"></div><div class="emoji tokyo-tower"></div><div class="emoji umbrella"></div><div class="emoji wave"></div><div class="emoji helmet-with-white-cross"></div></div></div>
+  <script src="a_data_002/api.js"></script>
+
+
+</body></html>

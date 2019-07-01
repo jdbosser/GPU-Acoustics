@@ -1,0 +1,2 @@
+webpackJsonp([22],{161:function(n,e,o){document.addEventListener("DOMContentLoaded",function(){window.WebComponents.waitFor(function(){o.e(4).then(o.bind(null,179))})})}},[161]);
+//# sourceMappingURL=clipboardCopy-d0c4494f29d2368c99ea.js.map

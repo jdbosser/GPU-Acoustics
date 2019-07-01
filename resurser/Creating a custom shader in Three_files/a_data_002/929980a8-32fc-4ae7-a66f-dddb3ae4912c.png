@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="127px" height="114px" viewBox="0 0 127 114" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.1 (51147) - http://www.bohemiancoding.com/sketch -->
+    <title>hello-website</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="9" width="125" height="103"></rect>
+        <rect id="path-2" x="14" y="21" width="97" height="80"></rect>
+    </defs>
+    <g id="scraps" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="hello-website" transform="translate(-10.000000, -12.000000)">
+            <rect id="Rectangle-Copy-2" fill="#FFC6C7" opacity="0" x="0" y="0" width="145" height="145"></rect>
+            <g id="picture-frame" transform="translate(11.000000, 14.000000)">
+                <g id="Rectangle">
+                    <use fill="#FAE7E5" fill-rule="evenodd" xlink:href="#path-1"></use>
+                    <rect stroke="#222222" stroke-width="3" x="1.5" y="10.5" width="122" height="100"></rect>
+                </g>
+                <path d="M75,10 C75,4.4771525 69.8512746,0 63.5,0 C57.1487254,0 52,4.4771525 52,10 L75,10 Z" id="Oval-9" stroke="#222222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M110,99 L123,109" id="Line-19" stroke="#222222" stroke-width="3" stroke-linecap="square" stroke-linejoin="round"></path>
+                <g id="Rectangle-Copy">
+                    <use fill="#FF9CE7" fill-rule="evenodd" xlink:href="#path-2"></use>
+                    <rect stroke="#222222" stroke-width="3" x="15.5" y="22.5" width="94" height="77"></rect>
+                </g>
+                <path d="M110,22 L123,12" id="Line-16" stroke="#222222" stroke-width="3" stroke-linecap="square" stroke-linejoin="round"></path>
+                <path d="M15,22 L2,12" id="Line-17" stroke="#222222" stroke-width="3" stroke-linecap="square" stroke-linejoin="round"></path>
+                <path d="M2,109 L15,99" id="Line-18" stroke="#222222" stroke-width="3" stroke-linecap="square" stroke-linejoin="round"></path>
+                <path d="M16,42.5456518 C19.308481,41.546041 23.9402574,41.546041 29.8953293,42.5456518 C38.8279372,44.0450679 39.6026806,48.2688907 50.8160149,47.9864959 C62.0293492,47.7041011 67.2341266,38.8975254 81.6621177,38.2075454 C96.0901088,37.5175655 106.850745,29.1916237 109,27" id="Path-4" stroke="#222222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M16,69.4108745 C24.8812414,72.9852707 34.8845346,73.8898714 46.0098798,72.1246766 C62.6978976,69.4768845 67.9387725,60.7097189 83.9380638,58.7274579 C99.9373552,56.745197 105.499959,53.2833719 110,51" id="Path-5" stroke="#222222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M16,85.723582 C26.8927121,88.3549639 39.2610892,88.7050741 53.1051313,86.7739125 C73.8711943,83.8771701 78.5796118,79.0412052 92.1706706,75.5758333 C101.231376,73.2655854 106.841153,71.7403077 109,71" id="Path-6" stroke="#222222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+            </g>
+        </g>
+    </g>
+</svg>

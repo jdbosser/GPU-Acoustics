@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="113px" height="127px" viewBox="0 0 113 127" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.1 (51147) - http://www.bohemiancoding.com/sketch -->
+    <title>hello-express</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="7.32407407" width="111.953704" height="59.6388889"></rect>
+        <rect id="path-2" x="16.7407407" y="0" width="23.0185185" height="10.462963"></rect>
+        <rect id="path-3" x="70.1018519" y="0" width="23.0185185" height="10.462963"></rect>
+        <path d="M0,7.32407407 L42.105482,7.32407407 L111.40796,64.7925473 C112.683354,65.8501563 112.859903,67.7414288 111.802294,69.0168225 C111.232348,69.7041328 110.385869,70.1018519 109.492989,70.1018519 L0,70.1018519 L0,7.32407407 Z" id="path-4"></path>
+        <rect id="path-5" x="8.37037037" y="0" width="24.0648148" height="10.462963"></rect>
+    </defs>
+    <g id="scraps" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="hello-express" transform="translate(-16.000000, -9.000000)">
+            <rect id="Rectangle-Copy" fill="#35FFC4" opacity="0" x="0" y="0" width="145" height="145"></rect>
+            <g id="Group-2" transform="translate(16.000000, 9.000000)">
+                <g id="smiley-lego" transform="translate(0.000000, 59.638889)">
+                    <g id="Rectangle-36">
+                        <use fill="#FE5548" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <rect stroke="#222222" stroke-width="3" x="1.5" y="8.82407407" width="108.953704" height="56.6388889"></rect>
+                    </g>
+                    <circle id="Oval-45-Copy-13" stroke="#222222" stroke-width="3" fill="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" transform="translate(74.287037, 27.203704) scale(-1, 1) translate(-74.287037, -27.203704) " cx="74.287037" cy="27.2037037" r="11.5092593"></circle>
+                    <path d="M79.5304999,34.5246416 C83.1633734,33.4015855 85.7962963,30.0846753 85.7962963,26.1676048 C85.7962963,22.2259155 83.1301736,18.8919543 79.4618841,17.7896532 C79.0490328,17.6655937 75.3242967,21.9750741 75.3333498,26.1676048 C75.3426406,30.4702236 79.0966972,34.6587461 79.5304999,34.5246416 Z" id="Oval-47-Copy-15" fill="#222222" transform="translate(80.564815, 26.157407) scale(-1, 1) translate(-80.564815, -26.157407) "></path>
+                    <circle id="Oval-45-Copy-14" stroke="#222222" stroke-width="3" fill="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" transform="translate(37.666667, 27.203704) scale(-1, 1) translate(-37.666667, -27.203704) " cx="37.6666667" cy="27.2037037" r="11.5092593"></circle>
+                    <path d="M42.8681579,36.093988 C46.4647026,34.9358364 49.0712963,31.5152728 49.0712963,27.4757938 C49.0712963,23.4109268 46.4318348,19.9727793 42.8002282,18.8360313 C42.3915055,18.7080949 38.7040167,23.1522466 38.7129793,27.4757938 C38.7221772,31.9128695 42.4386931,36.2322833 42.8681579,36.093988 Z" id="Oval-47-Copy-16" fill="#222222" transform="translate(43.892130, 27.465278) scale(-1, 1) translate(-43.892130, -27.465278) "></path>
+                    <g id="Rectangle-37">
+                        <use fill="#FE5548" fill-rule="evenodd" xlink:href="#path-2"></use>
+                        <rect stroke="#222222" stroke-width="3" x="18.2407407" y="1.5" width="20.0185185" height="7.46296296"></rect>
+                    </g>
+                    <g id="Rectangle-37-Copy">
+                        <use fill="#FE5548" fill-rule="evenodd" xlink:href="#path-3"></use>
+                        <rect stroke="#222222" stroke-width="3" x="71.6018519" y="1.5" width="20.0185185" height="7.46296296"></rect>
+                    </g>
+                    <ellipse id="Oval-52" stroke="#222222" stroke-width="3" fill="#1CFEFE" stroke-linecap="round" stroke-linejoin="round" cx="55.9768519" cy="40.8055556" rx="4.70833333" ry="3.13888889"></ellipse>
+                    <path d="M39.7592593,49.1759259 C43.5688909,54.079893 49.5225615,57.2353929 56.2132387,57.2353929 C62.736093,57.2353929 68.55845,54.236207 72.3765215,49.5416233" id="Oval-53" stroke="#222222" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+                </g>
+                <g id="triangle-lego">
+                    <g id="Rectangle-36-Copy-3">
+                        <use fill="#01A8E7" fill-rule="evenodd" xlink:href="#path-4"></use>
+                        <path stroke="#222222" stroke-width="3" d="M1.5,8.82407407 L1.5,68.6018519 L109.492989,68.6018519 C109.939429,68.6018519 110.362668,68.4029923 110.647642,68.0593372 C111.176446,67.4216403 111.088171,66.4760041 110.450475,65.9471996 L41.564459,8.82407407 L1.5,8.82407407 Z"></path>
+                    </g>
+                    <g id="Rectangle-37-Copy-5">
+                        <use fill="#01A8E7" fill-rule="evenodd" xlink:href="#path-5"></use>
+                        <rect stroke="#222222" stroke-width="3" x="9.87037037" y="1.5" width="21.0648148" height="7.46296296"></rect>
+                    </g>
+                    <g id="Group-22" transform="translate(13.601852, 21.972222)">
+                        <path d="M14.6481481,19.8796296 C22.738097,19.8796296 29.2962963,11.0062186 29.2962963,9.93981481 C29.2962963,8.87341098 22.738097,0 14.6481481,0 C6.55819931,0 0,8.50783342 0,9.93981481 C8.61452633e-17,11.3717962 6.55819931,19.8796296 14.6481481,19.8796296 Z" id="Oval-45-Copy-15" stroke="#222222" stroke-width="3" fill="#FFFFFF" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <ellipse id="Oval-54" fill="#222222" cx="14.1056241" cy="9.93981481" rx="7.59533608" ry="8.83539095"></ellipse>
+                    </g>
+                    <path d="M49.1759259,58.5925926 C54.589025,58.5925926 62.7777778,55.7835096 62.7777778,52.3183302 C62.7777778,48.8531507 56.6880213,48.1296296 49.1759259,48.1296296 C41.6638306,48.1296296 35.5740741,48.8531507 35.5740741,52.3183302 C35.5740741,55.7835096 43.7628268,58.5925926 49.1759259,58.5925926 Z" id="Oval-55" stroke="#222222" stroke-width="3" fill="#F9C1DC" stroke-linecap="round" stroke-linejoin="round"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
