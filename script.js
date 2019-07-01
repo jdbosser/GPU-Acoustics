@@ -66,10 +66,44 @@ const loader = new STLLoader();
 submarine https://www.thingiverse.com/thing:21583 by rustel https://www.thingiverse.com/rustel/about is licensed under the Creative Commons - Attribution - Non-Commercial - No Derivatives license. 
 */
 
+scene.add(light);
+
+// Playground for the different shaders
+// Mostly taken from 
+// https://dev.to/maniflames/creating-a-custom-shader-in-threejs-3bhi
+const vertexShader = `
+    varying vec3 vUv; 
+
+    void main() {
+      vUv = position; 
+
+      vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
+      gl_Position = projectionMatrix * modelViewPosition; 
+    }
+`
+const fragmentShader =  `
+    uniform vec3 colorA; 
+    uniform vec3 colorB; 
+    varying vec3 vUv;
+
+    void main() {
+        gl_FragColor = vec4(mix(colorA, colorB, vUv.z), 1.0);
+    }
+`
+
+// Create the custom shader material
+const customMaterial = new THREE.ShaderMaterial({
+    uniforms: {
+        colorB: {type: 'vec3', value: new THREE.Color(0xACB6E5)},
+        colorA: {type: 'vec3', value: new THREE.Color(0x74ebd5)}
+    },
+    fragmentShader: fragmentShader,
+    vertexShader: vertexShader 
+});
 loader.load('./cute_submarine.stl', geometry => {
     geometry.computeFaceNormals();
     geometry.computeVertexNormals();
-    const submarine = new THREE.Mesh(geometry, material);
+    const submarine = new THREE.Mesh(geometry, customMaterial);
 
      
     submarine.rotation.x = Math.PI/4; 
@@ -80,7 +114,9 @@ loader.load('./cute_submarine.stl', geometry => {
 
     renderer.render(scene, camera);
 });
-scene.add(light);
+
+
+
 
 // [ ] Ladda upp en modell
 // [ ] Styra position av modellen
