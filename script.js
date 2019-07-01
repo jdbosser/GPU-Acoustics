@@ -72,23 +72,44 @@ scene.add(light);
 // Mostly taken from 
 // https://dev.to/maniflames/creating-a-custom-shader-in-threejs-3bhi
 const vertexShader = `
-    varying vec3 vUv; 
+   	varying vec3 vNormal;
 
     void main() {
-      vUv = position; 
 
-      vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
-      gl_Position = projectionMatrix * modelViewPosition; 
-    }
+    // set the vNormal value with
+    // the attribute value passed
+    // in by Three.js
+    vNormal = normal;
+
+    gl_Position = projectionMatrix *
+                modelViewMatrix *
+                vec4(position, 1.0);
+    } 
 `
 const fragmentShader =  `
-    uniform vec3 colorA; 
-    uniform vec3 colorB; 
-    varying vec3 vUv;
+    varying vec3 vNormal;
 
     void main() {
-        gl_FragColor = vec4(mix(colorA, colorB, vUv.z), 1.0);
-    }
+
+      // calc the dot product and clamp
+      // 0 -> 1 rather than -1 -> 1
+      vec3 light = vec3(0.5, 0.2, 1.0);
+
+      // ensure it's normalized
+      light = normalize(light);
+
+      // calculate the dot product of
+      // the light to the vertex normal
+      float dProd = max(0.0,
+                        dot(vNormal, light));
+
+      // feed into our frag colour
+      gl_FragColor = vec4(dProd, // R
+                          dProd, // G
+                          dProd, // B
+                          1.0);  // A
+
+    } 
 `
 
 // Create the custom shader material
