@@ -4,3 +4,6 @@
 [submodule "less.js"]
 	path = less.js
 	url = https://github.com/less/less.js.git
+[submodule "dat.gui"]
+	path = dat.gui
+	url = https://github.com/dataarts/dat.gui.git
