@@ -1,0 +1,56 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+#c {
+    height: 100%;
+    width: 100%;
+}
+
+aside {
+    background: #050505cc;
+    width: 20em;
+    position: absolute;
+    left: 0px;
+    top: 0px;    
+    color:white;
+    padding: 1em;
+}
+
+aside > button {
+    margin-bottom: 1em;
+    width: calc(100%);
+    background: #6b75ff;
+    color: white;
+    border: none;
+    padding: 1em;
+    cursor: pointer;
+}
+
+aside > input {
+    width: 100%;
+}
+
+.controls {display: none;}
+.controls > * {
+    display: block;    
+    width: 100%;
+}
+
+.coordinate_input {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    > input {
+        flex-grow: 1;
+        min-width:1px;
+    }
+    > div {
+        margin-right: 0.5em;    
+        padding-top:0.3em;
+    }
+    > div:not(:first-child){
+        margin-left: 0.5em;
+    }
+} 

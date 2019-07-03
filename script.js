@@ -25,7 +25,6 @@ const renderer = new THREE.WebGLRenderer({canvas});
 setRendererSize(renderer, canvas);
 const camera = getCamera(canvas);
 const light = new THREE.DirectionalLight(0xFFFFFF,1); // Color white, and intensity 1 are the defaults. 
-debugger;
 scene.add(light);
 renderer.render(scene, camera);
 
@@ -66,7 +65,7 @@ const loader = new STLLoader();
 submarine https://www.thingiverse.com/thing:21583 by rustel https://www.thingiverse.com/rustel/about is licensed under the Creative Commons - Attribution - Non-Commercial - No Derivatives license. 
 */
 
-loader.load('./cute_submarine.stl', geometry => {
+loader.load('./russian.stl', geometry => {
     geometry.computeFaceNormals();
     geometry.computeVertexNormals();
     const submarine = new THREE.Mesh(geometry, material);

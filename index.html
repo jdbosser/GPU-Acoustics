@@ -1,12 +1,46 @@
 <!DOCTYPE html> 
 
 <html>
+
 <head>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet/less" type="text/css" href="style.less">
+    <meta charset="UTF-8">
 </head>
 
 <body>
-<canvas id="c"></canvas>
-<script src="script.js" type="module"></script>
+    <canvas id="c"></canvas>
+    <aside>
+         
+        <button id="upload_stl">Upload STL</button>
+        <button id="upload_stl">Upload OBJ</button>
+        
+        <div class="controls">
+            <span id="Z_rotation_angle">Z-axis rotation: </span>
+            <input type="range" id="Z_rotation_angle_range">
+        </div>
+
+        <div class="controls">
+            <span>Camera position:</span>
+            <div class="coordinate_input">
+                <div>X:</div> <input id="camera_x"> 
+                <div>Y:</div> <input id="camera_y">
+                <div>Z:</div> <input id="camera_z">
+            </div>
+        </div>
+
+        <div class="controls">
+            <span>Camera look at coordinate:</span>
+            <div class="coordinate_input">
+                <div>X:</div> <input id="camera_x" placeholder="0"> 
+                <div>Y:</div> <input id="camera_y" placeholder="0">
+                <div>Z:</div> <input id="camera_z" placeholder="0">
+            </div>
+        </div>
+
+
+    </aside>
+    <script src="less.js/dist/less.js" type="text/javascript"></script>
+    <script src="script2.js" type="module"></script>
+    <script src="ui.js" type="module"></script>
 </body>
 </html>
