@@ -1,9 +1,15 @@
 import * as THREE from './three.js/build/three.module.js';
 import { STLLoader } from './three.js/examples/jsm/loaders/STLLoader.js';
+import { OBJLoader2 } from "./three.js/examples/jsm/loaders/OBJLoader2.js";
 import { OrbitControls } from './three.js/examples/jsm/controls/OrbitControls.js'
 
 // Get the aspect ratio of the canvas. 
 const getAspectRatio = (canvas) => canvas.clientWidth / canvas.clientHeight
+
+const shaders = {
+    fragmentshader: "123",
+    vertexshader:   "123"
+}
 
 // Helper function to get the camera. 
 // Can redifine some of the camera properies here.
@@ -112,27 +118,34 @@ const setModelRotation = (x,y,z) => {
     console.log(model);
 }
 
-const replaceModel = (uri, loader) => {
-    loader.load(uri, geometry => {
-        geometry.computeFaceNormals();
-        geometry.computeVertexNormals();
+const replaceModel = imported_model => {
+        //geometry.computeFaceNormals();
+        //geometry.computeVertexNormals();
         
-        const material = new THREE.MeshLambertMaterial({color: 0xff5533});
-        const imported_model = new THREE.Mesh(geometry, material);
+        //const material = new THREE.MeshLambertMaterial({color: 0xff5533});
+        //const imported_model = new THREE.Mesh(geometry, material);
         scene.remove( model );
         scene.add(imported_model);         
 
         // Repaint
         renderer.render(scene, camera);
         model = imported_model;
-    });    
-}
+};
 
 const replaceModelOBJ = (uri) => {
-    replaceModel(uri, new THREE.OBJLoader());
+    const loader = new OBJLoader2();
+    loader.load(uri, replaceModel);
 };
 
 const replaceModelSTL = (uri) => {
-    replaceModel(uri, new STLLoader());
+    const loader = new STLLoader();
+    loader.load(uri, geometry => {
+        geometry.computeFaceNormals();
+        geometry.computeVertexNormals();
+        
+        const material = new THREE.MeshLambertMaterial({color: 0xff5533});
+        const imported_model = new THREE.Mesh(geometry, material);
+        replaceModel(imported_model);
+    });
 };
 export {setCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ};
