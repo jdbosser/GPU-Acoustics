@@ -23,7 +23,8 @@ const setRendererSize = (renderer, canvas) => renderer.setSize(canvas.clientWidt
 // Set up all the master elements, such as the scene, renderer and more
 const canvas = document.getElementById("c");
 const scene  = new THREE.Scene();
-scene.background = new THREE.Color(0x000000);
+//scene.background = new THREE.Color(0x000000);
+scene.background = new THREE.Color();
 const renderer = new THREE.WebGLRenderer({canvas});
 setRendererSize(renderer, canvas);
 const camera = getCamera(canvas);
@@ -86,8 +87,6 @@ animate();
 
 
 // Exporting functions to the ui
-
-
 const setCameraChangeListener = handler => {
     controls.addEventListener('change', handler);    
 }
@@ -110,26 +109,30 @@ const setModelPosition = (x,y,z) => {
 
 const setModelRotation = (x,y,z) => {
     model.rotation.set(x,y,z);
+    console.log(model);
 }
 
-const replaceModel = (uri) => {
+const replaceModel = (uri, loader) => {
     loader.load(uri, geometry => {
         geometry.computeFaceNormals();
         geometry.computeVertexNormals();
         
         const material = new THREE.MeshLambertMaterial({color: 0xff5533});
         const imported_model = new THREE.Mesh(geometry, material);
-         
-        // Repaint
+        scene.remove( model );
+        scene.add(imported_model);         
 
+        // Repaint
         renderer.render(scene, camera);
         model = imported_model;
-
-
-        // Maybe need to do 
-        // model.geometry.dispatch()
-        // model.geometry = geometry;
-    });
-   
+    });    
 }
-export {setCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModel};
+
+const replaceModelOBJ = (uri) => {
+    replaceModel(uri, new THREE.OBJLoader());
+};
+
+const replaceModelSTL = (uri) => {
+    replaceModel(uri, new STLLoader());
+};
+export {setCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ};

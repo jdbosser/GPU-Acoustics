@@ -93,4 +93,26 @@ const updateGuiCameraChange = (o) => {
 dman.setCameraChangeListener(updateGuiCameraChange);
 dman.setAutoRotation(false);
 
-
+// Upload a model
+const model_input = document.getElementById('model_upload');
+model_input.addEventListener('change', () => {
+    
+    // Get the file
+    const file = model_input.files[0];
+    const extension = file.name.match(/\.[0-9a-z]+$/i)[0]; 
+    console.log(extension);
+    // Generate a pseudourl to the file. 
+    const src = window.URL.createObjectURL(file);
+    // Try to replace the model
+    switch(extension) {
+        case ".stl": {
+            dman.replaceModelSTL(src);
+            break;
+        }
+        case ".obj": {
+            dman.replaceModelOBJ(src);
+            break;
+        }
+        default: alert("Ivalid file format");
+    }
+});
