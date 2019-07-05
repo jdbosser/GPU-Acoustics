@@ -6,14 +6,9 @@ import { OrbitControls } from './three.js/examples/jsm/controls/OrbitControls.js
 // Get the aspect ratio of the canvas. 
 const getAspectRatio = (canvas) => canvas.clientWidth / canvas.clientHeight
 
-const shaders = {
-    fragmentshader: "123",
-    vertexshader:   "123"
-}
-
 // Helper function to get the camera. 
 // Can redifine some of the camera properies here.
-const getCamera = canvas => {
+const getPerspectiveCamera = canvas => {
     const fov = 75;
     const aspect = getAspectRatio(canvas);
     const near = 0.1;
@@ -23,6 +18,26 @@ const getCamera = canvas => {
     camera.up.set(0,0,1);
     return camera;
 }
+
+const getOrthographicCamera = canvas => {
+    const width = canvas.clientWidth/10; 
+    const height = canvas.clientHeight/10;
+    const near = 0.01;
+    const far = 100;
+    
+    const camera = new THREE.OrthographicCamera(
+        width / - 2, width / 2, 
+        height / 2, height / - 2);
+
+     
+    camera.position.y = 50;
+    camera.up.set(0,0,1);
+    return camera;
+};
+
+const getCamera = canvas => {
+    return getOrthographicCamera(canvas);  
+};
 
 const setRendererSize = (renderer, canvas) => renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
 
@@ -66,14 +81,14 @@ const setPhaseMaterial = (model, lambda, phase = 0) => {
 
     const vertexShader = `
    	varying vec3 vNormal;
-
+    varying vec3 vUv;
     void main() {
 
     // set the vNormal value with
     // the attribute value passed
     // in by Three.js
     vNormal = normal;
-
+    vUv = position;
     gl_Position = projectionMatrix *
                 modelViewMatrix *
                 vec4(position, 1.0);
@@ -81,6 +96,7 @@ const setPhaseMaterial = (model, lambda, phase = 0) => {
     `;
     const fragmentShader =  `
     varying vec3 vNormal;
+    varying vec3 vUv;
     uniform mat4 inverseRotationMatrix;
     void main() {
 
@@ -98,6 +114,7 @@ const setPhaseMaterial = (model, lambda, phase = 0) => {
 
       // calculate the dot product of
       // the light to the vertex normal
+      /*
       float dProd = max(0.0,
                         dot(vNormal, light));
 
@@ -106,14 +123,19 @@ const setPhaseMaterial = (model, lambda, phase = 0) => {
                           dProd, // G
                           dProd, // B
                           1.0);  // A
+      */
+
+      float prod = mod(dot(vUv, light),1.0);
+      gl_FragColor = vec4(prod, // R
+                          prod, // G
+                          prod, // B
+                          1.0);  // A
+
 
     } 
 `;   
     let inverseRotationMatrix = new THREE.Matrix4();
     inverseRotationMatrix.makeRotationFromEuler(model.rotation);
-    //inverseRotationMatrix.makeRotationZ(-model.rotation.z);
-    //inverseRotationMatrix.makeRotationY(-model.rotation.y);
-    //inverseRotationMatrix.makeRotationX(-model.rotation.x);
     const customMaterial = new THREE.ShaderMaterial({
     uniforms: {
         colorB: {type: 'vec3', value: new THREE.Color(0xACB6E5)},
@@ -137,14 +159,10 @@ loader.load('./ShaderFood/P677_shell(fine).stl', geometry => {
     //geometry.rotateX(-Math.PI/2); 
     const material = new THREE.MeshLambertMaterial({color: 0xff5533});
     const submarine = new THREE.Mesh(geometry, material);
-
      
-    //submarine.rotation.x = Math.PI/4; 
-    //submarine.rotation.y = -Math.PI/6;
     scene.add(submarine);
 
     // Repaint
-
     renderer.render(scene, camera);
     model = submarine;
     setPhaseMaterial(model, 1, 1); 
@@ -155,7 +173,7 @@ loader.load('./ShaderFood/P677_shell(fine).stl', geometry => {
 const controls = new OrbitControls( camera, renderer.domElement );
 controls.enableDamping = true;
 controls.dampingFactor = 0.25;
-controls.autoRotate = true;
+controls.autoRotate = false;
 controls.update();
 
 controls.addEventListener('change', () => {});
