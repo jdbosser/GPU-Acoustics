@@ -52,6 +52,82 @@ window.addEventListener('resize', () => {
     renderer.render(scene, camera);
 });
 
+
+const replaceMaterial = (model, material) => {
+    model.material = material;
+    renderer.render(scene, camera);    
+};
+
+const setPhaseMaterial = (model, lambda, phase = 0) => {
+    // Playground for the different shaders
+    // Mostly taken from 
+    // https://dev.to/maniflames/creating-a-custom-shader-in-threejs-3bhi
+    // https://aerotwist.com/tutorials/an-introduction-to-shaders-part-2/
+
+    const vertexShader = `
+   	varying vec3 vNormal;
+
+    void main() {
+
+    // set the vNormal value with
+    // the attribute value passed
+    // in by Three.js
+    vNormal = normal;
+
+    gl_Position = projectionMatrix *
+                modelViewMatrix *
+                vec4(position, 1.0);
+    } 
+    `;
+    const fragmentShader =  `
+    varying vec3 vNormal;
+    uniform mat4 inverseRotationMatrix;
+    void main() {
+
+      // calc the dot product and clamp
+      // 0 -> 1 rather than -1 -> 1
+      vec4 light4 = vec4(0.0, 1.0, 0.0, 1.0);
+      
+      // Rotate 
+      light4 = inverseRotationMatrix * light4; 
+
+      vec3 light = vec3(light4);
+       
+      // ensure it's normalized
+      light = normalize(light);
+
+      // calculate the dot product of
+      // the light to the vertex normal
+      float dProd = max(0.0,
+                        dot(vNormal, light));
+
+      // feed into our frag colour
+      gl_FragColor = vec4(dProd, // R
+                          dProd, // G
+                          dProd, // B
+                          1.0);  // A
+
+    } 
+`;   
+    let inverseRotationMatrix = new THREE.Matrix4();
+    inverseRotationMatrix.makeRotationFromEuler(model.rotation);
+    //inverseRotationMatrix.makeRotationZ(-model.rotation.z);
+    //inverseRotationMatrix.makeRotationY(-model.rotation.y);
+    //inverseRotationMatrix.makeRotationX(-model.rotation.x);
+    const customMaterial = new THREE.ShaderMaterial({
+    uniforms: {
+        colorB: {type: 'vec3', value: new THREE.Color(0xACB6E5)},
+        colorA: {type: 'vec3', value: new THREE.Color(0x74ebd5)},
+        inverseRotationMatrix: {type: 'mat4', value: inverseRotationMatrix}
+    },
+    fragmentShader: fragmentShader,
+    vertexShader: vertexShader  
+    });
+
+    
+    replaceMaterial(model, customMaterial);
+};
+
 let model;
 const loader = new STLLoader();
 // Load the russian submarine
@@ -71,6 +147,7 @@ loader.load('./ShaderFood/P677_shell(fine).stl', geometry => {
 
     renderer.render(scene, camera);
     model = submarine;
+    setPhaseMaterial(model, 1, 1); 
 });
 
 
@@ -115,6 +192,13 @@ const setModelPosition = (x,y,z) => {
 
 const setModelRotation = (x,y,z) => {
     model.rotation.set(x,y,z);
+    // Rotate inside shader
+    let rotation = model.rotation.clone();
+    rotation.x = -rotation.x;
+    rotation.y = -rotation.y;
+    rotation.z = -rotation.z;
+    model.material.uniforms.inverseRotationMatrix.value.makeRotationFromEuler(rotation);
+
     console.log(model);
 }
 
