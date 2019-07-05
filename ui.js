@@ -1,5 +1,5 @@
 import * as dat from './dat.gui/build/dat.gui.module.js';
-import * as dman from './script2.js';
+import * as dman from './engine.js';
 
 const copyKeysAndVals = (obj1, obj2) => {
     for ( const [key, val] of Object.entries(obj1) ) obj2[key] = val; 
