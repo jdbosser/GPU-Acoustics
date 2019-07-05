@@ -306,3 +306,12 @@ export {setCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLo
 
 // Finally, add a default model to our scene. 
 replaceModelSTL('./ShaderFood/P677_shell(fine).stl');
+
+// [x] Ladda upp en modell. Typ klar, OBJ fungerar inte. 
+// [x] Styra position av modellen
+// [x] Styra kameran
+// [ ] Hur stor är varje pixel i meter? 
+// [x] Origo i mitten av modellen. 
+// [x] Rotation i Z-axeln på modellen. 
+// [ ] Input av våglängd och fas. 
+// [ ] Radio buttons visa intensitet, fas, eller intensitet och fas. 
