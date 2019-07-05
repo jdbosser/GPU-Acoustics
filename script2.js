@@ -60,6 +60,10 @@ const canvas = document.getElementById("c");
 const scene  = new THREE.Scene();
 scene.background = new THREE.Color(0x000000); // Set the shader background to black.
 
+// Add a model. There is nothing in it yet, 
+// it needs to be loaded. This is done asynchronously.  
+let model;
+
 // The renderer is the element that draws our 3D objects to our canvas. 
 const renderer = new THREE.WebGLRenderer({canvas});
 
@@ -69,9 +73,22 @@ setRendererSize(renderer, canvas); // We want the renderer to have the same size
 // Get the camera.
 const camera = getCamera(canvas);
 
-// Draw in the canvas what the camera can see. Should be nothing right now, since
-// we have no elements in the scene. 
-renderer.render(scene, camera);
+// Add orbit controls to the camera
+const controls = new OrbitControls( camera, renderer.domElement );
+controls.enableDamping = true;
+controls.dampingFactor = 0.25;
+controls.autoRotate = false;
+controls.update();
+
+// Animation loop for the orbit controls, and pretty much everything
+const animate = () => {
+
+    renderer.render(scene, camera);
+    controls.update();
+    requestAnimationFrame(animate);    
+
+};
+animate();
 
 // These couple of lines defines a function to execute when the browser
 // window is resized.  
@@ -187,44 +204,6 @@ const setPhaseMaterial = (model, lambda, phase = 0) => {
 
 };
 
-let model;
-const loader = new STLLoader();
-// Load the russian submarine
-loader.load('./ShaderFood/P677_shell(fine).stl', geometry => {
-
-    geometry.computeFaceNormals();
-    geometry.computeVertexNormals();
-    //geometry.rotateX(-Math.PI/2); 
-    const material = new THREE.MeshLambertMaterial({color: 0xff5533});
-    const submarine = new THREE.Mesh(geometry, material);
-     
-    scene.add(submarine);
-
-    // Repaint
-    renderer.render(scene, camera);
-    model = submarine;
-    setPhaseMaterial(model, 1, 1); 
-
-});
-
-// Add orbit controls
-const controls = new OrbitControls( camera, renderer.domElement );
-controls.enableDamping = true;
-controls.dampingFactor = 0.25;
-controls.autoRotate = false;
-controls.update();
-
-controls.addEventListener('change', () => {});
-
-// Animation loop for the orbit controls, and pretty much everything
-const animate = () => {
-
-    renderer.render(scene, camera);
-    controls.update();
-    requestAnimationFrame(animate);    
-};
-animate();
-
 // The following functions are exposing different 
 // properties to the ui. 
 
@@ -287,15 +266,16 @@ const setModelRotation = (x,y,z) => {
 
 const replaceModel = imported_model => {
         
-        scene.remove( model );
-        scene.add(imported_model);         
+    scene.remove( model );
+    scene.add(imported_model);         
 
-        // Repaint
-        renderer.render(scene, camera);
+    // Repaint
+    renderer.render(scene, camera);
 
-        // Make sure that the model points to our new model.
-        model = imported_model;
-
+    // Make sure that the model points to our new model.
+    model = imported_model;
+     
+    setPhaseMaterial(model, 1, 1); 
 };
 
 // Upload obj.
@@ -323,3 +303,6 @@ const replaceModelSTL = (uri) => {
 
 // Export all the setters, getters and setListneres to the ui controller.
 export {setCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ};
+
+// Finally, add a default model to our scene. 
+replaceModelSTL('./ShaderFood/P677_shell(fine).stl');
