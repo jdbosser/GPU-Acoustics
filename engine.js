@@ -148,6 +148,9 @@ const setPhaseMaterial = (model, lambda, phase = 0) => {
     varying vec3 vNormal;
     varying vec3 vUv;
     uniform mat4 inverseRotationMatrix;
+    uniform float lambda;
+    uniform float phase; 
+
     void main() {
 
       // calc the dot product and clamp
@@ -175,7 +178,7 @@ const setPhaseMaterial = (model, lambda, phase = 0) => {
                           1.0);  // A
       */
 
-      float prod = mod(dot(vUv, light),1.0);
+      float prod = mod((dot(vUv, light) / lambda) + phase, 1.0);
       gl_FragColor = vec4(prod, // R
                           prod, // G
                           prod, // B
@@ -192,6 +195,8 @@ const setPhaseMaterial = (model, lambda, phase = 0) => {
 
             colorB: {type: 'vec3', value: new THREE.Color(0xACB6E5)},
             colorA: {type: 'vec3', value: new THREE.Color(0x74ebd5)},
+            lambda: {type: 'float', value: 1.0},
+            phase: {type: 'float', value: 0.0},
             inverseRotationMatrix: {type: 'mat4', value: inverseRotationMatrix}
 
         },
@@ -301,8 +306,16 @@ const replaceModelSTL = (uri) => {
 
 };
 
+const setWaveLength = wavelength => {
+    model.material.uniforms.lambda.value = wavelength;
+};
+
+const setPhaseShift = phase => {
+    model.material.uniforms.phase.value = phase;    
+};
+
 // Export all the setters, getters and setListneres to the ui controller.
-export {setCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ};
+export {setCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift};
 
 // Finally, add a default model to our scene. 
 replaceModelSTL('./ShaderFood/P677_shell(fine).stl');
@@ -313,5 +326,5 @@ replaceModelSTL('./ShaderFood/P677_shell(fine).stl');
 // [ ] Hur stor är varje pixel i meter? 
 // [x] Origo i mitten av modellen. 
 // [x] Rotation i Z-axeln på modellen. 
-// [ ] Input av våglängd och fas. 
+// [x] Input av våglängd och fas. 
 // [ ] Radio buttons visa intensitet, fas, eller intensitet och fas. 
