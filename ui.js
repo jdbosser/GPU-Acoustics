@@ -8,6 +8,7 @@ const copyKeysAndVals = (obj1, obj2) => {
 let ui_controller = function(){
     this.wavelength = 1;
     this.phase = 0;
+    this.animatePhase = false;
     this.autoRotateCamera = false;
     this.camera = {
         position:   { x: 0, y: 0, z: 25 },    
@@ -24,6 +25,7 @@ const controller = new ui_controller();
 
 gui.add(controller, 'wavelength').onChange((value) => dman.setWaveLength(value));
 gui.add(controller, 'phase').step(0.01).onChange((value) => {dman.setPhaseShift(value); console.log(value);});
+gui.add(controller, 'animatePhase').onChange((value) => dman.setPhaseAnimation(value));
 gui.add(controller, 'autoRotateCamera').onChange((value) => dman.setAutoRotation(value));
 
 // These loops can be done a lot prettier using a for ... of ... loop

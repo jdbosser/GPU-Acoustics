@@ -80,9 +80,11 @@ controls.dampingFactor = 0.25;
 controls.autoRotate = false;
 controls.update();
 
-// Animation loop for the orbit controls, and pretty much everything
-const animate = () => {
+let animatePhase = false;
 
+// Animation loop for the orbit controls, and pretty much everything
+const animate = (time) => {
+    if(model && animatePhase) model.material.uniforms.phase.value = time/1000;
     renderer.render(scene, camera);
     controls.update();
     requestAnimationFrame(animate);    
@@ -314,8 +316,10 @@ const setPhaseShift = phase => {
     model.material.uniforms.phase.value = phase;    
 };
 
+const setPhaseAnimation = bool => animatePhase = bool;
+
 // Export all the setters, getters and setListneres to the ui controller.
-export {setCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift};
+export {setCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation};
 
 // Finally, add a default model to our scene. 
 replaceModelSTL('./ShaderFood/P677_shell(fine).stl');
