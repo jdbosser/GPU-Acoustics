@@ -211,6 +211,89 @@ const setPhaseMaterial = (model, lambda, phase = 0) => {
 
 };
 
+const setIntensityMaterial = (model, lambda, pixelArea) => {
+
+    const vertexShader = `
+   	varying vec3 vNormal;
+    varying vec3 vUv;
+    void main() {
+
+    // set the vNormal value with
+    // the attribute value passed
+    // in by Three.js
+    vNormal = normal;
+    vUv = position;
+    gl_Position = projectionMatrix *
+                modelViewMatrix *
+                vec4(position, 1.0);
+    } 
+    `;
+
+    const fragmentShader =  `
+    varying vec3 vNormal;
+    varying vec3 vUv;
+    uniform mat4 inverseRotationMatrix;
+    uniform float lambda;
+    uniform float pixelArea;
+    uniform float scalingFactor; 
+
+    void main() {
+
+      // calc the dot product and clamp
+      // 0 -> 1 rather than -1 -> 1
+      vec4 light4 = vec4(0.0, 1.0, 0.0, 1.0);
+      
+      // Rotate 
+      light4 = inverseRotationMatrix * light4; 
+
+      vec3 light = vec3(light4);
+       
+      // ensure it's normalized
+      light = normalize(light);
+
+      // calculate the dot product of
+      // the light to the vertex normal
+      /*
+      float dProd = max(0.0,
+                        dot(vNormal, light));
+
+      // feed into our frag colour
+      gl_FragColor = vec4(dProd, // R
+                          dProd, // G
+                          dProd, // B
+                          1.0);  // A
+      */
+        
+        float prod = (pixelArea * (dot(normalize(vNormal), light) / lambda)) * scalingFactor;
+        gl_FragColor = vec4(prod, // R
+                          prod, // G
+                          prod, // B
+                          1.0);  // A
+
+
+    } 
+    `; 
+
+    let inverseRotationMatrix = new THREE.Matrix4();
+    inverseRotationMatrix.makeRotationFromEuler(model.rotation);
+    const customMaterial = new THREE.ShaderMaterial({
+    
+        uniforms: {
+            scalingFactor: {type: 'float', value: 1},
+            lambda: {type: 'float', value: lambda},
+            pixelArea: {type: 'float', value: pixelArea},
+            inverseRotationMatrix: {type: 'mat4', value: inverseRotationMatrix}
+
+        },
+
+        fragmentShader: fragmentShader,
+        vertexShader: vertexShader    
+    
+    });
+
+    replaceMaterial(model, customMaterial);  
+};
+
 // The following functions are exposing different 
 // properties to the ui. 
 
@@ -282,7 +365,7 @@ const replaceModel = imported_model => {
     // Make sure that the model points to our new model.
     model = imported_model;
      
-    setPhaseMaterial(model, 1, 1); 
+    setIntensityMaterial(model, 1, 1); 
 };
 
 // Upload obj.
