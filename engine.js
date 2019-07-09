@@ -264,7 +264,11 @@ const setIntensityMaterial = (model, lambda, pixelArea) => {
                           1.0);  // A
       */
         
-        float prod = (pixelArea * (dot(normalize(vNormal), light) / lambda)) * scalingFactor;
+        //float prod = (pixelArea * (dot(normalize(vNormal), light) / lambda)) * scalingFactor;
+
+        // Include the pixelArea when writing to texture.
+        float prod = (1.0 * (dot(normalize(vNormal), light) / lambda)) * scalingFactor;
+
         gl_FragColor = vec4(prod, // R
                           prod, // G
                           prod, // B
@@ -301,6 +305,8 @@ let fitCameraToModel = false;
 // Update the camera to fit model
 const fitCameraToModelFunction = (camera, model, canvas) => {
     
+    camera.lookAt(0,0,0);
+
     let bb = new THREE.Box3().setFromObject(model);
     let center = new THREE.Vector3();
     bb.getCenter(center);
@@ -318,6 +324,7 @@ const fitCameraToModelFunction = (camera, model, canvas) => {
     let boundingBox = bbh.geometry.boundingBox;
     let width = boundingBox.max.x - boundingBox.min.x; 
     let height = boundingBox.max.z - boundingBox.min.z; 
+    
      
     const aspectRatio = canvas.clientWidth/canvas.clientHeight;
     const objAspectRatio = width/height;
@@ -331,6 +338,7 @@ const fitCameraToModelFunction = (camera, model, canvas) => {
     width = width * scale;
     height = height * scale;
     
+    camera.position.set(0,boundingBox.max.y*scale, 0);
     camera.left = width / -2;
     camera.right = width / 2; 
     camera.top = height / 2;
@@ -399,7 +407,14 @@ const setModelRotation = (x,y,z) => {
     rotation.z = -rotation.z;
     model.material.uniforms.inverseRotationMatrix.value.makeRotationFromEuler(rotation);
     // Lots of dots ... ^ 
-    
+    // Calculate pixel area
+    const num_pixels = canvas.clientHeight*canvas.clientWidth;
+    const area = (camera.right - camera.left)*(camera.top - camera.bottom)
+    const pixelArea = area / num_pixels;
+    model.material.uniforms.pixelArea = pixelArea;
+
+    console.log("pixelArea", pixelArea);
+
     if ( fitCameraToModel ) fitCameraToModelFunction(camera, model, canvas);
 
 };
@@ -464,7 +479,7 @@ replaceModelSTL('./ShaderFood/P677_shell(fine).stl');
 // [x] Ladda upp en modell. Typ klar, OBJ fungerar inte. 
 // [x] Styra position av modellen
 // [x] Styra kameran
-// [ ] Hur stor är varje pixel i meter? 
+// [x] Hur stor är varje pixel i meter? 
 // [x] Origo i mitten av modellen. 
 // [x] Rotation i Z-axeln på modellen. 
 // [x] Input av våglängd och fas. 
