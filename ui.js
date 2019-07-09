@@ -11,6 +11,7 @@ let ui_controller = function(){
     this.animatePhase = false;
     this.autoRotateCamera = false;
     this.camera = {
+        autoFitToModel: false,
         position:   { x: 0, y: 0, z: 25 },    
         lookAt:     { x: 0, y: 0, z: 0 }
     };    
@@ -51,9 +52,9 @@ const updateModelRotation = () => {
     dman.setModelRotation.apply(null, Object.values(controller.model.rotation));    
 };
 const modelRotationFolder = modelFolder.addFolder('Rotation');
-modelRotationFolder.add(controller.model.rotation, 'x').step(0.1).onChange(updateModelRotation);
-modelRotationFolder.add(controller.model.rotation, 'y').step(0.1).onChange(updateModelRotation);
-modelRotationFolder.add(controller.model.rotation, 'z').step(0.1).onChange(updateModelRotation);
+modelRotationFolder.add(controller.model.rotation, 'x').step(0.01).onChange(updateModelRotation);
+modelRotationFolder.add(controller.model.rotation, 'y').step(0.01).onChange(updateModelRotation);
+modelRotationFolder.add(controller.model.rotation, 'z').step(0.01).onChange(updateModelRotation);
 
 // Controls for the camera
 const updateCameraPosition = () => {
@@ -65,6 +66,7 @@ const updateCameraLookAt = () => {
 }
 
 const cameraFolder = gui.addFolder('Camera');
+cameraFolder.add(controller.camera, 'autoFitToModel').onChange((value) => dman.autoFitCameraToModel(value));
 const cameraPositionFolder = cameraFolder.addFolder('Position');
 cameraPositionFolder.add(controller.camera.position, 'x').step(0.01).onChange(updateCameraPosition);
 cameraPositionFolder.add(controller.camera.position, 'y').step(0.01).onChange(updateCameraPosition);

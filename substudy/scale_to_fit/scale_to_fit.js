@@ -1,47 +1,4 @@
-/* 'use strict'
-
-// Helper function to get a Orthographic camera. 
-const getOrthographicCamera = canvas => {
-
-    const width = canvas.clientWidth/10; 
-    const height = canvas.clientHeight/10;
-    const near = 0.01;
-    const far = 100;
-    
-    const camera = new THREE.OrthographicCamera(
-        width / - 2, width / 2, 
-        height / 2, height / - 2);
-     
-    camera.position.y = 2;
-    camera.up.set(0,0,1);
-    return camera;
-
-};
-
-const getCamera = canvas => getOrthographicCamera(canvas);  
-
-const setRendererSize = (renderer, canvas) => renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
-
-const scene  = new THREE.Scene();
-scene.background = new THREE.Color(0xffffff); // Set the shader background to black.
-
-const renderer = new THREE.WebGLRenderer({canvas});
-
-setRendererSize(renderer, canvas); // We want the renderer to have the same size as our canvas
-
-const camera = getCamera(canvas);
-
-const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-const cube = new THREE.Mesh( geometry, material );
-scene.add( cube );
-
-renderer.render(scene,camera)
-*/
-
 'use strict';
-
-/* global THREE */
 
 const canvas = document.getElementById("c");
   const renderer = new THREE.WebGLRenderer({canvas});
@@ -80,8 +37,8 @@ scene.add( alight );
 light.position.set(0,0,1)
 scene.add(light);
 
-const boxWidth = 0.5;
-const boxHeight = 0.5;
+const boxWidth = 10;
+const boxHeight = 1;
 const boxDepth = 0.5;
 const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
 
@@ -109,7 +66,8 @@ const fitCameraToModel = (camera, model, canvas) => {
     let height = boundingBox.max.z - boundingBox.min.z; 
      
     const aspectRatio = canvas.clientWidth/canvas.clientHeight;
-    if (aspectRatio > 1) {
+    const oAspectRatio = width / height;
+    if (oAspectRatio < aspectRatio) {
         // Keep the height
         width = aspectRatio * height;
     }
@@ -126,6 +84,7 @@ const fitCameraToModel = (camera, model, canvas) => {
 };
 const animate = (time) => {
     cube.rotation.z = time/1000;
+    cube.rotation.x = time/1000;
     fitCameraToModel(camera, cube, canvas);
     renderer.render(scene, camera);
     requestAnimationFrame(animate);

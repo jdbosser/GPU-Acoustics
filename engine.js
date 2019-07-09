@@ -294,6 +294,54 @@ const setIntensityMaterial = (model, lambda, pixelArea) => {
     replaceMaterial(model, customMaterial);  
 };
 
+
+
+// Set to true if you want to autofit camera to model when rotation is applied. 
+let fitCameraToModel = false; 
+// Update the camera to fit model
+const fitCameraToModelFunction = (camera, model, canvas) => {
+    
+    let bb = new THREE.Box3().setFromObject(model);
+    let center = new THREE.Vector3();
+    bb.getCenter(center);
+    
+    let bbh = new THREE.BoxHelper(model, 0xffff00); 
+
+    // Get the center of the boundingbox
+    bbh.geometry.computeBoundingBox();
+    let offset = new THREE.Vector3();
+    bbh.geometry.boundingBox.getCenter(offset).negate();
+    bbh.geometry.center();
+    bbh.position.set(0,0,0);
+    
+    model.geometry.center();
+    let boundingBox = bbh.geometry.boundingBox;
+    let width = boundingBox.max.x - boundingBox.min.x; 
+    let height = boundingBox.max.z - boundingBox.min.z; 
+     
+    const aspectRatio = canvas.clientWidth/canvas.clientHeight;
+    const objAspectRatio = width/height;
+    if (objAspectRatio < aspectRatio) {
+        // Keep the height
+        width = aspectRatio * height;
+    }
+    else height = width / aspectRatio;
+   
+    const scale = 1.1;
+    width = width * scale;
+    height = height * scale;
+    
+    camera.left = width / -2;
+    camera.right = width / 2; 
+    camera.top = height / 2;
+    camera.bottom = height / -2;
+    camera.lookAt(0,0,0); 
+    camera.zoom = 1;
+    
+    camera.updateProjectionMatrix();
+
+};
+
 // The following functions are exposing different 
 // properties to the ui. 
 
@@ -351,8 +399,13 @@ const setModelRotation = (x,y,z) => {
     rotation.z = -rotation.z;
     model.material.uniforms.inverseRotationMatrix.value.makeRotationFromEuler(rotation);
     // Lots of dots ... ^ 
+    
+    if ( fitCameraToModel ) fitCameraToModelFunction(camera, model, canvas);
 
 };
+
+// Toggle autofit to model
+const autoFitCameraToModel = (bool) => fitCameraToModel = bool;
 
 const replaceModel = imported_model => {
         
@@ -364,7 +417,8 @@ const replaceModel = imported_model => {
 
     // Make sure that the model points to our new model.
     model = imported_model;
-     
+    model.geometry.center();
+    model.position.set(0,0,0);     
     setIntensityMaterial(model, 1, 1); 
 };
 
@@ -402,7 +456,7 @@ const setPhaseShift = phase => {
 const setPhaseAnimation = bool => animatePhase = bool;
 
 // Export all the setters, getters and setListneres to the ui controller.
-export {setCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation};
+export {setCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation, autoFitCameraToModel};
 
 // Finally, add a default model to our scene. 
 replaceModelSTL('./ShaderFood/P677_shell(fine).stl');
