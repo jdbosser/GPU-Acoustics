@@ -7,3 +7,6 @@
 [submodule "dat.gui"]
 	path = dat.gui
 	url = https://github.com/dataarts/dat.gui.git
+[submodule "stats.js"]
+	path = stats.js
+	url = https://github.com/mrdoob/stats.js.git

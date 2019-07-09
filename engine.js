@@ -1,7 +1,9 @@
 import * as THREE from './three.js/build/three.module.js';
 import { STLLoader } from './three.js/examples/jsm/loaders/STLLoader.js';
 import { OBJLoader2 } from "./three.js/examples/jsm/loaders/OBJLoader2.js";
-import { OrbitControls } from './three.js/examples/jsm/controls/OrbitControls.js'
+import { OrbitControls } from './three.js/examples/jsm/controls/OrbitControls.js';
+import Stats from './stats.js/build/stats.module.js';
+
 
 // Get the aspect ratio of the canvas. 
 const getAspectRatio = (canvas) => canvas.clientWidth / canvas.clientHeight
@@ -82,11 +84,23 @@ controls.update();
 
 let animatePhase = false;
 
+// Add stats
+const stats = new Stats();
+stats.showPanel(0);
+document.body.appendChild(stats.dom);
+stats.dom.style.cssText = 'position:fixed;bottom:0;left:0;cursor:pointer;opacity:0.9;z-index:10000'
+
+
 // Animation loop for the orbit controls, and pretty much everything
 const animate = (time) => {
-    if(model && animatePhase) model.material.uniforms.phase.value = time/1000;
+    stats.begin();
+    
+    if(model && animatePhase && model.material.uniforms.phase) model.material.uniforms.phase.value = time/1000;
     renderer.render(scene, camera);
     controls.update();
+    
+    stats.end();
+
     requestAnimationFrame(animate);    
 
 };
@@ -484,3 +498,4 @@ replaceModelSTL('./ShaderFood/P677_shell(fine).stl');
 // [x] Rotation i Z-axeln på modellen. 
 // [x] Input av våglängd och fas. 
 // [ ] Radio buttons visa intensitet, fas, eller intensitet och fas. 
+// [ ] fps-mätare
