@@ -25,7 +25,7 @@ const gui = new dat.GUI();
 const controller = new ui_controller();
 
 gui.add(controller, 'wavelength').onChange((value) => dman.setWaveLength(value));
-gui.add(controller, 'phase').step(0.01).onChange((value) => {dman.setPhaseShift(value); console.log(value);});
+gui.add(controller, 'phase').step(0.01).onChange((value) => {dman.setPhaseShift(value);});
 gui.add(controller, 'animatePhase').onChange((value) => dman.setPhaseAnimation(value));
 gui.add(controller, 'autoRotateCamera').onChange((value) => dman.setAutoRotation(value));
 

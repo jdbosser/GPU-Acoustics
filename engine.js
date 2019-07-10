@@ -77,8 +77,8 @@ const camera = getCamera(canvas);
 
 // Add orbit controls to the camera
 const controls = new OrbitControls( camera, renderer.domElement );
-controls.enableDamping = true;
-controls.dampingFactor = 0.25;
+//controls.enableDamping = true;
+//controls.dampingFactor = 0.25;
 controls.autoRotate = false;
 controls.update();
 
@@ -95,11 +95,15 @@ stats.dom.style.cssText = 'position:fixed;bottom:0;left:0;cursor:pointer;opacity
 const animate = (time) => {
     stats.begin();
     
-    if(model && animatePhase && model.material.uniforms.phase) model.material.uniforms.phase.value = time/1000;
-    renderer.render(scene, camera);
-    controls.update();
+    if (controls.autoRotate || animatePhase) {
+        if(model && animatePhase && model.material.uniforms.phase) model.material.uniforms.phase.value = time/1000;
+        renderer.render(scene, camera);
+        controls.update();
     
-    stats.end();
+        console.log("animating");    
+    }
+        
+        stats.end();
 
     requestAnimationFrame(animate);    
 
@@ -376,6 +380,9 @@ const setCameraChangeListener = handler => {
 
 }
 
+controls.addEventListener("change", () => renderer.render(scene, camera));
+
+
 // Start (or stop) OrbitControls auto rotation around the
 // target.
 const setAutoRotation = bool => controls.autoRotate = bool;
@@ -401,6 +408,7 @@ const setCameraLookAt = (x,y,z) => {
 const setModelPosition = (x,y,z) => {
 
     model.position.set(x,y,z);
+    renderer.render(scene, camera);
 }; 
 
 // Rotate the model in the world.
@@ -430,7 +438,8 @@ const setModelRotation = (x,y,z) => {
     console.log("pixelArea", pixelArea);
 
     if ( fitCameraToModel ) fitCameraToModelFunction(camera, model, canvas);
-
+    
+    renderer.render(scene, camera);
 };
 
 // Toggle autofit to model
@@ -476,10 +485,12 @@ const replaceModelSTL = (uri) => {
 
 const setWaveLength = wavelength => {
     model.material.uniforms.lambda.value = wavelength;
+    renderer.render(scene, camera);
 };
 
 const setPhaseShift = phase => {
-    model.material.uniforms.phase.value = phase;    
+    if (model.material.uniforms.phase) model.material.uniforms.phase.value = phase;    
+    renderer.render(scene, camera);
 };
 
 const setPhaseAnimation = bool => animatePhase = bool;
