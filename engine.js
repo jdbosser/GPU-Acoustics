@@ -4,7 +4,6 @@ import { OBJLoader2 } from "./three.js/examples/jsm/loaders/OBJLoader2.js";
 import { OrbitControls } from './three.js/examples/jsm/controls/OrbitControls.js';
 import Stats from './stats.js/build/stats.module.js';
 
-
 // Get the aspect ratio of the canvas. 
 const getAspectRatio = (canvas) => canvas.clientWidth / canvas.clientHeight
 
@@ -68,9 +67,11 @@ let model;
 
 // The renderer is the element that draws our 3D objects to our canvas. 
 const renderer = new THREE.WebGLRenderer({canvas});
+const outputBuffer = new THREE.WebGLRenderer({preserveDrawingBuffer: true}); 
 
 setRendererSize(renderer, canvas); // We want the renderer to have the same size as our canvas
                                    // to get maximal resolution.  
+setRendererSize(outputBuffer, canvas);
 
 // Get the camera.
 const camera = getCamera(canvas);
@@ -368,6 +369,30 @@ const fitCameraToModelFunction = (camera, model, canvas) => {
 
 };
 
+
+const renderToBuffer = () => {
+   outputBuffer.render(scene, camera);
+   // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/readPixels
+   const outputCanvas = outputBuffer.domElement;
+   const gl = outputCanvas.getContext("webgl");
+   const pixels = new Uint8Array(gl.drawingBufferWidth*gl.drawingBufferHeight*4); // RGBA => 4. 
+   gl.readPixels(0,0,gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+   debugger;
+    for (let i = 0; i < pixels.length; i++) {
+        if (pixels[i] !== 0 && pixels[i] !== 255) {
+            console.log("Found one!", i, pixels[i]);
+            break;    
+        }   
+    }
+   //let ext = gl.getExtension("EXT_color_buffer_float")
+   //const pixels = new Float32Array(gl.drawingBufferWidth*gl.drawingBufferHeight*4); // RGBA => 4. 
+   //gl.readPixels(0,0,gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.FLOAT, pixels);
+   console.log(pixels);
+   window.open(outputBuffer.domElement.toDataURL( 'image/png' ), 'screenshot');
+   debugger;
+}; 
+
+
 // The following functions are exposing different 
 // properties to the ui. 
 
@@ -469,7 +494,7 @@ const replaceModelOBJ = (uri) => {
 };
 
 // Upload STL.
-const replaceModelSTL = (uri) => {
+const replaceModelSTL = (uri, callback) => {
 
     const loader = new STLLoader();
     loader.load(uri, geometry => {
@@ -479,6 +504,7 @@ const replaceModelSTL = (uri) => {
         const material = new THREE.MeshLambertMaterial({color: 0xff5533});
         const imported_model = new THREE.Mesh(geometry, material);
         replaceModel(imported_model);
+        callback();
     });
 
 };
@@ -499,7 +525,9 @@ const setPhaseAnimation = bool => animatePhase = bool;
 export {setCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation, autoFitCameraToModel};
 
 // Finally, add a default model to our scene. 
-replaceModelSTL('./ShaderFood/P677_shell(fine).stl');
+replaceModelSTL('./ShaderFood/P677_shell(fine).stl', () => {
+    renderToBuffer();
+});
 
 // [x] Ladda upp en modell. Typ klar, OBJ fungerar inte. 
 // [x] Styra position av modellen
@@ -509,4 +537,4 @@ replaceModelSTL('./ShaderFood/P677_shell(fine).stl');
 // [x] Rotation i Z-axeln på modellen. 
 // [x] Input av våglängd och fas. 
 // [ ] Radio buttons visa intensitet, fas, eller intensitet och fas. 
-// [ ] fps-mätare
+// [x] fps-mätare
