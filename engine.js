@@ -67,7 +67,7 @@ let model;
 
 // The renderer is the element that draws our 3D objects to our canvas. 
 const renderer = new THREE.WebGLRenderer({canvas});
-const outputBuffer = new THREE.WebGLRenderer({preserveDrawingBuffer: true}); 
+const outputBuffer = new THREE.WebGLRenderTarget(canvas.clientWidth, canvas.clientHeight, { minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter, format: THREE.RGBAFormat, type: THREE.FloatType }); 
 
 setRendererSize(renderer, canvas); // We want the renderer to have the same size as our canvas
                                    // to get maximal resolution.  
@@ -371,25 +371,15 @@ const fitCameraToModelFunction = (camera, model, canvas) => {
 
 
 const renderToBuffer = () => {
-   outputBuffer.render(scene, camera);
    // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/readPixels
-   const outputCanvas = outputBuffer.domElement;
-   const gl = outputCanvas.getContext("webgl");
-   const pixels = new Uint8Array(gl.drawingBufferWidth*gl.drawingBufferHeight*4); // RGBA => 4. 
-   gl.readPixels(0,0,gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-   debugger;
-    for (let i = 0; i < pixels.length; i++) {
-        if (pixels[i] !== 0 && pixels[i] !== 255) {
-            console.log("Found one!", i, pixels[i]);
-            break;    
-        }   
-    }
-   //let ext = gl.getExtension("EXT_color_buffer_float")
-   //const pixels = new Float32Array(gl.drawingBufferWidth*gl.drawingBufferHeight*4); // RGBA => 4. 
-   //gl.readPixels(0,0,gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.FLOAT, pixels);
-   console.log(pixels);
-   window.open(outputBuffer.domElement.toDataURL( 'image/png' ), 'screenshot');
-   debugger;
+   renderer.setRenderTarget(outputBuffer);
+   renderer.clear(); // Do not know what this line does. 
+   renderer.render(scene, camera);
+   renderer.setRenderTarget(null);
+
+   let read = new Float32Array(4 * canvas.clientWidth * canvas.clientHeight);
+   renderer.readRenderTargetPixels(outputBuffer, 0, 0, canvas.clientWidth,canvas.clientHeight, read);
+   return read;
 }; 
 
 
