@@ -274,8 +274,7 @@ const phaseMaterial = (function(){
 
 
 
-const setIntensityMaterial = (model, lambda, pixelArea) => {
-
+const intensityMaterial = (function(){
     const vertexShader = `
    	varying vec3 vNormal;
     varying vec3 vUv;
@@ -296,9 +295,6 @@ const setIntensityMaterial = (model, lambda, pixelArea) => {
     varying vec3 vNormal;
     varying vec3 vUv;
     uniform mat4 inverseRotationMatrix;
-    uniform float lambda;
-    uniform float pixelArea;
-    uniform float scalingFactor; 
 
     void main() {
 
@@ -316,19 +312,7 @@ const setIntensityMaterial = (model, lambda, pixelArea) => {
 
       // calculate the dot product of
       // the light to the vertex normal
-      /*
-      float dProd = max(0.0,
-                        dot(vNormal, light));
-
-      // feed into our frag colour
-      gl_FragColor = vec4(dProd, // R
-                          dProd, // G
-                          dProd, // B
-                          1.0);  // A
-      */
-        
-        //float prod = dot(normalize(vNormal), light);
-
+       
         // Include the pixelArea when writing to texture.
         float prod = dot(normalize(vNormal), light);
 
@@ -342,24 +326,24 @@ const setIntensityMaterial = (model, lambda, pixelArea) => {
     `; 
 
     let inverseRotationMatrix = new THREE.Matrix4();
-    inverseRotationMatrix.makeRotationFromEuler(model.rotation);
     const customMaterial = new THREE.ShaderMaterial({
     
         uniforms: {
-            scalingFactor: {type: 'float', value: 1},
-            lambda: {type: 'float', value: lambda},
-            pixelArea: {type: 'float', value: pixelArea},
             inverseRotationMatrix: {type: 'mat4', value: inverseRotationMatrix}
-
         },
 
         fragmentShader: fragmentShader,
         vertexShader: vertexShader    
     
     });
+    modelRotationListeners.push((x,y,z) => {
+        const rotation = new THREE.Euler(-x,-y,-z, 'XYZ');
+        inverseRotationMatrix.makeRotationFromEuler(rotation);
+    });
 
-    replaceMaterial(model, customMaterial);  
-};
+    return customMaterial;    
+    
+})();
 
 const mixMaterial = (function() {
 
@@ -595,7 +579,7 @@ const replaceModel = imported_model => {
         
     scene.remove( model );
     scene.add(imported_model);         
-
+    
     // Repaint
     renderer.render(scene, camera);
 
@@ -603,8 +587,7 @@ const replaceModel = imported_model => {
     model = imported_model;
     model.geometry.center();
     model.position.set(0,0,0);     
-    //setIntensityMaterial(model, 1, 1); 
-    replaceMaterial(model, phaseMaterial);
+    replaceMaterial(model, intensityMaterial);
     
 };
 
