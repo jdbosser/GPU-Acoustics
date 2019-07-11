@@ -4,6 +4,41 @@ import { OBJLoader2 } from "./three.js/examples/jsm/loaders/OBJLoader2.js";
 import { OrbitControls } from './three.js/examples/jsm/controls/OrbitControls.js';
 import Stats from './stats.js/build/stats.module.js';
 
+
+const waveLengthListeners = new Array();
+const [getWaveLength, setWaveLength2] = (function(){
+    
+    let wavelength = 1;
+
+    const getter = function(){
+        return wavelength;
+    };
+
+    const setter = function(val){
+        for ( let func of waveLengthListeners ) func(val);
+        wavelength = val;    
+    };
+    
+    return [getter, setter]; 
+})();
+
+const phaseChangeListeners = new Array();
+const [getPhase, setPhase] = (function(){
+    let phase = 0;
+    
+    const getter = function(){
+        return phase;    
+    };    
+
+    const setter = function(val){
+        for (let func of phaseChangeListeners) func(val);
+        phase = val;    
+    };
+    return [getter, setter];
+})();
+
+const modelRotationListeners = new Array();
+
 // Get the aspect ratio of the canvas. 
 const getAspectRatio = (canvas) => canvas.clientWidth / canvas.clientHeight
 
@@ -199,7 +234,7 @@ const setPhaseMaterial = (model, lambda, phase = 0) => {
                           1.0);  // A
       */
 
-      float prod = mod((dot(vUv, light) / lambda) + phase, 1.0);
+      float prod = mod(2 * (dot(vUv, light) / lambda) + phase, 1.0);
       gl_FragColor = vec4(prod, // R
                           prod, // G
                           prod, // B
@@ -283,10 +318,10 @@ const setIntensityMaterial = (model, lambda, pixelArea) => {
                           1.0);  // A
       */
         
-        //float prod = (pixelArea * (dot(normalize(vNormal), light) / lambda)) * scalingFactor;
+        //float prod = dot(normalize(vNormal), light);
 
         // Include the pixelArea when writing to texture.
-        float prod = (1.0 * (dot(normalize(vNormal), light) / lambda)) * scalingFactor;
+        float prod = dot(normalize(vNormal), light);
 
         gl_FragColor = vec4(prod, // R
                           prod, // G
@@ -317,7 +352,92 @@ const setIntensityMaterial = (model, lambda, pixelArea) => {
     replaceMaterial(model, customMaterial);  
 };
 
+const mixMaterial = (function() {
 
+    const vertexShader = `
+   	varying vec3 vNormal;
+    varying vec3 vUv;
+    void main() {
+
+    // set the vNormal value with
+    // the attribute value passed
+    // in by Three.js
+    vNormal = normal;
+    vUv = position;
+    gl_Position = projectionMatrix *
+                modelViewMatrix *
+                vec4(position, 1.0);
+    } 
+    `;
+
+    const fragmentShader =  `
+    varying vec3 vNormal;
+    varying vec3 vUv;
+    uniform mat4 inverseRotationMatrix;
+    uniform float lambda;
+    uniform float phase;
+
+    void main() {
+
+      // calc the dot product and clamp
+      // 0 -> 1 rather than -1 -> 1
+      vec4 light4 = vec4(0.0, 1.0, 0.0, 1.0);
+      
+      // Rotate 
+      light4 = inverseRotationMatrix * light4; 
+
+      vec3 light = vec3(light4);
+       
+      // ensure it's normalized
+      light = normalize(light);
+
+      // calculate the dot product of
+      // the light to the vertex normal
+       
+        float intensity = dot(normalize(vNormal), light);
+        float phase = mod(2.0 * (dot(vUv, light) / lambda) + phase, 1.0);
+
+        float prod = dot(normalize(vNormal), light);
+
+        gl_FragColor = vec4(intensity, // R
+                          phase, // G
+                          dot(vUv, light), // B
+                          1.0);  // A
+
+
+    }`; 
+    
+      
+    const inverseRotationMatrix = new THREE.Matrix4();
+    const customMaterial = new THREE.ShaderMaterial({
+         uniforms: {
+            lambda: {type: 'float', value: getWaveLength()},
+            inverseRotationMatrix: {type: 'mat4', value: inverseRotationMatrix},
+            phase: {type: 'float', value: getPhase()}
+
+        },
+
+        fragmentShader: fragmentShader,
+        vertexShader: vertexShader    
+    
+    
+    });
+
+    // Bind some functions that change the material when the model changes
+    waveLengthListeners.push((newWaveLength) => {
+        customMaterial.uniforms.lambda.value = newWaveLength;
+    });
+    phaseChangeListeners.push((newPhase) => {
+        customMaterial.uniforms.phase.value = newPhase;    
+    }); 
+    modelRotationListeners.push((x,y,z) => {
+        const rotation = new THREE.Euler(-x,-y,-z, 'XYZ');
+        inverseRotationMatrix.makeRotationFromEuler(rotation);     
+    });
+    
+    return customMaterial;    
+}
+)();
 
 // Set to true if you want to autofit camera to model when rotation is applied. 
 let fitCameraToModel = false; 
@@ -430,7 +550,9 @@ const setModelPosition = (x,y,z) => {
 const setModelRotation = (x,y,z) => {
 
     model.rotation.set(x,y,z);
-    
+    for (let func of modelRotationListeners) func(x,y,z);
+    console.log(mixMaterial);
+     
     // Rotate inside shader
     // this is needed, since the incoming aucustic wave 
     // have the model coordinates. We need to "rotate back"
@@ -472,7 +594,9 @@ const replaceModel = imported_model => {
     model = imported_model;
     model.geometry.center();
     model.position.set(0,0,0);     
-    setIntensityMaterial(model, 1, 1); 
+    //setIntensityMaterial(model, 1, 1); 
+    replaceMaterial(model, mixMaterial);
+    
 };
 
 // Upload obj.
@@ -500,11 +624,14 @@ const replaceModelSTL = (uri, callback) => {
 };
 
 const setWaveLength = wavelength => {
+    setWaveLength2(wavelength);
+    console.log(mixMaterial);
     model.material.uniforms.lambda.value = wavelength;
     renderer.render(scene, camera);
 };
 
 const setPhaseShift = phase => {
+    setPhase(phase);
     if (model.material.uniforms.phase) model.material.uniforms.phase.value = phase;    
     renderer.render(scene, camera);
 };
