@@ -132,7 +132,10 @@ const animate = (time) => {
     stats.begin();
     
     if (controls.autoRotate || animatePhase) {
-        if(model && animatePhase && model.material.uniforms.phase) model.material.uniforms.phase.value = time/1000;
+        if(model && animatePhase && model.material.uniforms.phase) {
+           model.material.uniforms.phase.value = time/1000;
+           setPhase(time/1000);
+        }
         renderer.render(scene, camera);
         controls.update();
     
@@ -175,10 +178,7 @@ const replaceMaterial = (model, material) => {
 
 // Function to give the model a phase material. This material is 
 // "sensitive" to changes in the aucustic phase. 
-// NOTE: this function is not done yet. 
-// TODO: incorporate the wavelength and phaseshift (the phase) 
-// calculating the phase/angle. 
-const setPhaseMaterial = (model, lambda, phase = 0) => {
+const phaseMaterial = (function(){
 
     // Playground for the different shaders
     // Mostly taken from 
@@ -234,7 +234,7 @@ const setPhaseMaterial = (model, lambda, phase = 0) => {
                           1.0);  // A
       */
 
-      float prod = mod(2 * (dot(vUv, light) / lambda) + phase, 1.0);
+      float prod = mod(2.0 * (dot(vUv, light) / lambda) + phase, 1.0);
       gl_FragColor = vec4(prod, // R
                           prod, // G
                           prod, // B
@@ -244,13 +244,10 @@ const setPhaseMaterial = (model, lambda, phase = 0) => {
     } 
 `;   
     let inverseRotationMatrix = new THREE.Matrix4();
-    inverseRotationMatrix.makeRotationFromEuler(model.rotation);
     const customMaterial = new THREE.ShaderMaterial({
 
         uniforms: {
 
-            colorB: {type: 'vec3', value: new THREE.Color(0xACB6E5)},
-            colorA: {type: 'vec3', value: new THREE.Color(0x74ebd5)},
             lambda: {type: 'float', value: 1.0},
             phase: {type: 'float', value: 0.0},
             inverseRotationMatrix: {type: 'mat4', value: inverseRotationMatrix}
@@ -260,10 +257,22 @@ const setPhaseMaterial = (model, lambda, phase = 0) => {
         vertexShader: vertexShader  
 
     });
+    
+    waveLengthListeners.push((newWaveLength) => {
+        customMaterial.uniforms.lambda.value = newWaveLength;
+    });
+    phaseChangeListeners.push((newPhase) => {
+        customMaterial.uniforms.phase.value = newPhase;    
+    }); 
+    modelRotationListeners.push((x,y,z) => {
+        const rotation = new THREE.Euler(-x,-y,-z, 'XYZ');
+        inverseRotationMatrix.makeRotationFromEuler(rotation);
+    });
 
-    replaceMaterial(model, customMaterial);
+    return customMaterial;
+})(); 
 
-};
+
 
 const setIntensityMaterial = (model, lambda, pixelArea) => {
 
@@ -595,7 +604,7 @@ const replaceModel = imported_model => {
     model.geometry.center();
     model.position.set(0,0,0);     
     //setIntensityMaterial(model, 1, 1); 
-    replaceMaterial(model, mixMaterial);
+    replaceMaterial(model, phaseMaterial);
     
 };
 
@@ -625,7 +634,6 @@ const replaceModelSTL = (uri, callback) => {
 
 const setWaveLength = wavelength => {
     setWaveLength2(wavelength);
-    console.log(mixMaterial);
     model.material.uniforms.lambda.value = wavelength;
     renderer.render(scene, camera);
 };
