@@ -20,10 +20,12 @@ const [getWaveLength, setWaveLength2] = (function(){
     };
     
     return [getter, setter]; 
+
 })();
 
 const phaseChangeListeners = new Array();
 const [getPhase, setPhase] = (function(){
+
     let phase = 0;
     
     const getter = function(){
@@ -35,9 +37,31 @@ const [getPhase, setPhase] = (function(){
         phase = val;    
     };
     return [getter, setter];
+
 })();
 
+
+const cameraViewChangeListeners = new Array();
+const [getPixelArea, setPixelArea] = (function(){
+
+    let pixelArea = 1;
+    
+    const getter = function(){
+        return pixelArea;    
+    };    
+
+    const setter = function(val){
+        for (let func of cameraViewChangeListeners) func(val);
+        pixelArea = val;    
+    };
+    return [getter, setter];
+
+})();
+
+
 const modelRotationListeners = new Array();
+const modelPositionListeners = new Array();
+
 
 // Get the aspect ratio of the canvas. 
 const getAspectRatio = (canvas) => canvas.clientWidth / canvas.clientHeight
@@ -71,6 +95,13 @@ const getOrthographicCamera = canvas => {
      
     camera.position.y = 50;
     camera.up.set(0,0,1);
+
+    // Calculate new pixel area
+    const num_pixels = canvas.clientWidth*canvas.clientHeight;
+    const pixelarea = (width*height)/num_pixels;
+    // Notifies all pixel area change listeners
+    setPixelArea(pixelarea);
+
     return camera;
 
 };
@@ -113,12 +144,11 @@ const camera = getCamera(canvas);
 
 // Add orbit controls to the camera
 const controls = new OrbitControls( camera, renderer.domElement );
-//controls.enableDamping = true;
-//controls.dampingFactor = 0.25;
 controls.autoRotate = false;
 controls.update();
 
-let animatePhase = false;
+// If we change the controls by mouse or arrows, make sure to rerender. 
+controls.addEventListener("change", () => renderer.render(scene, camera));
 
 // Add stats
 const stats = new Stats();
@@ -126,14 +156,13 @@ stats.showPanel(0);
 document.body.appendChild(stats.dom);
 stats.dom.style.cssText = 'position:fixed;bottom:0;left:0;cursor:pointer;opacity:0.9;z-index:10000'
 
-
+let animatePhase = false;
 // Animation loop for the orbit controls, and pretty much everything
 const animate = (time) => {
     stats.begin();
     
     if (controls.autoRotate || animatePhase) {
         if(model && animatePhase && model.material.uniforms.phase) {
-           model.material.uniforms.phase.value = time/1000;
            setPhase(time/1000);
         }
         renderer.render(scene, camera);
@@ -142,31 +171,12 @@ const animate = (time) => {
         console.log("animating");    
     }
         
-        stats.end();
+    stats.end();
 
     requestAnimationFrame(animate);    
 
 };
 animate();
-
-// These couple of lines defines a function to execute when the browser
-// window is resized.  
-// If the browser window is resized, our canvas will have a height and width in
-// px where we are able to draw. This means that both resolution and aspect
-// ratio can change. 
-window.addEventListener('resize', () => {
-
-    // Update camera aspect ratio
-    camera.aspect = getAspectRatio(canvas);
-    camera.updateProjectionMatrix();
-    
-    // Get the new resolution of the view and give that to the renderer 
-    setRendererSize(renderer, canvas);
-
-    // Repaint
-    renderer.render(scene, camera);
-
-});
 
 // If a model changes material we need to repaint the scene.  
 const replaceMaterial = (model, material) => {
@@ -221,19 +231,9 @@ const phaseMaterial = (function(){
       // ensure it's normalized
       light = normalize(light);
 
-      // calculate the dot product of
-      // the light to the vertex normal
-      /*
-      float dProd = max(0.0,
-                        dot(vNormal, light));
-
-      // feed into our frag colour
-      gl_FragColor = vec4(dProd, // R
-                          dProd, // G
-                          dProd, // B
-                          1.0);  // A
-      */
-
+      // Dot between vUv and the "light" gives the z-distance into the model
+      // Multiply by 2 to get the phase after reflection
+       
       float prod = mod(2.0 * (dot(vUv, light) / lambda) + phase, 1.0);
       gl_FragColor = vec4(prod, // R
                           prod, // G
@@ -258,6 +258,10 @@ const phaseMaterial = (function(){
 
     });
     
+    // This material is intrested in knowing about changes to
+    // + model rotation
+    // + Wavelength
+    // + Changes to the phase
     waveLengthListeners.push((newWaveLength) => {
         customMaterial.uniforms.lambda.value = newWaveLength;
     });
@@ -312,16 +316,16 @@ const intensityMaterial = (function(){
 
       // calculate the dot product of
       // the light to the vertex normal
-       
-        // Include the pixelArea when writing to texture.
+      // Since they are both normalized, this will equal
+      // cos(theta), where theta is the angle between the 
+      // light and the vertex normal
+         
         float prod = dot(normalize(vNormal), light);
 
         gl_FragColor = vec4(prod, // R
                           prod, // G
                           prod, // B
                           1.0);  // A
-
-
     } 
     `; 
 
@@ -336,6 +340,8 @@ const intensityMaterial = (function(){
         vertexShader: vertexShader    
     
     });
+
+    // This material needs to know about changes in model rotation.
     modelRotationListeners.push((x,y,z) => {
         const rotation = new THREE.Euler(-x,-y,-z, 'XYZ');
         inverseRotationMatrix.makeRotationFromEuler(rotation);
@@ -384,9 +390,8 @@ const mixMaterial = (function() {
       // ensure it's normalized
       light = normalize(light);
 
-      // calculate the dot product of
-      // the light to the vertex normal
-       
+        // Intensity is the cos(theta) between the "light" and the normal
+        // The phase is the z distance traveled by the "light" times 2 modulo 1.  
         float intensity = dot(normalize(vNormal), light);
         float phase = mod(2.0 * (dot(vUv, light) / lambda) + phase, 1.0);
 
@@ -396,8 +401,6 @@ const mixMaterial = (function() {
                           phase, // G
                           dot(vUv, light), // B
                           1.0);  // A
-
-
     }`; 
     
       
@@ -417,6 +420,8 @@ const mixMaterial = (function() {
     });
 
     // Bind some functions that change the material when the model changes
+    // The material needs to know about changes in wavelength, 
+    // phase and model rotation.
     waveLengthListeners.push((newWaveLength) => {
         customMaterial.uniforms.lambda.value = newWaveLength;
     });
@@ -432,32 +437,48 @@ const mixMaterial = (function() {
 }
 )();
 
-// Set to true if you want to autofit camera to model when rotation is applied. 
-let fitCameraToModel = false; 
+// If we switch model, set the material to the current material
+// current material changes based on UI input. 
+// set default to phase material.
+let currentMaterial = phaseMaterial;
+
+// Whenever the view is updated, we need to recalculate the pixel area. 
+const setCameraView = (width, height) => {
+    camera.left = width / -2;
+    camera.right = width / 2; 
+    camera.top = height / 2;
+    camera.bottom = height / -2;
+    camera.zoom = 1;
+    
+    camera.updateProjectionMatrix();
+
+    // Calculate new pixel area
+    const num_pixels = canvas.clientWidth*canvas.clientHeight;
+    const pixelarea = (width*height)/num_pixels;
+    // Notifies all pixel area change listeners
+    setPixelArea(pixelarea);
+};
+
 // Update the camera to fit model
 const fitCameraToModelFunction = (camera, model, canvas) => {
     
-    camera.lookAt(0,0,0);
-
-    let bb = new THREE.Box3().setFromObject(model);
-    let center = new THREE.Vector3();
-    bb.getCenter(center);
+    // Reset model position 
+    setModelPosition(0,0,0);    
+    // Make sure camera looks at the model
+    setCameraLookAt(0,0,0);
     
+    // Find the boundingbox
     let bbh = new THREE.BoxHelper(model, 0xffff00); 
 
-    // Get the center of the boundingbox
+    // Get the dimensions of the bounding box
     bbh.geometry.computeBoundingBox();
-    let offset = new THREE.Vector3();
-    bbh.geometry.boundingBox.getCenter(offset).negate();
-    bbh.geometry.center();
-    bbh.position.set(0,0,0);
-    
-    model.geometry.center();
     let boundingBox = bbh.geometry.boundingBox;
     let width = boundingBox.max.x - boundingBox.min.x; 
     let height = boundingBox.max.z - boundingBox.min.z; 
     
-     
+    // Compare aspect ratios. 
+    // If the model aspect ratio (w/h) is greater than the camera aspect ratio
+    // set the camera height to be equal to the bounding box height. 
     const aspectRatio = canvas.clientWidth/canvas.clientHeight;
     const objAspectRatio = width/height;
     if (objAspectRatio < aspectRatio) {
@@ -465,34 +486,47 @@ const fitCameraToModelFunction = (camera, model, canvas) => {
         width = aspectRatio * height;
     }
     else height = width / aspectRatio;
-   
+    
+    // Since I couldnt get the bounding box to not translate while 
+    // rotating the object, the object moves out of camera view by a little bit.
+    // This scaling ensures that the whole model is in view. 
+    // Sorry for the ugly hack. Please change if (this whole function) if 
+    // you ever figure out how to do this correctly.
     const scale = 1.1;
     width = width * scale;
     height = height * scale;
     
+    setCameraView(width, height);
+     
     camera.position.set(0,boundingBox.max.y*scale, 0);
-    camera.left = width / -2;
-    camera.right = width / 2; 
-    camera.top = height / 2;
-    camera.bottom = height / -2;
-    camera.lookAt(0,0,0); 
-    camera.zoom = 1;
-    
-    camera.updateProjectionMatrix();
-
 };
 
 
 const renderToBuffer = () => {
-   // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/readPixels
-   renderer.setRenderTarget(outputBuffer);
-   renderer.clear(); // Do not know what this line does. 
-   renderer.render(scene, camera);
-   renderer.setRenderTarget(null);
-
-   let read = new Float32Array(4 * canvas.clientWidth * canvas.clientHeight);
-   renderer.readRenderTargetPixels(outputBuffer, 0, 0, canvas.clientWidth,canvas.clientHeight, read);
-   return read;
+   
+    // Documentiation on how to read pixels. 
+    // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/readPixels
+     
+    // Ultimately, this is done the same way as have been done in following threejs example
+    // https://threejs.org/examples/?q=read#webgl_read_float_buffer
+   
+    // There are two places from the example that I have copied shamelessly that
+    // was key to make this work
+    // Line 104: https://github.com/mrdoob/three.js/blob/master/examples/webgl_read_float_buffer.html#L104
+    // Line(s) 202-216: https://github.com/mrdoob/three.js/blob/master/examples/webgl_read_float_buffer.html#L202
+     
+    // Render to the rendertarget. 
+    renderer.setRenderTarget(outputBuffer);
+    renderer.clear(); // Do not know what this line does. 
+    renderer.render(scene, camera);
+    renderer.setRenderTarget(null);
+  
+    // Create array for the storing the output of the GPU
+    let read = new Float32Array(4 * canvas.clientWidth * canvas.clientHeight);
+    // Read to the array
+    renderer.readRenderTargetPixels(outputBuffer, 0, 0, canvas.clientWidth,canvas.clientHeight, read);
+   
+    return read;
 }; 
 
 
@@ -507,9 +541,6 @@ const setCameraChangeListener = handler => {
     controls.addEventListener('change', handler);    
 
 }
-
-controls.addEventListener("change", () => renderer.render(scene, camera));
-
 
 // Start (or stop) OrbitControls auto rotation around the
 // target.
@@ -534,46 +565,72 @@ const setCameraLookAt = (x,y,z) => {
 
 // Move the model in the world.
 const setModelPosition = (x,y,z) => {
-
-    model.position.set(x,y,z);
-    renderer.render(scene, camera);
+    // Update position if the position is changed
+    if (model.position.x !== x || model.position.y !== y || model.position.z !== z) {
+        model.position.set(x,y,z);
+        renderer.render(scene, camera);
+    }
 }; 
 
 // Rotate the model in the world.
 const setModelRotation = (x,y,z) => {
 
     model.rotation.set(x,y,z);
+    // Let everyone intrested in this change know about it
     for (let func of modelRotationListeners) func(x,y,z);
-    console.log(mixMaterial);
      
-    // Rotate inside shader
-    // this is needed, since the incoming aucustic wave 
-    // have the model coordinates. We need to "rotate back"
-    // the incoming wave to make sure it stays in place in the world.
-
-    // we do a clone, since object oriented programming is actually quite scary 
-    // sometimes. 
-    let rotation = model.rotation.clone();
-    rotation.x = -rotation.x;
-    rotation.y = -rotation.y;
-    rotation.z = -rotation.z;
-    model.material.uniforms.inverseRotationMatrix.value.makeRotationFromEuler(rotation);
-    // Lots of dots ... ^ 
-    // Calculate pixel area
-    const num_pixels = canvas.clientHeight*canvas.clientWidth;
-    const area = (camera.right - camera.left)*(camera.top - camera.bottom)
-    const pixelArea = area / num_pixels;
-    model.material.uniforms.pixelArea = pixelArea;
-
-    console.log("pixelArea", pixelArea);
-
-    if ( fitCameraToModel ) fitCameraToModelFunction(camera, model, canvas);
-    
     renderer.render(scene, camera);
 };
 
-// Toggle autofit to model
-const autoFitCameraToModel = (bool) => fitCameraToModel = bool;
+// Set to true if you want to autofit camera to model when rotation is applied. 
+let autoFitCameraToModel = false; 
+// Subscribe to changes in rotation of the model if we want to autofit. 
+modelRotationListeners.push(() => {
+    if ( autoFitCameraToModel ) fitCameraToModelFunction(camera, model, canvas)
+});
+
+// Toggle autofit to model for the UI
+// Could probably be named better so that the above function can 
+// have a better name
+const autoFitCameraToModelUI = (bool) => {
+
+    autoFitCameraToModel = bool;
+    if (autoFitCameraToModel) {
+        fitCameraToModelFunction(camera, model, canvas);
+        renderer.render(scene, camera);
+    }
+
+}
+
+// These couple of lines defines a function to execute when the browser
+// window is resized.  
+// If the browser window is resized, our canvas will have a height and width in
+// px where we are able to draw. This means that both resolution and aspect
+// ratio can change. 
+window.addEventListener('resize', () => {
+
+    // Update camera aspect ratio
+    const aspectRatio = getAspectRatio(canvas);
+    // Keep the height
+    const height = camera.top - camera.bottom;
+    const width = height * aspectRatio;
+    
+    // If we have enabled autoFitCameraToModel then we let the fitCameraToModelFunction take 
+    // take over. 
+    // Else we only update the camera
+
+    if ( autoFitCameraToModel ) fitCameraToModelFunction(camera, model, canvas);
+    else setCameraView(width, height);
+    
+    // Get the new resolution of the view and give that to the renderer 
+    setRendererSize(renderer, canvas);
+    // Update the buffer
+    outputBuffer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+    // Repaint
+    renderer.render(scene, camera);
+
+});
 
 const replaceModel = imported_model => {
         
@@ -587,7 +644,7 @@ const replaceModel = imported_model => {
     model = imported_model;
     model.geometry.center();
     model.position.set(0,0,0);     
-    replaceMaterial(model, intensityMaterial);
+    replaceMaterial(model, currentMaterial);
     
 };
 
@@ -615,22 +672,40 @@ const replaceModelSTL = (uri, callback) => {
 
 };
 
+// Quite uneccessary function. Might delete later
 const setWaveLength = wavelength => {
     setWaveLength2(wavelength);
-    model.material.uniforms.lambda.value = wavelength;
     renderer.render(scene, camera);
 };
 
+// Quite uneccessary function. Might delete later
 const setPhaseShift = phase => {
     setPhase(phase);
-    if (model.material.uniforms.phase) model.material.uniforms.phase.value = phase;    
     renderer.render(scene, camera);
 };
 
 const setPhaseAnimation = bool => animatePhase = bool;
 
+const setMaterialUI = (materialString) => {
+    switch (materialString) {
+        case 'phase':
+            currentMaterial = phaseMaterial;
+            break;
+        case 'intensity':
+            currentMaterial = intensityMaterial;
+            break;
+        case 'mix':
+            currentMaterial = mixMaterial;
+            break;
+        default: 
+            alert('Invalid material');
+    }
+    replaceMaterial(model, currentMaterial);
+    renderer.render(scene, camera);
+};
+
 // Export all the setters, getters and setListneres to the ui controller.
-export {setCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation, autoFitCameraToModel};
+export {setCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation, autoFitCameraToModelUI, setMaterialUI};
 
 // Finally, add a default model to our scene. 
 replaceModelSTL('./ShaderFood/P677_shell(fine).stl', () => {
@@ -644,5 +719,5 @@ replaceModelSTL('./ShaderFood/P677_shell(fine).stl', () => {
 // [x] Origo i mitten av modellen. 
 // [x] Rotation i Z-axeln på modellen. 
 // [x] Input av våglängd och fas. 
-// [ ] Radio buttons visa intensitet, fas, eller intensitet och fas. 
+// [x] Radio buttons visa intensitet, fas, eller intensitet och fas. 
 // [x] fps-mätare

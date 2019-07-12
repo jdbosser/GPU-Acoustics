@@ -10,6 +10,7 @@ let ui_controller = function(){
     this.phase = 0;
     this.animatePhase = false;
     this.autoRotateCamera = false;
+    this.material = 'phase';
     this.camera = {
         autoFitToModel: false,
         position:   { x: 0, y: 0, z: 25 },    
@@ -46,6 +47,8 @@ modelPositionFolder.add(controller.model.position, 'x').step(0.1).onChange(updat
 modelPositionFolder.add(controller.model.position, 'y').step(0.1).onChange(updateModelPosition);
 modelPositionFolder.add(controller.model.position, 'z').step(0.1).onChange(updateModelPosition);
 
+gui.add(controller, 'material', ['phase', 'intensity', 'mix']).onChange((value) => dman.setMaterialUI(value));
+
 const updateModelRotation = () => {
      // Apply function takes a list of arguments, i.e the array returned by Object.values
     // containing [x,y,z] and gives that array as the arguments to setModelPosition. 
@@ -66,7 +69,7 @@ const updateCameraLookAt = () => {
 }
 
 const cameraFolder = gui.addFolder('Camera');
-cameraFolder.add(controller.camera, 'autoFitToModel').onChange((value) => dman.autoFitCameraToModel(value));
+cameraFolder.add(controller.camera, 'autoFitToModel').onChange((value) => dman.autoFitCameraToModelUI(value));
 const cameraPositionFolder = cameraFolder.addFolder('Position');
 cameraPositionFolder.add(controller.camera.position, 'x').step(0.01).onChange(updateCameraPosition);
 cameraPositionFolder.add(controller.camera.position, 'y').step(0.01).onChange(updateCameraPosition);
