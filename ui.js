@@ -11,6 +11,7 @@ let ui_controller = function(){
     this.animatePhase = false;
     this.autoRotateCamera = false;
     this.material = 'phase';
+    this.r2mSphereTest = dman.testForA2mRadiusSphere
     this.camera = {
         autoFitToModel: false,
         position:   { x: 0, y: 0, z: 25 },    
@@ -125,3 +126,7 @@ model_input.addEventListener('change', () => {
         default: alert("Ivalid file format");
     }
 });
+
+const routineFolder = gui.addFolder("Routines");
+routineFolder.add(controller, 'r2mSphereTest');
+

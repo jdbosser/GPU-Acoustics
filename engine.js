@@ -704,13 +704,142 @@ const setMaterialUI = (materialString) => {
     renderer.render(scene, camera);
 };
 
-// Export all the setters, getters and setListneres to the ui controller.
-export {setCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation, autoFitCameraToModelUI, setMaterialUI};
+
+const getTS = () => {
+    
+    
+    // Caused crash of tab 
+    /*function zipWith(λ,xs,ys) {
+        if(xs.length == 0) return []
+        else return [λ(xs[0],ys[0])].concat(zipWith(λ,xs.slice(1),ys.slice(1)));
+    };*/
+
+    const extractFourChannels = (arr) => {
+        
+        const num_elements = arr.length;
+        const ch_elements  = num_elements/4;
+        let ch1 = new Float32Array(ch_elements);
+        let ch2 = new Float32Array(ch_elements);
+        let ch3 = new Float32Array(ch_elements);
+        let ch4 = new Float32Array(ch_elements);
+        
+        for (let i = 0; i < ch_elements; i++) {
+
+            const j = i * 4;
+            ch1[i] = arr[j];
+            ch2[i] = arr[j+1];
+            ch3[i] = arr[j+2];
+            ch4[i] = arr[j+3];
+
+        }
+        return [ch1, ch2, ch3, ch4];    
+    }; 
+
+    // Steps to perform
+    // Make sure that model is in view
+    // Make sure that the model has the right material
+    //setMaterialUI('mix');
+    //fitCameraToModelFunction(camera, model, canvas);
+    // Get the output
+    let read = renderToBuffer();
+
+    const [r,g,b,a] = extractFourChannels(read);
+    
+    const multiplyBy2pi = (val) => val*2*Math.PI; // Maybe add negative sign here
+    let intensity = r;
+    let phase = g.map(multiplyBy2pi);
+   
+    let cos_part = phase.map((angle) => Math.cos(angle));
+    let sin_part = phase.map((angle) => Math.sin(angle));
+    
+    const multiplyArrs = (arr1, arr2) => {
+        const output = new Float32Array(arr1.length);
+        for(let i = 0; i < arr1.length; i++) {
+            output[i] = arr1[i]*arr2[i];
+        };
+        return output;
+    };
+    
+    let real_part = multiplyArrs(intensity, cos_part);
+    let imag_part = multiplyArrs(intensity, sin_part);
+
+    let sum = (x,y) => x + y;
+    let real_sum = real_part.reduce(sum, 0);
+    let imag_sum = imag_part.reduce(sum, 0);
+
+    console.log('Wavelen', getWaveLength());
+
+    // Multiply with scaling
+    real_sum *= getPixelArea()/getWaveLength();
+    imag_sum *= getPixelArea()/getWaveLength();
+
+    // Finally, get the absolute value
+    let TS = 10 * Math.log10(real_sum**2 + imag_sum**2);
+
+    console.log(TS);
+
+    return TS
+};
 
 // Finally, add a default model to our scene. 
 replaceModelSTL('./ShaderFood/P677_shell(fine).stl', () => {
-    renderToBuffer();
+    console.log("Default model added to scene");
 });
+
+
+// https://stackoverflow.com/a/30800715/1939970
+const downloadObjectAsJson = (exportObj, exportName) => {
+    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+    var downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href",     dataStr);
+    downloadAnchorNode.setAttribute("download", exportName + ".json");
+    document.body.appendChild(downloadAnchorNode); // required for firefox
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+};
+
+
+// Test for a sphere
+const testForA2mRadiusSphere = () => {
+    // Create the sphere
+    const geometry = new THREE.SphereGeometry(2, 128, 128);
+    const material = new THREE.MeshLambertMaterial({color: 0xff5533});   
+    const sphere = new THREE.Mesh(geometry, material);
+    // Place the model and material to our super cool material
+    replaceModel(sphere);
+    // Set the material to our cool material
+    setMaterialUI('mix');
+    // Make sure that the model fits optimally in the camera
+    fitCameraToModelFunction(camera, model, canvas);
+    renderer.render(scene, camera);
+    
+    const num_calc = 100;
+    alert(`
+Programmet kommer nu att göra ett svep av olika frekvenser infallandes mot en sfär med en 2 meters radie. Svepet består av ${num_calc} olika beräkningar, och kan därför ta lite tid. Webläsarfönstret kan temporärt frysa under tiden beräkningarna görs. Efter att beräkningarna är klara kommer en json fil med frekvenser och beräknad TS att laddas ner. 
+    `);
+
+    const linspace = (min, max, num) => {
+        const output = new Array(num);
+        const delta = (max - min) / (num-1);
+        for (let i = 0; i < num; i++) {
+            output[i] = min + delta*i;
+        }   
+        return output; 
+    };
+    
+    const freqs = linspace(1,Math.log10(50000),num_calc).map((v) => 10**v);
+    const wavelengths = freqs.map((f) => 1500/f);
+    
+    const TSs = wavelengths.map((w) => {
+        setWaveLength2(w);
+        return getTS();    
+    });
+    const exportObj = {x:freqs, y:TSs};
+    downloadObjectAsJson(exportObj, "2msphereDiffFreqsTS");
+};
+
+// Export all the setters, getters and setListneres to the ui controller.
+export {setCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation, autoFitCameraToModelUI, setMaterialUI, testForA2mRadiusSphere};
 
 // [x] Ladda upp en modell. Typ klar, OBJ fungerar inte. 
 // [x] Styra position av modellen
