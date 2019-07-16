@@ -1,11 +1,26 @@
 html, body {
     margin: 0;
     padding: 0;
+    overflow: hidden;
     height: 100%;
 }
 #c {
     height: 100%;
     width: 100%;
+}
+
+#outputBufferCanvas {
+    max-width: 25%;
+    max-height: 25%;
+    border-style: solid;
+    border-color: red;
+    border-width: thin;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    margin: 0;
+    padding:0;
+    transform: rotate(180deg) scaleX(-1);
 }
 
 aside {
