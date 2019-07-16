@@ -58,10 +58,8 @@ const [getPixelArea, setPixelArea] = (function(){
 
 })();
 
-
 const modelRotationListeners = new Array();
 const modelPositionListeners = new Array();
-
 
 // Get the aspect ratio of the canvas. 
 const getAspectRatio = (canvas) => canvas.clientWidth / canvas.clientHeight
@@ -100,7 +98,7 @@ const getOrthographicCamera = canvas => {
     const num_pixels = canvas.clientWidth*canvas.clientHeight;
     const pixelarea = (width*height)/num_pixels;
     // Notifies all pixel area change listeners
-    setPixelArea(pixelarea);
+    // setPixelArea(pixelarea);
 
     return camera;
 
@@ -133,6 +131,10 @@ let model;
 
 // The renderer is the element that draws our 3D objects to our canvas. 
 const renderer = new THREE.WebGLRenderer({canvas});
+// This "constant" tells us how many pixels we want the output buffer to consist of. Higher number => higher resolution. 
+// When rendering we get slightly less than the target number of pixels. 
+// This value might be changed by the user. 
+let OUTPUT_TARGET_RESOLUTION = 2000*2000;
 const outputBuffer = new THREE.WebGLRenderTarget(canvas.clientWidth, canvas.clientHeight, { minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter, format: THREE.RGBAFormat, type: THREE.FloatType }); 
 
 setRendererSize(renderer, canvas); // We want the renderer to have the same size as our canvas
@@ -142,6 +144,17 @@ setRendererSize(outputBuffer, canvas);
 // Get the camera.
 const camera = getCamera(canvas);
 
+// Get outputBuffer camera
+const outputBufferCamera = new THREE.OrthographicCamera(-1, 1, 1, -1);
+outputBufferCamera.up.set(0,0,1);
+outputBufferCamera.position.y = 50;
+outputBufferCamera.lookAt(0,0,0);
+outputBufferCamera.updateMatrixWorld();
+outputBufferCamera.updateProjectionMatrix();
+const outputBufferCameraHelper  = new THREE.CameraHelper(outputBufferCamera);
+scene.add(outputBufferCameraHelper);
+outputBufferCameraHelper.update();
+
 // Add orbit controls to the camera
 const controls = new OrbitControls( camera, renderer.domElement );
 controls.autoRotate = false;
@@ -150,12 +163,13 @@ controls.update();
 // If we change the controls by mouse or arrows, make sure to rerender. 
 controls.addEventListener("change", () => renderer.render(scene, camera));
 
-// Add stats
+// Add stats. Shows framerate. 
 const stats = new Stats();
 stats.showPanel(0);
 document.body.appendChild(stats.dom);
 stats.dom.style.cssText = 'position:fixed;bottom:0;left:0;cursor:pointer;opacity:0.9;z-index:10000'
 
+// Boolean that is able to be set by user. Toggles animation of the phase. 
 let animatePhase = false;
 // Animation loop for the orbit controls, and pretty much everything
 const animate = (time) => {
@@ -442,8 +456,9 @@ const mixMaterial = (function() {
 // set default to phase material.
 let currentMaterial = phaseMaterial;
 
-// Whenever the view is updated, we need to recalculate the pixel area. 
-const setCameraView = (width, height) => {
+// Set camera view based on width and height.  
+const setCameraView = (camera, width, height) => {
+
     camera.left = width / -2;
     camera.right = width / 2; 
     camera.top = height / 2;
@@ -452,20 +467,15 @@ const setCameraView = (width, height) => {
     
     camera.updateProjectionMatrix();
 
-    // Calculate new pixel area
-    const num_pixels = canvas.clientWidth*canvas.clientHeight;
-    const pixelarea = (width*height)/num_pixels;
-    // Notifies all pixel area change listeners
-    setPixelArea(pixelarea);
 };
 
 // Update the camera to fit model
-const fitCameraToModelFunction = (camera, model, canvas) => {
+const fitCameraToModelFunction = (camera, canvas) => {
     
     // Reset model position 
     setModelPosition(0,0,0);    
     // Make sure camera looks at the model
-    setCameraLookAt(0,0,0);
+    setCameraLookAt(camera, 0,0,0);
     
     // Find the boundingbox
     let bbh = new THREE.BoxHelper(model, 0xffff00); 
@@ -479,14 +489,21 @@ const fitCameraToModelFunction = (camera, model, canvas) => {
     // Compare aspect ratios. 
     // If the model aspect ratio (w/h) is greater than the camera aspect ratio
     // set the camera height to be equal to the bounding box height. 
-    const aspectRatio = canvas.clientWidth/canvas.clientHeight;
-    const objAspectRatio = width/height;
-    if (objAspectRatio < aspectRatio) {
-        // Keep the height
-        width = aspectRatio * height;
-    }
-    else height = width / aspectRatio;
     
+    
+    if (canvas !== undefined) {
+
+        const aspectRatio = canvas.clientWidth/canvas.clientHeight;
+        
+        const objAspectRatio = width/height;
+        if (objAspectRatio < aspectRatio) {
+            // Keep the height
+            width = aspectRatio * height;
+        }
+        else height = width / aspectRatio;
+
+    }
+
     // Since I couldnt get the bounding box to not translate while 
     // rotating the object, the object moves out of camera view by a little bit.
     // This scaling ensures that the whole model is in view. 
@@ -496,13 +513,14 @@ const fitCameraToModelFunction = (camera, model, canvas) => {
     width = width * scale;
     height = height * scale;
     
-    setCameraView(width, height);
+    setCameraView(camera, width, height);
      
     camera.position.set(0,boundingBox.max.y*scale, 0);
+
 };
 
 
-const renderToBuffer = () => {
+const renderToBuffer = (camera) => {
    
     // Documentiation on how to read pixels. 
     // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/readPixels
@@ -514,19 +532,29 @@ const renderToBuffer = () => {
     // was key to make this work
     // Line 104: https://github.com/mrdoob/three.js/blob/master/examples/webgl_read_float_buffer.html#L104
     // Line(s) 202-216: https://github.com/mrdoob/three.js/blob/master/examples/webgl_read_float_buffer.html#L202
+    
+    resizeOutputBuffer(camera);
+    
+    // Make sure outputBufferCameraHelper is not visible
+    const b = outputBufferCameraHelper.visible;
+    outputBufferCameraHelper.visible = false;
      
     // Render to the rendertarget. 
     renderer.setRenderTarget(outputBuffer);
     renderer.clear(); // Do not know what this line does. 
-    renderer.render(scene, camera);
+    renderer.render(scene, outputBufferCamera);
     renderer.setRenderTarget(null);
   
     // Create array for the storing the output of the GPU
-    let read = new Float32Array(4 * canvas.clientWidth * canvas.clientHeight);
+    let read = new Float32Array(4 * outputBuffer.width * outputBuffer.height);
     // Read to the array
-    renderer.readRenderTargetPixels(outputBuffer, 0, 0, canvas.clientWidth,canvas.clientHeight, read);
+    renderer.readRenderTargetPixels(outputBuffer, 0, 0, outputBuffer.width, outputBuffer.height, read);
+  
+    // Reset outputBufferCameraHelper visibility
+    outputBufferCameraHelper.visible = b;
    
     return read;
+
 }; 
 
 
@@ -556,9 +584,10 @@ const setCameraPosition = (x,y,z) => {
 }
 
 // Change camera focus and what to orbit around when autorotate. 
-const setCameraLookAt = (x,y,z) => {
+const setCameraLookAt = (camera, x,y,z) => {
 
-    controls.target = new THREE.Vector3(x,y,z);
+    camera.lookAt(x,y,z);
+    //controls.target = new THREE.Vector3(x,y,z);
     controls.update();
 
 };
@@ -586,8 +615,17 @@ const setModelRotation = (x,y,z) => {
 let autoFitCameraToModel = false; 
 // Subscribe to changes in rotation of the model if we want to autofit. 
 modelRotationListeners.push(() => {
-    if ( autoFitCameraToModel ) fitCameraToModelFunction(camera, model, canvas)
+    
+    if ( autoFitCameraToModel ) fitCameraToModelFunction(camera, canvas);
+
 });
+
+// Sets the target resolution for the outputBuffer.
+const setTargetResolution = (val) => {
+
+    OUTPUT_TARGET_RESOLUTION = val;
+
+}
 
 // Toggle autofit to model for the UI
 // Could probably be named better so that the above function can 
@@ -596,7 +634,7 @@ const autoFitCameraToModelUI = (bool) => {
 
     autoFitCameraToModel = bool;
     if (autoFitCameraToModel) {
-        fitCameraToModelFunction(camera, model, canvas);
+        fitCameraToModelFunction(camera, canvas);
         renderer.render(scene, camera);
     }
 
@@ -619,8 +657,8 @@ window.addEventListener('resize', () => {
     // take over. 
     // Else we only update the camera
 
-    if ( autoFitCameraToModel ) fitCameraToModelFunction(camera, model, canvas);
-    else setCameraView(width, height);
+    if ( autoFitCameraToModel ) fitCameraToModelFunction(camera, canvas);
+    else setCameraView(camera, width, height);
     
     // Get the new resolution of the view and give that to the renderer 
     setRendererSize(renderer, canvas);
@@ -674,19 +712,24 @@ const replaceModelSTL = (uri, callback) => {
 
 // Quite uneccessary function. Might delete later
 const setWaveLength = wavelength => {
+
     setWaveLength2(wavelength);
     renderer.render(scene, camera);
+
 };
 
 // Quite uneccessary function. Might delete later
 const setPhaseShift = phase => {
+
     setPhase(phase);
     renderer.render(scene, camera);
+
 };
 
 const setPhaseAnimation = bool => animatePhase = bool;
 
 const setMaterialUI = (materialString) => {
+
     switch (materialString) {
         case 'phase':
             currentMaterial = phaseMaterial;
@@ -700,8 +743,10 @@ const setMaterialUI = (materialString) => {
         default: 
             alert('Invalid material');
     }
+
     replaceMaterial(model, currentMaterial);
     renderer.render(scene, camera);
+    
 };
 
 
@@ -738,10 +783,8 @@ const getTS = () => {
     // Steps to perform
     // Make sure that model is in view
     // Make sure that the model has the right material
-    //setMaterialUI('mix');
-    //fitCameraToModelFunction(camera, model, canvas);
     // Get the output
-    let read = renderToBuffer();
+    let read = renderToBuffer(outputBufferCamera);
 
     const [r,g,b,a] = extractFourChannels(read);
     
@@ -776,19 +819,25 @@ const getTS = () => {
     // Finally, get the absolute value
     let TS = 10 * Math.log10(real_sum**2 + imag_sum**2);
 
-    console.log(TS);
-
     return TS
 };
 
 // Finally, add a default model to our scene. 
 replaceModelSTL('./ShaderFood/P677_shell(fine).stl', () => {
+    
     console.log("Default model added to scene");
+
 });
 
 
 // https://stackoverflow.com/a/30800715/1939970
+/* 
+    Input: Any javascript object
+    Creates a JSON file and prompts the user to download the 
+    file. 
+*/
 const downloadObjectAsJson = (exportObj, exportName) => {
+    
     var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
     var downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute("href",     dataStr);
@@ -796,6 +845,7 @@ const downloadObjectAsJson = (exportObj, exportName) => {
     document.body.appendChild(downloadAnchorNode); // required for firefox
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
+
 };
 
 
@@ -810,7 +860,23 @@ const testForA2mRadiusSphere = () => {
     // Set the material to our cool material
     setMaterialUI('mix');
     // Make sure that the model fits optimally in the camera
-    fitCameraToModelFunction(camera, model, canvas);
+    fitCameraToModelFunction(outputBufferCamera);
+
+    // Reize outputbuffer
+    resizeOutputBuffer(outputBufferCamera);
+    
+    // Set pixel area
+    const cameraWidth = outputBufferCamera.right - outputBufferCamera.left;
+    const cameraHeight = outputBufferCamera.top - outputBufferCamera.bottom;
+    const num_pixels = outputBuffer.height * outputBuffer.width;
+    setPixelArea(cameraWidth * cameraHeight / num_pixels);
+
+    // Show a tiny display of what our outputBufferCamera sees. 
+    let data = renderToBuffer(outputBufferCamera).map((val) => Math.max(0, val)).map((val) => Math.floor(Math.min(255,val*255)));
+    displayArrayInTinyWindow(data, outputBuffer.width, outputBuffer.height);
+    
+    // Show the outputBufferCamera
+    displayOutputBufferCamera();
     renderer.render(scene, camera);
     
     const num_calc = 100;
@@ -838,8 +904,124 @@ Programmet kommer nu att göra ett svep av olika frekvenser infallandes mot en s
     downloadObjectAsJson(exportObj, "2msphereDiffFreqsTS");
 };
 
+
+// Splitting up this function into several smaller functions 
+
+// Functions : 
+
+// Take picture of submarine -> read. Change the renderToBuffer.  
+
+// Display in tiny window -> displayArrayInTinyWindow DONE
+
+// Resize output buffer based on the outputBufferCamera and OUTPUT_TARGET_RESOLUTION. DONE
+
+// Show the outputBufferCameraHelper DONE
+
+/*
+    This function resizes the output buffer so that the aspect ratio 
+    of the buffer matches the aspect ratio of a camera, that can be given
+    as input, for example the outputBufferCamera. 
+
+    The size is determined by OUTPUT_TARGET_RESOLUTION, so that the 
+    width and the height of the outputBuffer is approximately
+    equal to OUTPUT_TARGET_RESOLUTION. Since there are flooring 
+    opertations involved when calculating the width and height of the
+    outoutBuffer, width * height <= OUTPUT_TARGET_RESOLUTION. 
+*/
+const resizeOutputBuffer = (camera) => {
+
+    // Get the aspect ratio of the camera    
+    const width = camera.right - camera.left;
+    const height = camera.top - camera.bottom;
+    const cameraAspectRatio = width/height;
+    
+    const totalTargetSize = OUTPUT_TARGET_RESOLUTION;
+    
+    // Set the size of the outputBuffer based on totalTargetSize and aspect ratio
+    // This needs some math. Let me explain to myself
+    // We know that totalTargetSize = w*h, and aspect ratio a = w/h
+    // The solution to this equation is given by
+    // h = sqrt(totalTargetSize/a), w = a * h
+    let bufferHeight = Math.sqrt(totalTargetSize/cameraAspectRatio);
+    // Since we are dealing with pixels, we need to make sure that the 
+    // height is an integer
+    bufferHeight = Math.floor(bufferHeight);
+    let bufferWidth = cameraAspectRatio * bufferHeight;
+    bufferWidth = Math.floor(bufferWidth);
+    
+    // Set the buffer size
+    outputBuffer.setSize(bufferWidth, bufferHeight);
+
+}
+
+/*
+    Shows the outputBufferCameraHelper and rerenders the image
+*/
+const displayOutputBufferCamera = () => {
+    
+    outputBufferCamera.updateMatrixWorld();
+    outputBufferCamera.updateProjectionMatrix();
+    // Set the outputBufferCameraHelper to visible and rerender
+    outputBufferCameraHelper.update();
+    outputBufferCameraHelper.visible = true;
+    renderer.render(scene, camera);   
+
+}
+
+/* 
+    This functions purpuse is to display the array given by renderToBuffer 
+    in the tiny img tag on the interface. 
+
+    Can be used to view any array really. Just make sure that the input 
+    follow the criteria: 
+        
+        + Elements in array are integers
+        + They are bound between 0 and 255.
+*/
+const displayArrayInTinyWindow = (arr, width, height) => {
+    
+    const tinyWindow = document.getElementById("outputBufferCanvas");
+    
+    const invisibleCanvas = document.createElement('canvas');
+    const ctx = invisibleCanvas.getContext('2d');
+    
+    invisibleCanvas.height = height;
+    invisibleCanvas.width = width;
+    
+    // Create the image data array that represents all the pixels in the canvas
+    const imageData = ctx.createImageData(width, height);
+    
+    // Put all elements from arr into imageData
+    for (let i = 0; i < imageData.data.length; i++){
+        imageData.data[i] = arr[i];
+    } 
+
+    // Put the data back into the canvas
+    ctx.putImageData(imageData, 0, 0); // 0,0 is where in the image to put the data
+                                       // This is top left corner
+
+    // Get the url of the created image and display in
+    tinyWindow.src = invisibleCanvas.toDataURL("image/png");
+     
+};
+
+const renderOutputBufferCameraInTinyWindow = () => {
+
+    fitCameraToModelFunction(outputBufferCamera);
+    displayOutputBufferCamera();
+    resizeOutputBuffer(outputBufferCamera);
+    let data = renderToBuffer(outputBufferCamera);
+    // Make sure data is 0, 255 ints
+    data = data.map((val) => Math.max(0, val))  // All negative values in the read should be 0
+            .map((val) => Math.floor(Math.min(255,val*255)));           // 1's correspond to 255 
+        
+    displayArrayInTinyWindow(data, outputBuffer.width, outputBuffer.height);    
+
+}
+
+
 // Export all the setters, getters and setListneres to the ui controller.
-export {setCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation, autoFitCameraToModelUI, setMaterialUI, testForA2mRadiusSphere};
+export {setCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation, autoFitCameraToModelUI, setMaterialUI, testForA2mRadiusSphere, renderOutputBufferCameraInTinyWindow, setTargetResolution};
 
 // [x] Ladda upp en modell. Typ klar, OBJ fungerar inte. 
 // [x] Styra position av modellen

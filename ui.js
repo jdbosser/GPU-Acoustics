@@ -7,7 +7,9 @@ const copyKeysAndVals = (obj1, obj2) => {
 
 let ui_controller = function(){
     this.wavelength = 1;
+    this.outputBufferCamera = dman.renderOutputBufferCameraInTinyWindow;
     this.phase = 0;
+    this.targetResolution = 2000*2000;
     this.animatePhase = false;
     this.autoRotateCamera = false;
     this.material = 'phase';
@@ -26,6 +28,8 @@ let ui_controller = function(){
 const gui = new dat.GUI();
 const controller = new ui_controller();
 
+gui.add(controller, "targetResolution").onChange((value) => dman.setTargetResolution(value));
+gui.add(controller, 'outputBufferCamera');
 gui.add(controller, 'wavelength').onChange((value) => dman.setWaveLength(value));
 gui.add(controller, 'phase').step(0.01).onChange((value) => {dman.setPhaseShift(value);});
 gui.add(controller, 'animatePhase').onChange((value) => dman.setPhaseAnimation(value));
