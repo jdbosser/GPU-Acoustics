@@ -36,3 +36,14 @@ with open(filename, 'r') as f:
     plt.savefig("pngs/2msphereDiffFreqTS2000x2000.png", format="png") 
     plt.savefig("svgs/2msphereDiffFreqTS2000x2000.png", format="svg") 
 
+filename = "rotateTSSubmarine.json"
+with open(filename, 'r') as f:
+    read_data = f.read()
+    json_data = json.loads(read_data) 
+    plt.clf()
+    plt.plot(json_data['x'], json_data['y'])
+    plt.xlabel("Angle [rad]");
+    plt.ylabel("TS [dB]")
+    plt.savefig(filename+".png", format="png") 
+    plt.savefig(filename+".svg", format="svg") 
+

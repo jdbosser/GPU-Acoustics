@@ -5,6 +5,16 @@ import { OrbitControls } from './three.js/examples/jsm/controls/OrbitControls.js
 import Stats from './stats.js/build/stats.module.js';
 
 
+// Helper function to get a linspaced array between two numbers. 
+const linspace = (min, max, num) => {
+        const output = new Array(num);
+        const delta = (max - min) / (num-1);
+        for (let i = 0; i < num; i++) {
+            output[i] = min + delta*i;
+        }   
+        return output; 
+};
+
 const waveLengthListeners = new Array();
 const [getWaveLength, setWaveLength2] = (function(){
     
@@ -810,8 +820,6 @@ const getTS = () => {
     let real_sum = real_part.reduce(sum, 0);
     let imag_sum = imag_part.reduce(sum, 0);
 
-    console.log('Wavelen', getWaveLength());
-
     // Multiply with scaling
     real_sum *= getPixelArea()/getWaveLength();
     imag_sum *= getPixelArea()/getWaveLength();
@@ -883,15 +891,6 @@ const testForA2mRadiusSphere = () => {
     alert(`
 Programmet kommer nu att göra ett svep av olika frekvenser infallandes mot en sfär med en 2 meters radie. Svepet består av ${num_calc} olika beräkningar, och kan därför ta lite tid. Webläsarfönstret kan temporärt frysa under tiden beräkningarna görs. Efter att beräkningarna är klara kommer en json fil med frekvenser och beräknad TS att laddas ner. 
     `);
-
-    const linspace = (min, max, num) => {
-        const output = new Array(num);
-        const delta = (max - min) / (num-1);
-        for (let i = 0; i < num; i++) {
-            output[i] = min + delta*i;
-        }   
-        return output; 
-    };
     
     const freqs = linspace(1,Math.log10(50000),num_calc).map((v) => 10**v);
     const wavelengths = freqs.map((f) => 1500/f);
@@ -1005,6 +1004,15 @@ const displayArrayInTinyWindow = (arr, width, height) => {
      
 };
 
+const displayFloat32ArrayInTinyWindow = (arr, width, height) => {
+    
+    // Make sure data is 0, 255 ints
+    arr = arr.map((val) => Math.max(0, val))  // All negative values in the read should be 0
+            .map((val) => Math.floor(Math.min(255,val*255)));           // 1's correspond to 255 
+    displayArrayInTinyWindow(arr, width, height); 
+
+};
+
 const renderOutputBufferCameraInTinyWindow = () => {
 
     fitCameraToModelFunction(outputBufferCamera);
@@ -1019,9 +1027,116 @@ const renderOutputBufferCameraInTinyWindow = () => {
 
 }
 
+const rotationTS = () => {
+    // What to do:
+
+    // Set material
+
+    // For every degree: 
+        // Rotate the model
+        // Fit the outputBufferCamera
+        // Resize outputBuffer
+        // get pixel area
+        // getTS()
+
+    const demoMode = true;
+    
+    replaceMaterial(model, mixMaterial);
+     
+    const rotationDegs = linspace(0, Math.PI, 180);
+    
+    if (!demoMode) {
+    
+        const TSs = rotationDegs.map((rotationDeg) => {
+            const percentage_complete = rotationDeg / Math.PI
+            console.log(rotationDeg, `${100*percentage_complete}%`);    
+            // Rotate the model
+            setModelRotation(0,0,rotationDeg);
+            
+            // Fit the outputBufferCamera 
+            fitCameraToModelFunction(outputBufferCamera);
+
+            // For debbuging
+            //displayOutputBufferCamera();
+            
+            // Resize the output buffer
+            resizeOutputBuffer(outputBufferCamera);
+
+            // Get the pixel area
+            const cameraWidth = outputBufferCamera.right - outputBufferCamera.left;
+            const cameraHeight = outputBufferCamera.top - outputBufferCamera.bottom;
+            const num_pixels = outputBuffer.height * outputBuffer.width;
+            setPixelArea(cameraWidth * cameraHeight / num_pixels);
+
+            // Get the output of the buffer         
+            //let data = renderToBuffer(outputBufferCamera);
+            // displayFloat32ArrayInTinyWindow(data, outputBuffer.width, outputBuffer.height);     
+            
+            return getTS();
+        
+        });
+        
+
+        const exportObj = {x:rotationDegs, y:TSs};
+        downloadObjectAsJson(exportObj, "result");
+
+    }
+    
+    else {
+    
+        // In demo mode, we do the same things, but we render stuff. We thus need to request animation frames
+        let i = 0;
+
+        const result = new Array(); 
+        const animate = () => {
+            const rotationDeg = rotationDegs[i];
+
+            const percentage_complete = rotationDeg / Math.PI
+            console.log(rotationDeg, `${100*percentage_complete}%`);    
+            // Rotate the model
+            setModelRotation(0,0,rotationDeg);
+            
+            // Fit the outputBufferCamera 
+            fitCameraToModelFunction(outputBufferCamera);
+
+            // For debbuging
+            displayOutputBufferCamera();
+            
+            // Resize the output buffer
+            resizeOutputBuffer(outputBufferCamera);
+
+            // Get the pixel area
+            const cameraWidth = outputBufferCamera.right - outputBufferCamera.left;
+            const cameraHeight = outputBufferCamera.top - outputBufferCamera.bottom;
+            const num_pixels = outputBuffer.height * outputBuffer.width;
+            setPixelArea(cameraWidth * cameraHeight / num_pixels);
+
+            // Get the output of the buffer         
+            let data = renderToBuffer(outputBufferCamera);
+            displayFloat32ArrayInTinyWindow(data, outputBuffer.width, outputBuffer.height);     
+            
+            // Get the result
+            result.push(getTS());
+
+            i++;
+            if (i < rotationDegs.length) requestAnimationFrame(animate);
+            if (i == rotationDegs.length) {
+
+                // We are done!
+                
+                const exportObj = {x:rotationDegs, y:result};
+                downloadObjectAsJson(exportObj, "result");
+              
+            }
+        }
+        requestAnimationFrame(animate); 
+        
+    }
+    
+}
 
 // Export all the setters, getters and setListneres to the ui controller.
-export {setCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation, autoFitCameraToModelUI, setMaterialUI, testForA2mRadiusSphere, renderOutputBufferCameraInTinyWindow, setTargetResolution};
+export {setCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation, autoFitCameraToModelUI, setMaterialUI, testForA2mRadiusSphere, renderOutputBufferCameraInTinyWindow, setTargetResolution, rotationTS};
 
 // [x] Ladda upp en modell. Typ klar, OBJ fungerar inte. 
 // [x] Styra position av modellen
