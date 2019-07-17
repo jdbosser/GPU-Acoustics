@@ -1074,9 +1074,6 @@ const rotationTS = () => {
             // Fit the outputBufferCamera 
             fitCameraToModelFunction(outputBufferCamera);
 
-            // For debbuging
-            //displayOutputBufferCamera();
-            
             // Resize the output buffer
             resizeOutputBuffer(outputBufferCamera);
 
@@ -1085,16 +1082,17 @@ const rotationTS = () => {
             const cameraHeight = outputBufferCamera.top - outputBufferCamera.bottom;
             const num_pixels = outputBuffer.height * outputBuffer.width;
             setPixelArea(cameraWidth * cameraHeight / num_pixels);
-
-            // Get the output of the buffer         
-            //let data = renderToBuffer(outputBufferCamera);
-            // displayFloat32ArrayInTinyWindow(data, outputBuffer.width, outputBuffer.height);     
             
-            return getTS();
+            // remove camera helper
+            const visibility_state = outputBufferCameraHelper.visible
+            outputBufferCameraHelper.visible = false;
+            const result = getTS();
+            outputBufferCameraHelper.visible = visibility_state;
+            
+            return result;
         
         });
         
-
         const exportObj = {x:rotationDegs, y:TSs};
         downloadObjectAsJson(exportObj, "result");
 
@@ -1129,13 +1127,14 @@ const rotationTS = () => {
             const num_pixels = outputBuffer.height * outputBuffer.width;
             setPixelArea(cameraWidth * cameraHeight / num_pixels);
 
-            // Get the output of the buffer         
-            let data = renderToBuffer(outputBufferCamera);
-            displayFloat32ArrayInTinyWindow(data, outputBuffer.width, outputBuffer.height);     
+            // Show in tiny window
+            renderOutputBufferCameraInTinyWindow(); 
             
+            outputBufferCameraHelper.visible = false; 
             // Get the result
             result.push(getTS());
-
+            outputBufferCameraHelper.visible = true;
+    
             i++;
             if (i < rotationDegs.length) requestAnimationFrame(animate);
             if (i == rotationDegs.length) {
