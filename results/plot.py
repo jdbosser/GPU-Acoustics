@@ -47,3 +47,12 @@ with open(filename, 'r') as f:
     plt.savefig(filename+".png", format="png") 
     plt.savefig(filename+".svg", format="svg") 
 
+filename = "2msphereDiffFreqsTScomplexMaterial.json"
+with open(filename, 'r') as f:
+    read_data = f.read()
+    json_data = json.loads(read_data) 
+    plt.clf()
+    logplot(json_data['x'], json_data['y'])
+    plt.savefig(filename+".png", format="png") 
+    plt.savefig(filename+".svg", format="svg") 
+
