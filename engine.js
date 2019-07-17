@@ -845,15 +845,12 @@ const setMaterialUI = (materialString) => {
 };
 
 
+
+/*
+    This function assumes that the model has the complexMaterial selected. 
+*/ 
 const getTS = () => {
     
-    
-    // Caused crash of tab 
-    /*function zipWith(λ,xs,ys) {
-        if(xs.length == 0) return []
-        else return [λ(xs[0],ys[0])].concat(zipWith(λ,xs.slice(1),ys.slice(1)));
-    };*/
-
     const extractFourChannels = (arr) => {
         
         const num_elements = arr.length;
@@ -883,23 +880,9 @@ const getTS = () => {
 
     const [r,g,b,a] = extractFourChannels(read);
     
-    const multiplyBy2pi = (val) => val*2*Math.PI; // Maybe add negative sign here
-    let intensity = r;
-    let phase = g.map(multiplyBy2pi);
-   
-    let cos_part = phase.map((angle) => Math.cos(angle));
-    let sin_part = phase.map((angle) => Math.sin(angle));
-    
-    const multiplyArrs = (arr1, arr2) => {
-        const output = new Float32Array(arr1.length);
-        for(let i = 0; i < arr1.length; i++) {
-            output[i] = arr1[i]*arr2[i];
-        };
-        return output;
-    };
-    
-    let real_part = multiplyArrs(intensity, cos_part);
-    let imag_part = multiplyArrs(intensity, sin_part);
+    // Assume that complexMaterial is selected
+    let real_part = r;
+    let imag_part = g;
 
     let sum = (x,y) => x + y;
     let real_sum = real_part.reduce(sum, 0);
@@ -913,6 +896,7 @@ const getTS = () => {
     let TS = 10 * Math.log10(real_sum**2 + imag_sum**2);
 
     return TS
+
 };
 
 // Finally, add a default model to our scene. 
@@ -951,7 +935,7 @@ const testForA2mRadiusSphere = () => {
     // Place the model and material to our super cool material
     replaceModel(sphere);
     // Set the material to our cool material
-    setMaterialUI('mix');
+    setMaterialUI('complex');
     // Make sure that the model fits optimally in the camera
     fitCameraToModelFunction(outputBufferCamera);
 
@@ -1144,7 +1128,7 @@ const rotationTS = () => {
 
     const demoMode = true;
     
-    replaceMaterial(model, mixMaterial);
+    replaceMaterial(model, complexMaterial);
      
     const rotationDegs = linspace(0, Math.PI, 180);
     
