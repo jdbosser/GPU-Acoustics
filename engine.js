@@ -423,7 +423,7 @@ const mixMaterial = (function() {
 
         gl_FragColor = vec4(intensity, // R
                           phase, // G
-                          dot(vUv, light), // B
+                          0.0, // dot(vUv, light), // B
                           1.0);  // A
     }`; 
     
@@ -988,13 +988,8 @@ const displayArrayInTinyWindow = (arr, width, height) => {
     invisibleCanvas.width = width;
     
     // Create the image data array that represents all the pixels in the canvas
-    const imageData = ctx.createImageData(width, height);
-    
-    // Put all elements from arr into imageData
-    for (let i = 0; i < imageData.data.length; i++){
-        imageData.data[i] = arr[i];
-    } 
-
+    const imageData = new ImageData(new Uint8ClampedArray(arr), width, height);
+     
     // Put the data back into the canvas
     ctx.putImageData(imageData, 0, 0); // 0,0 is where in the image to put the data
                                        // This is top left corner
@@ -1005,12 +1000,10 @@ const displayArrayInTinyWindow = (arr, width, height) => {
 };
 
 const displayFloat32ArrayInTinyWindow = (arr, width, height) => {
-    
+   
     // Make sure data is 0, 255 ints
-    arr = arr.map((val) => Math.max(0, val))  // All negative values in the read should be 0
-            .map((val) => Math.floor(Math.min(255,val*255)));           // 1's correspond to 255 
-    displayArrayInTinyWindow(arr, width, height); 
-
+    arr = arr.map((val) => val*255);
+    displayArrayInTinyWindow(arr);
 };
 
 const renderOutputBufferCameraInTinyWindow = () => {
@@ -1026,6 +1019,8 @@ const renderOutputBufferCameraInTinyWindow = () => {
     displayArrayInTinyWindow(data, outputBuffer.width, outputBuffer.height);    
 
 }
+
+modelRotationListeners.push(renderOutputBufferCameraInTinyWindow);
 
 const rotationTS = () => {
     // What to do:
