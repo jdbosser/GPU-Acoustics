@@ -419,8 +419,6 @@ const mixMaterial = (function() {
         float intensity = dot(normalize(vNormal), light);
         float phase = mod(2.0 * (dot(vUv, light) / lambda) + phase, 1.0);
 
-        float prod = dot(normalize(vNormal), light);
-
         gl_FragColor = vec4(intensity, // R
                           phase, // G
                           0.0, // dot(vUv, light), // B
@@ -461,6 +459,90 @@ const mixMaterial = (function() {
 }
 )();
 
+const complexMaterial = (function() {
+
+    const vertexShader = `
+   	varying vec3 vNormal;
+    varying vec3 vUv;
+    void main() {
+
+    // set the vNormal value with
+    // the attribute value passed
+    // in by Three.js
+    vNormal = normal;
+    vUv = position;
+    gl_Position = projectionMatrix *
+                modelViewMatrix *
+                vec4(position, 1.0);
+    } 
+    `;
+
+    const fragmentShader =  `
+    #define M_PI 3.1415926535897932384626433832795
+    varying vec3 vNormal;
+    varying vec3 vUv;
+    uniform mat4 inverseRotationMatrix;
+    uniform float lambda;
+    uniform float phase;
+
+    void main() {
+
+      // calc the dot product and clamp
+      // 0 -> 1 rather than -1 -> 1
+      vec4 light4 = vec4(0.0, 1.0, 0.0, 1.0);
+      
+      // Rotate 
+      light4 = inverseRotationMatrix * light4; 
+
+      vec3 light = vec3(light4);
+       
+      // ensure it's normalized
+      light = normalize(light);
+
+        // Intensity is the cos(theta) between the "light" and the normal 
+        float intensity = max(0.0, dot(normalize(vNormal), light));
+
+        // The angle is the distance the sound travels, times 2 pi divided by wavelength
+        float angle = 4. * M_PI * dot(vUv, light) / lambda + phase;
+
+        gl_FragColor = vec4(intensity * cos(angle), // R
+                          intensity * sin(angle), // G
+                          0.0, // dot(vUv, light), // B
+                          1.0);  // A
+    }`; 
+    
+      
+    const inverseRotationMatrix = new THREE.Matrix4();
+    const customMaterial = new THREE.ShaderMaterial({
+         uniforms: {
+            lambda: {type: 'float', value: getWaveLength()},
+            inverseRotationMatrix: {type: 'mat4', value: inverseRotationMatrix},
+            phase: {type: 'float', value: getPhase()}
+
+        },
+
+        fragmentShader: fragmentShader,
+        vertexShader: vertexShader    
+    
+    });
+
+    // Bind some functions that change the material when the model changes
+    // The material needs to know about changes in wavelength, 
+    // phase and model rotation.
+    waveLengthListeners.push((newWaveLength) => {
+        customMaterial.uniforms.lambda.value = newWaveLength;
+    });
+    phaseChangeListeners.push((newPhase) => {
+        customMaterial.uniforms.phase.value = newPhase;    
+    }); 
+    modelRotationListeners.push((x,y,z) => {
+        const rotation = new THREE.Euler(-x,-y,-z, 'XYZ');
+        inverseRotationMatrix.makeRotationFromEuler(rotation);     
+    });
+    
+    return customMaterial;    
+}
+)();
 // If we switch model, set the material to the current material
 // current material changes based on UI input. 
 // set default to phase material.
@@ -749,6 +831,9 @@ const setMaterialUI = (materialString) => {
             break;
         case 'mix':
             currentMaterial = mixMaterial;
+            break;
+        case 'complex':
+            currentMaterial = complexMaterial;
             break;
         default: 
             alert('Invalid material');

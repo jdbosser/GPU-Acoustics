@@ -54,7 +54,7 @@ modelPositionFolder.add(controller.model.position, 'x').step(0.1).onChange(updat
 modelPositionFolder.add(controller.model.position, 'y').step(0.1).onChange(updateModelPosition);
 modelPositionFolder.add(controller.model.position, 'z').step(0.1).onChange(updateModelPosition);
 
-gui.add(controller, 'material', ['phase', 'intensity', 'mix']).onChange((value) => dman.setMaterialUI(value));
+gui.add(controller, 'material', ['phase', 'intensity', 'mix', 'complex']).onChange((value) => dman.setMaterialUI(value));
 
 const updateModelRotation = () => {
      // Apply function takes a list of arguments, i.e the array returned by Object.values
