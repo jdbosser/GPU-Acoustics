@@ -1006,19 +1006,42 @@ const displayFloat32ArrayInTinyWindow = (arr, width, height) => {
     displayArrayInTinyWindow(arr);
 };
 
-const renderOutputBufferCameraInTinyWindow = () => {
-
-    fitCameraToModelFunction(outputBufferCamera);
-    displayOutputBufferCamera();
-    resizeOutputBuffer(outputBufferCamera);
-    let data = renderToBuffer(outputBufferCamera);
-    // Make sure data is 0, 255 ints
-    data = data.map((val) => Math.max(0, val))  // All negative values in the read should be 0
-            .map((val) => Math.floor(Math.min(255,val*255)));           // 1's correspond to 255 
+/* 
+    Uses an immidietly invoked function expression to prevent recreation of the 
+    tinyWindowRenderer. See more IIFE here: 
+*/
+const renderOutputBufferCameraInTinyWindow = ( () => {
         
-    displayArrayInTinyWindow(data, outputBuffer.width, outputBuffer.height);    
+    // create a new renderer, and write directly to that renderer. 
+    const invisibleCanvas = document.getElementById("invisibleCanvas");
+    const tinyWindowRenderer = new THREE.WebGLRenderer({canvas: invisibleCanvas}); 
+         
+    const f = () => {
+           
+        // Fit the camera to the model     
+        fitCameraToModelFunction(outputBufferCamera);
 
-}
+        // Make the buffer the same size as the model
+        resizeOutputBuffer(outputBufferCamera);
+        
+        // Set up the canvas dimensions. 
+        invisibleCanvas.width = outputBuffer.width;
+        invisibleCanvas.height = outputBuffer.height;
+        tinyWindowRenderer.setSize(outputBuffer.width, outputBuffer.height, false);
+
+
+        displayOutputBufferCamera();  
+        renderer.render(scene, camera);
+        
+        outputBufferCameraHelper.visible = false; 
+        tinyWindowRenderer.render(scene, outputBufferCamera);
+        outputBufferCameraHelper.visible = true;
+
+    };
+
+    return f;
+
+} )();
 
 modelRotationListeners.push(renderOutputBufferCameraInTinyWindow);
 
