@@ -656,7 +656,7 @@ const renderToBuffer = (camera) => {
 // Make it possible for the ui to respond to event when someone 
 // moves the camera. This is useful to update the coordinates for 
 // a camera controller when someone changes the camera position with mouse. 
-const setCameraChangeListener = handler => {
+const addCameraChangeListener = handler => {
 
     controls.addEventListener('change', handler);    
 
@@ -840,6 +840,7 @@ const setMaterialUI = (materialString) => {
     }
 
     replaceMaterial(model, currentMaterial);
+    renderOutputBufferCameraInTinyWindow();
     renderer.render(scene, camera);
     
 };
@@ -908,6 +909,8 @@ const getTS = () => {
 replaceModelSTL('./ShaderFood/P677_shell(fine).stl', () => {
     
     console.log("Default model added to scene");
+    renderOutputBufferCameraInTinyWindow();    
+    displayOutputBufferCamera();
 
 });
 
@@ -1149,6 +1152,8 @@ const renderOutputBufferCameraInTinyWindow = ( () => {
 } )();
 
 modelRotationListeners.push(renderOutputBufferCameraInTinyWindow);
+phaseChangeListeners.push(renderOutputBufferCameraInTinyWindow);
+waveLengthListeners.push(renderOutputBufferCameraInTinyWindow);
 
 const rotationTS = () => {
     // What to do:
@@ -1257,8 +1262,11 @@ const rotationTS = () => {
     
 }
 
+const addWaveLengthChangeListener = (handler) => waveLengthListeners.push(handler);
+const addModelRotationChangeListener = (handler) => modelRotationListeners.push(handler);
+
 // Export all the setters, getters and setListneres to the ui controller.
-export {setCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation, autoFitCameraToModelUI, setMaterialUI, testForA2mRadiusSphere, renderOutputBufferCameraInTinyWindow, setTargetResolution, rotationTS};
+export {addCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation, autoFitCameraToModelUI, setMaterialUI, testForA2mRadiusSphere, renderOutputBufferCameraInTinyWindow, setTargetResolution, rotationTS, addWaveLengthChangeListener, addModelRotationChangeListener};
 
 // [x] Ladda upp en modell. Typ klar, OBJ fungerar inte. 
 // [x] Styra position av modellen

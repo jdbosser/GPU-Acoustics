@@ -32,7 +32,7 @@ const controller = new ui_controller();
 gui.add(controller, 'rotationTS');
 gui.add(controller, "targetResolution").onChange((value) => dman.setTargetResolution(value));
 gui.add(controller, 'outputBufferCamera');
-gui.add(controller, 'wavelength').onChange((value) => dman.setWaveLength(value));
+gui.add(controller, 'wavelength').step(0.00001).onChange((value) => dman.setWaveLength(value));
 gui.add(controller, 'phase').step(0.01).onChange((value) => {dman.setPhaseShift(value);});
 gui.add(controller, 'animatePhase').onChange((value) => dman.setPhaseAnimation(value));
 gui.add(controller, 'autoRotateCamera').onChange((value) => dman.setAutoRotation(value));
@@ -106,8 +106,28 @@ const updateGuiCameraChange = (o) => {
         cameraLookAtFolder.__controllers[i].updateDisplay();
     } 
 } 
-dman.setCameraChangeListener(updateGuiCameraChange);
+dman.addCameraChangeListener(updateGuiCameraChange);
 dman.setAutoRotation(false);
+
+dman.addWaveLengthChangeListener((wavelength) => {
+
+    controller.wavelength = wavelength;
+    
+    gui.__controllers[3].updateDisplay();
+
+});
+
+
+dman.addModelRotationChangeListener((x,y,z) => {
+    for (var i in cameraPositionFolder.__controllers) {
+        controller.model.rotation.x = x;
+        controller.model.rotation.y = y;
+        controller.model.rotation.z = z;
+        
+        modelRotationFolder.__controllers[i].updateDisplay();
+    }   
+});
+
 
 // Upload a model
 const model_input = document.getElementById('model_upload');
