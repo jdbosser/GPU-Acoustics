@@ -293,7 +293,7 @@ const phaseMaterial = (function(){
         customMaterial.uniforms.phase.value = newPhase;    
     }); 
     modelRotationListeners.push((x,y,z) => {
-        const rotation = new THREE.Euler(-x,-y,-z, 'XYZ');
+        const rotation = new THREE.Euler(-x,-y,-z, 'ZYX');
         inverseRotationMatrix.makeRotationFromEuler(rotation);
     });
 
@@ -367,7 +367,7 @@ const intensityMaterial = (function(){
 
     // This material needs to know about changes in model rotation.
     modelRotationListeners.push((x,y,z) => {
-        const rotation = new THREE.Euler(-x,-y,-z, 'XYZ');
+        const rotation = new THREE.Euler(-x,-y,-z, 'ZYX');
         inverseRotationMatrix.makeRotationFromEuler(rotation);
     });
 
@@ -451,7 +451,7 @@ const mixMaterial = (function() {
         customMaterial.uniforms.phase.value = newPhase;    
     }); 
     modelRotationListeners.push((x,y,z) => {
-        const rotation = new THREE.Euler(-x,-y,-z, 'XYZ');
+        const rotation = new THREE.Euler(-x,-y,-z, 'ZYX');
         inverseRotationMatrix.makeRotationFromEuler(rotation);     
     });
     
@@ -536,7 +536,7 @@ const complexMaterial = (function() {
         customMaterial.uniforms.phase.value = newPhase;    
     }); 
     modelRotationListeners.push((x,y,z) => {
-        const rotation = new THREE.Euler(-x,-y,-z, 'XYZ');
+        const rotation = new THREE.Euler(-x,-y,-z, 'ZYX');
         inverseRotationMatrix.makeRotationFromEuler(rotation);     
     });
     
@@ -851,6 +851,9 @@ const setMaterialUI = (materialString) => {
 */ 
 const getTS = () => {
     
+    const helperVisibilityState = outputBufferCameraHelper.visible
+    outputBufferCameraHelper.visible = false;
+     
     const extractFourChannels = (arr) => {
         
         const num_elements = arr.length;
@@ -894,6 +897,8 @@ const getTS = () => {
 
     // Finally, get the absolute value
     let TS = 10 * Math.log10(real_sum**2 + imag_sum**2);
+    
+    outputBufferCameraHelper.visible = helperVisibilityState;
 
     return TS
 
@@ -928,6 +933,11 @@ const downloadObjectAsJson = (exportObj, exportName) => {
 
 // Test for a sphere
 const testForA2mRadiusSphere = () => {
+    
+    const DEMO_MODE = true; 
+
+    // Stuff common to the two modes
+    
     // Create the sphere
     const geometry = new THREE.SphereGeometry(2, 128, 128);
     const material = new THREE.MeshLambertMaterial({color: 0xff5533});   
@@ -948,10 +958,6 @@ const testForA2mRadiusSphere = () => {
     const num_pixels = outputBuffer.height * outputBuffer.width;
     setPixelArea(cameraWidth * cameraHeight / num_pixels);
 
-    // Show a tiny display of what our outputBufferCamera sees. 
-    let data = renderToBuffer(outputBufferCamera).map((val) => Math.max(0, val)).map((val) => Math.floor(Math.min(255,val*255)));
-    displayArrayInTinyWindow(data, outputBuffer.width, outputBuffer.height);
-    
     // Show the outputBufferCamera
     displayOutputBufferCamera();
     renderer.render(scene, camera);
@@ -963,13 +969,44 @@ Programmet kommer nu att göra ett svep av olika frekvenser infallandes mot en s
     
     const freqs = linspace(1,Math.log10(50000),num_calc).map((v) => 10**v);
     const wavelengths = freqs.map((f) => 1500/f);
-    
-    const TSs = wavelengths.map((w) => {
-        setWaveLength2(w);
-        return getTS();    
-    });
-    const exportObj = {x:freqs, y:TSs};
-    downloadObjectAsJson(exportObj, "2msphereDiffFreqsTS");
+
+    if ( !DEMO_MODE ) {
+
+          
+        const TSs = wavelengths.map((w) => {
+            setWaveLength2(w);
+            return getTS();    
+        });
+        const exportObj = {x:freqs, y:TSs};
+        downloadObjectAsJson(exportObj, "2msphereDiffFreqsTS");
+
+    } 
+
+    else {
+
+        let i = 0; 
+        const results = new Array();
+        const animate = () => {
+
+            setWaveLength2(wavelengths[i]);
+            renderer.render(scene, camera);
+            renderOutputBufferCameraInTinyWindow();
+            results.push(getTS()); 
+            
+
+            i++;
+            if (i < wavelengths.length) requestAnimationFrame(animate);
+            if (i == wavelengths.length) {
+
+                alert("We are done!");    
+                const exportObj = {x:freqs, y:results};
+                downloadObjectAsJson(exportObj, "2msphereDiffFreqsTS");
+
+            }  
+        };
+        requestAnimationFrame(animate);
+
+    }
 };
 
 
@@ -1098,13 +1135,12 @@ const renderOutputBufferCameraInTinyWindow = ( () => {
         invisibleCanvas.height = outputBuffer.height;
         tinyWindowRenderer.setSize(outputBuffer.width, outputBuffer.height, false);
 
-
-        displayOutputBufferCamera();  
         renderer.render(scene, camera);
         
+        const visibility_state = outputBufferCameraHelper.visible;
         outputBufferCameraHelper.visible = false; 
         tinyWindowRenderer.render(scene, outputBufferCamera);
-        outputBufferCameraHelper.visible = true;
+        outputBufferCameraHelper.visible = visibility_state;
 
     };
 
