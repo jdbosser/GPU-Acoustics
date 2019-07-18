@@ -1163,7 +1163,11 @@ let autoRenderToTinyWindow = false;
     waveLengthListeners.push(f);
 })();
 
-const setAutoRenderToTinyWindow = (bool) => autoRenderToTinyWindow = bool;
+const setAutoRenderToTinyWindow = (bool) => {
+    
+    autoRenderToTinyWindow = bool;
+    if ( bool == true ) renderOutputBufferCameraInTinyWindow();
+}
 
 const rotationTS = () => {
     // What to do:
