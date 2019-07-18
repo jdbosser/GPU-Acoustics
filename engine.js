@@ -1070,8 +1070,10 @@ const displayOutputBufferCamera = (bool) => {
 
     if ( bool == true ) {
         
+        fitCameraToModelFunction(outputBufferCamera); 
         outputBufferCamera.updateMatrixWorld();
         outputBufferCamera.updateProjectionMatrix();
+        
         // Set the outputBufferCameraHelper to visible and rerender
         outputBufferCameraHelper.update();
         outputBufferCameraHelper.visible = true;
@@ -1289,13 +1291,3 @@ const addModelRotationChangeListener = (handler) => modelRotationListeners.push(
 
 // Export all the setters, getters and setListneres to the ui controller.
 export {addCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation, autoFitCameraToModelUI, setMaterialUI, testForA2mRadiusSphere, renderOutputBufferCameraInTinyWindow, setTargetResolution, rotationTS, addWaveLengthChangeListener, addModelRotationChangeListener, displayOutputBufferCamera, setAutoRenderToTinyWindow};
-
-// [x] Ladda upp en modell. Typ klar, OBJ fungerar inte. 
-// [x] Styra position av modellen
-// [x] Styra kameran
-// [x] Hur stor är varje pixel i meter? 
-// [x] Origo i mitten av modellen. 
-// [x] Rotation i Z-axeln på modellen. 
-// [x] Input av våglängd och fas. 
-// [x] Radio buttons visa intensitet, fas, eller intensitet och fas. 
-// [x] fps-mätare
