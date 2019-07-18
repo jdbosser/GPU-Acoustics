@@ -186,13 +186,11 @@ const animate = (time) => {
     stats.begin();
     
     if (controls.autoRotate || animatePhase) {
-        if(model && animatePhase && model.material.uniforms.phase) {
-           setPhase(time/1000);
-        }
+
+        if(model && animatePhase) setPhase(time/1000); 
+
         renderer.render(scene, camera);
-        controls.update();
-    
-        console.log("animating");    
+
     }
         
     stats.end();
