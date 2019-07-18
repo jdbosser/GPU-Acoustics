@@ -17,6 +17,7 @@ let ui_controller = function(){
     this.r2mSphereTest = dman.testForA2mRadiusSphere
     this.camera = {
         autoFitToModel: false,
+        showOutputBufferCameraHelper: true,
         position:   { x: 0, y: 0, z: 25 },    
         lookAt:     { x: 0, y: 0, z: 0 }
     };    
@@ -77,6 +78,7 @@ const updateCameraLookAt = () => {
 
 const cameraFolder = gui.addFolder('Camera');
 cameraFolder.add(controller.camera, 'autoFitToModel').onChange((value) => dman.autoFitCameraToModelUI(value));
+cameraFolder.add(controller.camera, 'showOutputBufferCameraHelper').onChange((value) => dman.displayOutputBufferCamera(value));
 const cameraPositionFolder = cameraFolder.addFolder('Position');
 cameraPositionFolder.add(controller.camera.position, 'x').step(0.01).onChange(updateCameraPosition);
 cameraPositionFolder.add(controller.camera.position, 'y').step(0.01).onChange(updateCameraPosition);
