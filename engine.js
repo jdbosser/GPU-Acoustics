@@ -4,6 +4,10 @@ import { OBJLoader2 } from "./three.js/examples/jsm/loaders/OBJLoader2.js";
 import { OrbitControls } from './three.js/examples/jsm/controls/OrbitControls.js';
 import Stats from './stats.js/build/stats.module.js';
 
+// This part of the code defines setters and getters and listeners
+// Setters and getters were nessecary to make sure that changes to properties
+// such as model rotation or wavelength are reflected in the ui and the 
+// materials.
 
 // Helper function to get a linspaced array between two numbers. 
 const linspace = (min, max, num) => {
@@ -141,6 +145,7 @@ let model;
 
 // The renderer is the element that draws our 3D objects to our canvas. 
 const renderer = new THREE.WebGLRenderer({canvas});
+
 // This "constant" tells us how many pixels we want the output buffer to consist of. Higher number => higher resolution. 
 // When rendering we get slightly less than the target number of pixels. 
 // This value might be changed by the user. 
@@ -646,10 +651,6 @@ const renderToBuffer = (camera) => {
 
 }; 
 
-
-// The following functions are exposing different 
-// properties to the ui. 
-
 // Make it possible for the ui to respond to event when someone 
 // moves the camera. This is useful to update the coordinates for 
 // a camera controller when someone changes the camera position with mouse. 
@@ -676,7 +677,6 @@ const setCameraPosition = (x,y,z) => {
 const setCameraLookAt = (camera, x,y,z) => {
 
     camera.lookAt(x,y,z);
-    //controls.target = new THREE.Vector3(x,y,z);
     controls.update();
 
 };
@@ -847,6 +847,17 @@ const setMaterialUI = (materialString) => {
 
 /*
     This function assumes that the model has the complexMaterial selected. 
+
+    This function does the following:
+
+        1. Make sure that the outputBufferCameraHelper is not visible
+        2. reads a Float32Array from GPU. 
+        3. Extracts the the four channels from the Float32Array
+        4. The channel r and g contain I*cos(theta) and I*sin(theta) for
+           the real and imaginary part of the integrand
+        5. Sums the real and imaginary parts. 
+        6. Scale the sums with dS/wavelength
+        7. Gets the norm of the complex number and apply 20*log of the norm. 
 */ 
 const getTS = () => {
     
@@ -903,7 +914,7 @@ const getTS = () => {
 
 };
 
-// Finally, add a default model to our scene. 
+// Add a default model to our scene. 
 replaceModelSTL('./ShaderFood/P677_shell(fine).stl', () => {
     
     console.log("Default model added to scene");
@@ -1130,6 +1141,24 @@ const setAutoRenderToTinyWindow = (bool) => {
     if ( bool == true ) renderOutputBufferCameraInTinyWindow();
 }
 
+/* 
+    The purpose of this function is to calculate the TS for every degree of 
+    rotation of the model around the z axis. More specifically, this function does 
+    the following
+
+        1. Replace the material to the complex material (needed for correct calculation in getTS)
+        2. Creates a list of rotations to apply on the model
+
+        For every rotation degree, we do the following
+            1. Set the model rotation
+            2. Make sure that the outputBufferCamera is resized optimally to the model
+            3. Make sure that outputBuffer has optimal aspect ratio and set its size. 
+            4. Calculates and sets the pixel area. 
+            5. Calculates the TS
+
+    When done, this function prompts the user to download a JSON file containing the 
+    rotation degrees in x and the TS in y. 
+*/
 const rotationTS = () => {
     // What to do:
 
