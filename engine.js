@@ -714,6 +714,7 @@ modelRotationListeners.push(() => {
 const setTargetResolution = (val) => {
 
     OUTPUT_TARGET_RESOLUTION = val;
+    renderOutputBufferCameraInTinyWindow();
 
 }
 
@@ -945,6 +946,8 @@ const testForA2mRadiusSphere = () => {
     const sphere = new THREE.Mesh(geometry, material);
     // Place the model and material to our super cool material
     replaceModel(sphere);
+    // Set model rotation to 0,0,0
+    setModelRotation(0,0,0);
     // Set the material to our cool material
     setMaterialUI('complex');
     // Make sure that the model fits optimally in the camera
