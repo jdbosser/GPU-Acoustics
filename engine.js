@@ -298,8 +298,6 @@ const phaseMaterial = (function(){
     return customMaterial;
 })(); 
 
-
-
 const intensityMaterial = (function(){
     const vertexShader = `
    	varying vec3 vNormal;
@@ -541,6 +539,7 @@ const complexMaterial = (function() {
     return customMaterial;    
 }
 )();
+
 // If we switch model, set the material to the current material
 // current material changes based on UI input. 
 // set default to phase material.
@@ -1013,19 +1012,6 @@ Programmet kommer nu att göra ett svep av olika frekvenser infallandes mot en s
     }
 };
 
-
-// Splitting up this function into several smaller functions 
-
-// Functions : 
-
-// Take picture of submarine -> read. Change the renderToBuffer.  
-
-// Display in tiny window -> displayArrayInTinyWindow DONE
-
-// Resize output buffer based on the outputBufferCamera and OUTPUT_TARGET_RESOLUTION. DONE
-
-// Show the outputBufferCameraHelper DONE
-
 /*
     This function resizes the output buffer so that the aspect ratio 
     of the buffer matches the aspect ratio of a camera, that can be given
@@ -1288,6 +1274,7 @@ const rotationTS = () => {
 
 const addWaveLengthChangeListener = (handler) => waveLengthListeners.push(handler);
 const addModelRotationChangeListener = (handler) => modelRotationListeners.push(handler);
+const addPhaseChangeListener = (handler) => phaseChangeListeners.push(handler);
 
 // Export all the setters, getters and setListneres to the ui controller.
-export {addCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation, autoFitCameraToModelUI, setMaterialUI, testForA2mRadiusSphere, renderOutputBufferCameraInTinyWindow, setTargetResolution, rotationTS, addWaveLengthChangeListener, addModelRotationChangeListener, displayOutputBufferCamera, setAutoRenderToTinyWindow};
+export {addCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation, autoFitCameraToModelUI, setMaterialUI, testForA2mRadiusSphere, renderOutputBufferCameraInTinyWindow, setTargetResolution, rotationTS, addWaveLengthChangeListener, addModelRotationChangeListener, displayOutputBufferCamera, setAutoRenderToTinyWindow, addPhaseChangeListener};

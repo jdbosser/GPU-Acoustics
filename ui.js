@@ -59,6 +59,15 @@ dman.addWaveLengthChangeListener((wavelength) => {
 
 });
 
+// We also want to be notified about changes to the phase
+dman.addPhaseChangeListener((phase) => {
+    
+    controller.phase = phase;
+
+    gui.__controllers[3].updateDisplay();
+
+});
+
 // Controls for the model
 const updateModelPosition = () => {
     // Apply function takes a list of arguments, i.e the array returned by Object.values
