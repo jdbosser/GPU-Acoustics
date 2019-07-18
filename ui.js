@@ -8,6 +8,7 @@ const copyKeysAndVals = (obj1, obj2) => {
 let ui_controller = function(){
     this.wavelength = 1;
     this.outputBufferCamera = dman.renderOutputBufferCameraInTinyWindow;
+    this.autoRenderToTinyWindow = false;
     this.rotationTS = dman.rotationTS;
     this.phase = 0;
     this.targetResolution = 2000*2000;
@@ -37,6 +38,7 @@ gui.add(controller, 'wavelength').step(0.00001).onChange((value) => dman.setWave
 gui.add(controller, 'phase').step(0.01).onChange((value) => {dman.setPhaseShift(value);});
 gui.add(controller, 'animatePhase').onChange((value) => dman.setPhaseAnimation(value));
 gui.add(controller, 'autoRotateCamera').onChange((value) => dman.setAutoRotation(value));
+gui.add(controller, 'autoRenderToTinyWindow').onChange((value) => dman.setAutoRenderToTinyWindow(value));
 
 // These loops can be done a lot prettier using a for ... of ... loop
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of#Iterating_over_a_Map

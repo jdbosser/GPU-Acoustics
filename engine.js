@@ -187,8 +187,8 @@ const animate = (time) => {
     
     if (controls.autoRotate || animatePhase) {
 
-        if(model && animatePhase) setPhase(time/1000); 
-
+        if (model && animatePhase) setPhase(time/1000); 
+        if ( controls.autoRotate ) controls.update();
         renderer.render(scene, camera);
 
     }
@@ -1161,9 +1161,18 @@ const renderOutputBufferCameraInTinyWindow = ( () => {
 
 } )();
 
-modelRotationListeners.push(renderOutputBufferCameraInTinyWindow);
-phaseChangeListeners.push(renderOutputBufferCameraInTinyWindow);
-waveLengthListeners.push(renderOutputBufferCameraInTinyWindow);
+let autoRenderToTinyWindow = false;
+// Create temporary function f and and add listeners
+(function() {
+    const f = () => {
+        if ( autoRenderToTinyWindow ) renderOutputBufferCameraInTinyWindow();    
+    }
+    modelRotationListeners.push(f);
+    phaseChangeListeners.push(f);
+    waveLengthListeners.push(f);
+})();
+
+const setAutoRenderToTinyWindow = (bool) => autoRenderToTinyWindow = bool;
 
 const rotationTS = () => {
     // What to do:
@@ -1276,7 +1285,7 @@ const addWaveLengthChangeListener = (handler) => waveLengthListeners.push(handle
 const addModelRotationChangeListener = (handler) => modelRotationListeners.push(handler);
 
 // Export all the setters, getters and setListneres to the ui controller.
-export {addCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation, autoFitCameraToModelUI, setMaterialUI, testForA2mRadiusSphere, renderOutputBufferCameraInTinyWindow, setTargetResolution, rotationTS, addWaveLengthChangeListener, addModelRotationChangeListener, displayOutputBufferCamera};
+export {addCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation, autoFitCameraToModelUI, setMaterialUI, testForA2mRadiusSphere, renderOutputBufferCameraInTinyWindow, setTargetResolution, rotationTS, addWaveLengthChangeListener, addModelRotationChangeListener, displayOutputBufferCamera, setAutoRenderToTinyWindow};
 
 // [x] Ladda upp en modell. Typ klar, OBJ fungerar inte. 
 // [x] Styra position av modellen
