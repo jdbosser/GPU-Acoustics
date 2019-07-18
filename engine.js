@@ -910,7 +910,7 @@ replaceModelSTL('./ShaderFood/P677_shell(fine).stl', () => {
     
     console.log("Default model added to scene");
     renderOutputBufferCameraInTinyWindow();    
-    displayOutputBufferCamera();
+    displayOutputBufferCamera(true);
 
 });
 
@@ -962,7 +962,7 @@ const testForA2mRadiusSphere = () => {
     setPixelArea(cameraWidth * cameraHeight / num_pixels);
 
     // Show the outputBufferCamera
-    displayOutputBufferCamera();
+    displayOutputBufferCamera(true);
     renderer.render(scene, camera);
     
     const num_calc = 100;
@@ -1065,15 +1065,26 @@ const resizeOutputBuffer = (camera) => {
 /*
     Shows the outputBufferCameraHelper and rerenders the image
 */
-const displayOutputBufferCamera = () => {
-    
-    outputBufferCamera.updateMatrixWorld();
-    outputBufferCamera.updateProjectionMatrix();
-    // Set the outputBufferCameraHelper to visible and rerender
-    outputBufferCameraHelper.update();
-    outputBufferCameraHelper.visible = true;
-    renderer.render(scene, camera);   
+const displayOutputBufferCamera = (bool) => {
 
+    if ( bool == true ) {
+        
+        outputBufferCamera.updateMatrixWorld();
+        outputBufferCamera.updateProjectionMatrix();
+        // Set the outputBufferCameraHelper to visible and rerender
+        outputBufferCameraHelper.update();
+        outputBufferCameraHelper.visible = true;
+
+    } 
+
+    else {
+
+        outputBufferCameraHelper.visible = false;
+
+    } 
+
+    renderer.render(scene, camera);   
+     
 }
 
 /* 
@@ -1129,6 +1140,7 @@ const renderOutputBufferCameraInTinyWindow = ( () => {
            
         // Fit the camera to the model     
         fitCameraToModelFunction(outputBufferCamera);
+        outputBufferCameraHelper.update();
 
         // Make the buffer the same size as the model
         resizeOutputBuffer(outputBufferCamera);
@@ -1226,7 +1238,7 @@ const rotationTS = () => {
             fitCameraToModelFunction(outputBufferCamera);
 
             // For debbuging
-            displayOutputBufferCamera();
+            displayOutputBufferCamera(true);
             
             // Resize the output buffer
             resizeOutputBuffer(outputBufferCamera);
@@ -1266,7 +1278,7 @@ const addWaveLengthChangeListener = (handler) => waveLengthListeners.push(handle
 const addModelRotationChangeListener = (handler) => modelRotationListeners.push(handler);
 
 // Export all the setters, getters and setListneres to the ui controller.
-export {addCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation, autoFitCameraToModelUI, setMaterialUI, testForA2mRadiusSphere, renderOutputBufferCameraInTinyWindow, setTargetResolution, rotationTS, addWaveLengthChangeListener, addModelRotationChangeListener};
+export {addCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation, autoFitCameraToModelUI, setMaterialUI, testForA2mRadiusSphere, renderOutputBufferCameraInTinyWindow, setTargetResolution, rotationTS, addWaveLengthChangeListener, addModelRotationChangeListener, displayOutputBufferCamera};
 
 // [x] Ladda upp en modell. Typ klar, OBJ fungerar inte. 
 // [x] Styra position av modellen
