@@ -1077,45 +1077,6 @@ const displayOutputBufferCamera = (bool) => {
 }
 
 /* 
-    This functions purpuse is to display the array given by renderToBuffer 
-    in the tiny img tag on the interface. 
-
-    Can be used to view any array really. Just make sure that the input 
-    follow the criteria: 
-        
-        + Elements in array are integers
-        + They are bound between 0 and 255.
-*/
-const displayArrayInTinyWindow = (arr, width, height) => {
-    
-    const tinyWindow = document.getElementById("outputBufferCanvas");
-    
-    const invisibleCanvas = document.createElement('canvas');
-    const ctx = invisibleCanvas.getContext('2d');
-    
-    invisibleCanvas.height = height;
-    invisibleCanvas.width = width;
-    
-    // Create the image data array that represents all the pixels in the canvas
-    const imageData = new ImageData(new Uint8ClampedArray(arr), width, height);
-     
-    // Put the data back into the canvas
-    ctx.putImageData(imageData, 0, 0); // 0,0 is where in the image to put the data
-                                       // This is top left corner
-
-    // Get the url of the created image and display in
-    tinyWindow.src = invisibleCanvas.toDataURL("image/png");
-     
-};
-
-const displayFloat32ArrayInTinyWindow = (arr, width, height) => {
-   
-    // Make sure data is 0, 255 ints
-    arr = arr.map((val) => val*255);
-    displayArrayInTinyWindow(arr);
-};
-
-/* 
     Uses an immidietly invoked function expression to prevent recreation of the 
     tinyWindowRenderer. See more IIFE here: 
 */
