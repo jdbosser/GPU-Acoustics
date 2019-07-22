@@ -22,7 +22,7 @@ let ui_controller = function(){
     this.targetResolution = 2000*2000;
     this.animatePhase = false;
     this.autoRotateCamera = false;
-    this.material = 'phase';
+    this.material = 'complex';
     this.r2mSphereTest = dman.testForA2mRadiusSphere
     this.camera = {
         autoFitToModel: false,

@@ -548,7 +548,7 @@ const complexMaterial = (function() {
 // If we switch model, set the material to the current material
 // current material changes based on UI input. 
 // set default to phase material.
-let currentMaterial = phaseMaterial;
+let currentMaterial = complexMaterial;
 
 // Set camera view based on width and height.  
 const setCameraView = (camera, width, height) => {
