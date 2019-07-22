@@ -26,9 +26,7 @@ let ui_controller = function(){
     this.r2mSphereTest = dman.testForA2mRadiusSphere
     this.camera = {
         autoFitToModel: false,
-        showOutputBufferCameraHelper: true,
-        position:   { x: 0, y: 50, z: 0 },    
-        lookAt:     { x: 0, y: 0, z: 0 }
+        showOutputBufferCameraHelper: true
     };    
     this.model = {
         position: { x: 0, y: 0, z: 0 },
@@ -48,7 +46,7 @@ gui.add(controller, 'phase').name("Phase shift β").step(0.01).onChange((value) 
 gui.add(controller, 'animatePhase').name("Animate phase shift").onChange((value) => dman.setPhaseAnimation(value));
 gui.add(controller, 'autoRotateCamera').name("Auto rotate camera").onChange((value) => dman.setAutoRotation(value));
 gui.add(controller, 'autoRenderToTinyWindow').name("Auto calculate TS").onChange((value) => dman.setAutoRenderToTinyWindow(value));
-
+gui.add(controller.camera, 'showOutputBufferCameraHelper').name("Show GPU Camera").onChange((value) => dman.displayOutputBufferCamera(value));
 // Whenever the program changes the wavelength (in for example the routines) 
 // we want to update the wavelength ui to reflect the change. 
 dman.addWaveLengthChangeListener((wavelength) => {
@@ -98,60 +96,6 @@ dman.addModelRotationChangeListener((x,y,z) => {
         modelFolder.__controllers[i].updateDisplay();
     }   
 });
-
-
-
-// Controls for the camera
-// The apply function takes an array [x,y,z] and uses them as input for the function
-// f(x,y,z). The Object.values creates an array [x,y,z] from the object properties. 
-// This is some ninja code that makes it this program harder to read. 
-const updateCameraPosition = () => {
-    dman.setCameraPosition.apply(null, Object.values(controller.camera.position));        
-}
-
-const updateCameraLookAt = () => {
-    dman.setCameraLookAt.apply(null, Object.values(controller.camera.lookAt));
-}
-
-// All controls in the camera folder
-const cameraFolder = gui.addFolder('Camera');
-cameraFolder.add(controller.camera, 'showOutputBufferCameraHelper').name("Show GPU Camera").onChange((value) => dman.displayOutputBufferCamera(value));
-const cameraPositionFolder = cameraFolder.addFolder('Position');
-cameraPositionFolder.add(controller.camera.position, 'x').step(0.01).onChange(updateCameraPosition);
-cameraPositionFolder.add(controller.camera.position, 'y').step(0.01).onChange(updateCameraPosition);
-cameraPositionFolder.add(controller.camera.position, 'z').step(0.01).onChange(updateCameraPosition);
-const cameraLookAtFolder = cameraFolder.addFolder('Look at');
-cameraLookAtFolder.add(controller.camera.lookAt, 'x').step(0.01).onChange(updateCameraLookAt);
-cameraLookAtFolder.add(controller.camera.lookAt, 'y').step(0.01).onChange(updateCameraLookAt);
-cameraLookAtFolder.add(controller.camera.lookAt, 'z').step(0.01).onChange(updateCameraLookAt);
-
-// Whenever the user changes the camera position by arrows or mouse, we want to 
-// update the controls to reflect the camera changes.
-
-// Function that updates the controls. 
-const updateGuiCameraChange = (o) => {
-    // Get the new camera position
-
-    for (const [key, val] of Object.entries(o.target.object.position)) {
-        controller.camera.position[key] = val;
-    }
-    
-    for (var i in cameraPositionFolder.__controllers) {
-        cameraPositionFolder.__controllers[i].updateDisplay();
-    }
-    
-    for (const [key, val] of Object.entries(o.target.target)) {
-        controller.camera.lookAt[key] = val;
-    }
-
-    for (var i in cameraLookAtFolder.__controllers) {
-        cameraLookAtFolder.__controllers[i].updateDisplay();
-    } 
-} 
-
-// Add the listener. Whenever the camera changes, we update the controls 
-// with above function. 
-dman.addCameraChangeListener(updateGuiCameraChange);
 
 // Routine folder
 const routineFolder = gui.addFolder("Routines");
