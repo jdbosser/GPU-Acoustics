@@ -47,7 +47,7 @@ gui.add(controller, 'wavelength').name("Wavelength λ").step(0.001).onChange((va
 gui.add(controller, 'phase').name("Phase shift β").step(0.01).onChange((value) => {dman.setPhaseShift(value);});
 gui.add(controller, 'animatePhase').name("Animate phase shift").onChange((value) => dman.setPhaseAnimation(value));
 gui.add(controller, 'autoRotateCamera').name("Auto rotate camera").onChange((value) => dman.setAutoRotation(value));
-gui.add(controller, 'autoRenderToTinyWindow').name("Auto output GPU to window").onChange((value) => dman.setAutoRenderToTinyWindow(value));
+gui.add(controller, 'autoRenderToTinyWindow').name("Auto calculate TS").onChange((value) => dman.setAutoRenderToTinyWindow(value));
 
 // Whenever the program changes the wavelength (in for example the routines) 
 // we want to update the wavelength ui to reflect the change. 

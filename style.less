@@ -1,7 +1,13 @@
+
+@font-face {
+    font-family: LiquidCrystal;
+    src: url("fonts/LiquidCrystal-Normal.otf") format("opentype");    
+}
+
 html, body {
     margin: 0;
     padding: 0;
-//    overflow: hidden;
+    overflow: hidden;
     height: 100%;
 }
 #c {
@@ -15,11 +21,35 @@ html, body {
     border-style: solid;
     border-color: red;
     border-width: thin;
+    margin: 0;
+    padding:0;
+    display: block;
+    margin-left: auto;
     position: absolute;
     bottom: 0px;
     right: 0px;
-    margin: 0;
-    padding:0;
+}
+
+#cont {
+    text-align: right;
+}
+
+#TS_cont {
+    color: white;
+    position: absolute;
+    padding: 0.3em;
+    margin: auto;
+    top: 1em;
+    width: 100%;
+    text-align: center;
+    line-height: 3em;
+    font-family: sans-serif;
+}
+
+#TS {
+    margin-top: 1em;
+    font-family: LiquidCrystal;
+    font-size: 3em;
 }
 
 aside {
@@ -62,3 +92,5 @@ aside > input {
         margin-left: 0.5em;
     }
 } 
+
+

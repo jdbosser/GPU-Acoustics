@@ -1102,7 +1102,9 @@ const renderOutputBufferCameraInTinyWindow = ( () => {
     // create a new renderer, and write directly to that renderer. 
     const invisibleCanvas = document.getElementById("invisibleCanvas");
     const tinyWindowRenderer = new THREE.WebGLRenderer({canvas: invisibleCanvas}); 
-         
+
+    const TSdisplay = document.getElementById("TS");
+       
     const f = () => {
            
         // Fit the camera to the model     
@@ -1123,6 +1125,13 @@ const renderOutputBufferCameraInTinyWindow = ( () => {
         outputBufferCameraHelper.visible = false; 
         tinyWindowRenderer.render(scene, outputBufferCamera);
         outputBufferCameraHelper.visible = visibility_state;
+
+        // Calculate and display TS
+        const TS = getTS();
+        
+        // Format to one decimal place
+        const dispVal = Number(TS).toFixed(1);
+        TSdisplay.innerHTML = `${dispVal} dB`;
 
     };
 
