@@ -863,6 +863,12 @@ const getTS = () => {
     
     const helperVisibilityState = outputBufferCameraHelper.visible
     outputBufferCameraHelper.visible = false;
+    
+    // Calculate pixelArea
+    const cameraWidth = outputBufferCamera.right - outputBufferCamera.left;
+    const cameraHeight = outputBufferCamera.top - outputBufferCamera.bottom;
+    const num_pixels = outputBuffer.height * outputBuffer.width;
+    setPixelArea(cameraWidth * cameraHeight / num_pixels);
      
     const extractFourChannels = (arr) => {
         
@@ -1271,4 +1277,4 @@ const addModelRotationChangeListener = (handler) => modelRotationListeners.push(
 const addPhaseChangeListener = (handler) => phaseChangeListeners.push(handler);
 
 // Export all the setters, getters and setListneres to the ui controller.
-export {addCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation, autoFitCameraToModelUI, setMaterialUI, testForA2mRadiusSphere, renderOutputBufferCameraInTinyWindow, setTargetResolution, rotationTS, addWaveLengthChangeListener, addModelRotationChangeListener, displayOutputBufferCamera, setAutoRenderToTinyWindow, addPhaseChangeListener};
+export {addCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation, autoFitCameraToModelUI, setMaterialUI, testForA2mRadiusSphere, renderOutputBufferCameraInTinyWindow, setTargetResolution, rotationTS, addWaveLengthChangeListener, addModelRotationChangeListener, displayOutputBufferCamera, setAutoRenderToTinyWindow, addPhaseChangeListener, getTS};
