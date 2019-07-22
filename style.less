@@ -9,6 +9,7 @@ html, body {
     padding: 0;
     overflow: hidden;
     height: 100%;
+    background: black;
 }
 #c {
     height: 100%;
@@ -16,18 +17,21 @@ html, body {
 }
 
 #invisibleCanvas {
-    max-width: 25%;
-    max-height: 25%;
-    border-style: solid;
-    border-color: red;
-    border-width: thin;
+    max-width: 50%;
+    max-height: 100%;
     margin: 0;
     padding:0;
     display: block;
     margin-left: auto;
     position: absolute;
-    bottom: 0px;
+    top: 50%;
+    transform: translate(0, -50%);
     right: 0px;
+}
+
+#container {
+    height: 100%;
+    width: 50%;
 }
 
 #cont {
@@ -40,7 +44,8 @@ html, body {
     padding: 0.3em;
     margin: auto;
     top: 1em;
-    width: 100%;
+    left: 0;
+    width: 50%;
     text-align: center;
     line-height: 3em;
     font-family: sans-serif;
