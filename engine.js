@@ -87,7 +87,7 @@ const getPerspectiveCamera = canvas => {
     const near = 0.1;
     const far = 100;
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);    
-    camera.position.y = 50;
+    camera.position.x = 50;
     camera.up.set(0,0,1);
     return camera;
 
@@ -105,7 +105,7 @@ const getOrthographicCamera = canvas => {
         width / - 2, width / 2, 
         height / 2, height / - 2);
      
-    camera.position.y = 50;
+    camera.position.x = 50;
     camera.up.set(0,0,1);
 
     // Calculate new pixel area
@@ -162,7 +162,7 @@ const camera = getCamera(canvas);
 // Get outputBuffer camera
 const outputBufferCamera = new THREE.OrthographicCamera(-1, 1, 1, -1);
 outputBufferCamera.up.set(0,0,1);
-outputBufferCamera.position.y = 50;
+outputBufferCamera.position.x = 50;
 outputBufferCamera.lookAt(0,0,0);
 outputBufferCamera.updateMatrixWorld();
 outputBufferCamera.updateProjectionMatrix();
@@ -248,7 +248,7 @@ const phaseMaterial = (function(){
 
       // calc the dot product and clamp
       // 0 -> 1 rather than -1 -> 1
-      vec4 light4 = vec4(0.0, 1.0, 0.0, 1.0);
+      vec4 light4 = vec4(1.0, 0.0, 0.0, 1.0);
       
       // Rotate 
       light4 = inverseRotationMatrix * light4; 
@@ -329,7 +329,7 @@ const intensityMaterial = (function(){
 
       // calc the dot product and clamp
       // 0 -> 1 rather than -1 -> 1
-      vec4 light4 = vec4(0.0, 1.0, 0.0, 1.0);
+      vec4 light4 = vec4(1.0, 0.0, 0.0, 1.0);
       
       // Rotate 
       light4 = inverseRotationMatrix * light4; 
@@ -405,7 +405,7 @@ const mixMaterial = (function() {
 
       // calc the dot product and clamp
       // 0 -> 1 rather than -1 -> 1
-      vec4 light4 = vec4(0.0, 1.0, 0.0, 1.0);
+      vec4 light4 = vec4(1.0, 0.0, 0.0, 1.0);
       
       // Rotate 
       light4 = inverseRotationMatrix * light4; 
@@ -490,7 +490,7 @@ const complexMaterial = (function() {
 
       // calc the dot product and clamp
       // 0 -> 1 rather than -1 -> 1
-      vec4 light4 = vec4(0.0, 1.0, 0.0, 1.0);
+      vec4 light4 = vec4(1.0, 0.0, 0.0, 1.0);
       
       // Rotate 
       light4 = inverseRotationMatrix * light4; 
@@ -577,7 +577,7 @@ const fitCameraToModelFunction = (camera, canvas) => {
     // Get the dimensions of the bounding box
     bbh.geometry.computeBoundingBox();
     let boundingBox = bbh.geometry.boundingBox;
-    let width = boundingBox.max.x - boundingBox.min.x; 
+    let width = boundingBox.max.y - boundingBox.min.y; 
     let height = boundingBox.max.z - boundingBox.min.z; 
     
     // Compare aspect ratios. 
@@ -609,7 +609,7 @@ const fitCameraToModelFunction = (camera, canvas) => {
     
     setCameraView(camera, width, height);
      
-    camera.position.set(0,boundingBox.max.y*scale, 0);
+    camera.position.set(boundingBox.max.x*scale,0, 0);
 
 };
 
