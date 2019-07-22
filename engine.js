@@ -9,6 +9,11 @@ import Stats from './stats.js/build/stats.module.js';
 // such as model rotation or wavelength are reflected in the ui and the 
 // materials.
 
+// Change this if you want the routines (rotationTS and testForA2mRadiusSphere) to calculate faster
+// This allows maximal performance, with no rendering to ui in between 
+// the different calculations
+const DEMO_MODE = true;
+
 // Helper function to get a linspaced array between two numbers. 
 const linspace = (min, max, num) => {
         const output = new Array(num);
@@ -952,8 +957,6 @@ const downloadObjectAsJson = (exportObj, exportName) => {
 // Test for a sphere
 const testForA2mRadiusSphere = () => {
     
-    const DEMO_MODE = true; 
-
     // Stuff common to the two modes
     
     // Create the sphere
@@ -1184,13 +1187,11 @@ const rotationTS = () => {
         // get pixel area
         // getTS()
 
-    const demoMode = true;
-    
     replaceMaterial(model, complexMaterial);
      
     const rotationDegs = linspace(0, Math.PI, 180);
     
-    if (!demoMode) {
+    if (!DEMO_MODE) {
     
         const TSs = rotationDegs.map((rotationDeg) => {
             const percentage_complete = rotationDeg / Math.PI
