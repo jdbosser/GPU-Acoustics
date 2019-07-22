@@ -1011,8 +1011,9 @@ Programmet kommer nu att göra ett svep av olika frekvenser infallandes mot en s
 
             setWaveLength2(wavelengths[i]);
             renderer.render(scene, camera);
-            renderOutputBufferCameraInTinyWindow();
-            results.push(getTS()); 
+            const TS = getTS(); 
+            renderOutputBufferCameraInTinyWindow(TS);
+            results.push(TS); 
             
 
             i++;
@@ -1106,7 +1107,7 @@ const renderOutputBufferCameraInTinyWindow = ( () => {
 
     const TSdisplay = document.getElementById("TS");
        
-    const f = () => {
+    const f = (TS) => {
            
         // Fit the camera to the model     
         fitCameraToModelFunction(outputBufferCamera);
@@ -1126,10 +1127,12 @@ const renderOutputBufferCameraInTinyWindow = ( () => {
         outputBufferCameraHelper.visible = false; 
         tinyWindowRenderer.render(scene, outputBufferCamera);
         outputBufferCameraHelper.visible = visibility_state;
-
-        // Calculate and display TS
-        const TS = getTS();
         
+        if ( TS === undefined ) {
+            // Calculate and display TS
+            TS = getTS();
+        } 
+
         // Format to one decimal place
         const dispVal = Number(TS).toFixed(1);
         TSdisplay.innerHTML = `${dispVal} dB`;
@@ -1252,11 +1255,14 @@ const rotationTS = () => {
             const num_pixels = outputBuffer.height * outputBuffer.width;
             setPixelArea(cameraWidth * cameraHeight / num_pixels);
 
+            // Get the results
+            const TS = getTS();
+
             // Show in tiny window
-            renderOutputBufferCameraInTinyWindow(); 
+            renderOutputBufferCameraInTinyWindow(TS); 
             
-            // Get the result
-            result.push(getTS());
+            // Store the results
+            result.push(TS);
     
             i++;
             if (i < rotationDegs.length) requestAnimationFrame(animate);
@@ -1312,8 +1318,11 @@ const sweepTS = () => {
 
             setWaveLength2(wavelengths[i]);
             renderer.render(scene, camera);
-            renderOutputBufferCameraInTinyWindow();
-            results.push(getTS()); 
+
+            const TS = getTS();
+
+            renderOutputBufferCameraInTinyWindow(TS);
+            results.push(TS); 
             
             i++;
             if (i < wavelengths.length) requestAnimationFrame(animate);
