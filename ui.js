@@ -16,7 +16,7 @@ let ui_controller = function(){
         const c = document.getElementById("invisibleCanvas");
         window.open(c.toDataURL("image/png"));
     };
-    this.autoRenderToTinyWindow = false;
+    this.autoRenderToTinyWindow = true;
     this.rotationTS = dman.rotationTS;
     this.phase = 0;
     this.targetResolution = 2000*2000;

@@ -1137,7 +1137,7 @@ const renderOutputBufferCameraInTinyWindow = ( () => {
 
 } )();
 
-let autoRenderToTinyWindow = false;
+let autoRenderToTinyWindow = true;
 // Create temporary function f and and add listeners
 (function() {
     const f = () => {
