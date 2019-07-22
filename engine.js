@@ -1275,9 +1275,65 @@ const rotationTS = () => {
     
 }
 
+const sweepTS = () => {
+     // What to do:
+
+    // Set material
+    setMaterialUI('complex');
+    // fitCameraToModel
+    fitCameraToModelFunction(outputBufferCamera);
+    // resize outputBuffer
+    resizeOutputBuffer(outputBufferCamera);
+    // Get wavelengths  
+    const num_calc = 100;
+    const freqs = linspace(1,Math.log10(50000),num_calc).map((v) => 10**v);
+    const wavelengths = freqs.map((f) => 1500/f); 
+
+    // For each wavelength
+    if (! DEMO_MODE ) {
+            
+        const TSs = wavelengths.map((w) => {
+            
+            setWaveLength2(w);
+            return getTS();
+                
+        }); 
+
+        const exportObj = {x:freqs, y:TSs};
+        downloadObjectAsJson(exportObj, "results");
+
+    }
+
+    else {
+
+        let i = 0; 
+        const results = new Array();
+        const animate = () => {
+
+            setWaveLength2(wavelengths[i]);
+            renderer.render(scene, camera);
+            renderOutputBufferCameraInTinyWindow();
+            results.push(getTS()); 
+            
+            i++;
+            if (i < wavelengths.length) requestAnimationFrame(animate);
+            if (i == wavelengths.length) {
+
+                alert("We are done!");    
+                const exportObj = {x:freqs, y:results};
+                downloadObjectAsJson(exportObj, "results");
+
+            }  
+        };
+        requestAnimationFrame(animate);
+
+    }  
+        
+};
+
 const addWaveLengthChangeListener = (handler) => waveLengthListeners.push(handler);
 const addModelRotationChangeListener = (handler) => modelRotationListeners.push(handler);
 const addPhaseChangeListener = (handler) => phaseChangeListeners.push(handler);
 
 // Export all the setters, getters and setListneres to the ui controller.
-export {addCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation, autoFitCameraToModelUI, setMaterialUI, testForA2mRadiusSphere, renderOutputBufferCameraInTinyWindow, setTargetResolution, rotationTS, addWaveLengthChangeListener, addModelRotationChangeListener, displayOutputBufferCamera, setAutoRenderToTinyWindow, addPhaseChangeListener, getTS};
+export {addCameraChangeListener, setAutoRotation, setCameraPosition, setCameraLookAt, setModelPosition, setModelRotation, replaceModelSTL, replaceModelOBJ, setWaveLength, setPhaseShift, setPhaseAnimation, autoFitCameraToModelUI, setMaterialUI, testForA2mRadiusSphere, renderOutputBufferCameraInTinyWindow, setTargetResolution, rotationTS, addWaveLengthChangeListener, addModelRotationChangeListener, displayOutputBufferCamera, setAutoRenderToTinyWindow, addPhaseChangeListener, getTS, sweepTS};
