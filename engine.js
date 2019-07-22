@@ -925,7 +925,7 @@ replaceModelSTL('./ShaderFood/P677_shell(fine).stl', () => {
     
     console.log("Default model added to scene");
     renderOutputBufferCameraInTinyWindow();    
-    displayOutputBufferCamera(true);
+    displayOutputBufferCamera(false);
 
 });
 
@@ -978,8 +978,6 @@ const testForA2mRadiusSphere = () => {
     const num_pixels = outputBuffer.height * outputBuffer.width;
     setPixelArea(cameraWidth * cameraHeight / num_pixels);
 
-    // Show the outputBufferCamera
-    displayOutputBufferCamera(true);
     renderer.render(scene, camera);
     
     const num_calc = 100;
@@ -1244,9 +1242,6 @@ const rotationTS = () => {
             // Fit the outputBufferCamera 
             fitCameraToModelFunction(outputBufferCamera);
 
-            // For debbuging
-            displayOutputBufferCamera(true);
-            
             // Resize the output buffer
             resizeOutputBuffer(outputBufferCamera);
 
@@ -1259,10 +1254,8 @@ const rotationTS = () => {
             // Show in tiny window
             renderOutputBufferCameraInTinyWindow(); 
             
-            outputBufferCameraHelper.visible = false; 
             // Get the result
             result.push(getTS());
-            outputBufferCameraHelper.visible = true;
     
             i++;
             if (i < rotationDegs.length) requestAnimationFrame(animate);

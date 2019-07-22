@@ -26,7 +26,7 @@ let ui_controller = function(){
     this.r2mSphereTest = dman.testForA2mRadiusSphere
     this.camera = {
         autoFitToModel: false,
-        showOutputBufferCameraHelper: true
+        showOutputBufferCameraHelper: false
     };    
     this.model = {
         position: { x: 0, y: 0, z: 0 },
@@ -88,11 +88,11 @@ modelFolder.add(controller, 'material', ['phase', 'intensity', 'mix', 'complex']
 // If anything in engine.js changes the model rotation we want to update the controls
 // to reflect that change.
 dman.addModelRotationChangeListener((x,y,z) => {
-    for (var i in cameraPositionFolder.__controllers) {
-        controller.model.rotation.x = x;
-        controller.model.rotation.y = y;
-        controller.model.rotation.z = z;
+    controller.model.rotation.x = x;
+    controller.model.rotation.y = y;
+    controller.model.rotation.z = z;
         
+    for (var i in modelFolder.__controllers) {
         modelFolder.__controllers[i].updateDisplay();
     }   
 });
