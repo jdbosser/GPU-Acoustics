@@ -81,9 +81,9 @@ const updateModelRotation = () => {
 
 // All controls for the model folder
 const modelFolder = gui.addFolder('Model');
-modelFolder.add(controller.model.rotation, 'x').name("Rotation x").step(0.01).onChange(updateModelRotation);
-modelFolder.add(controller.model.rotation, 'y').name("Rotation y").step(0.01).onChange(updateModelRotation);
-modelFolder.add(controller.model.rotation, 'z').name("Rotation z").step(0.01).onChange(updateModelRotation);
+modelFolder.add(controller.model.rotation, 'x').name("Rotation x").step(0.0001).onChange(updateModelRotation);
+modelFolder.add(controller.model.rotation, 'y').name("Rotation y").step(0.0001).onChange(updateModelRotation);
+modelFolder.add(controller.model.rotation, 'z').name("Rotation z").step(0.0001).onChange(updateModelRotation);
 modelFolder.add(controller, 'material', ['phase', 'intensity', 'mix', 'complex']).onChange((value) => dman.setMaterialUI(value));
 
 // If anything in engine.js changes the model rotation we want to update the controls
