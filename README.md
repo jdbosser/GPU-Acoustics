@@ -94,7 +94,7 @@ python polarplot.py <filename>.json
 python sweeplot.py <filename>.json 
 ```
 
-Some preemade calculations exists in the `results/precalculated`-folder. These
+Some premade calculations exists in the `results/precalculated`-folder. These
 can be plotted by running 
 ```
 python plot_precalculated.py
