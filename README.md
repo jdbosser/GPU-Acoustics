@@ -3,7 +3,7 @@
 
 This project demonstrates a prototype me (John Daniel Bossér) and my 
 father (Lennart Bertil Bossér) made for the International Conference on
-Underwater Acoustics (ICUA). The paper about this project can be found 
+Underwater Acoustics (ICUA). A paper about this project can be found 
 [here](https://asa.scitation.org/doi/abs/10.1121/2.0001301). 
 
 ![Demo image](https://github.com/jdbosser/GPU-Acoustics/raw/master/images/demo.png)

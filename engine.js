@@ -985,8 +985,12 @@ const testForA2mRadiusSphere = () => {
     
     const num_calc = 100;
     alert(`
+The application will calculate the target strength for a set of frequencies of acoustic waves approaching a sphere with a 2 meter radius. The sweep consists ${num_calc} frequencies, and will
+therefore take a bit of time. The web browser may freeze during the calcuations. The user will be prompted to download a json file containing the calculated TS with their correpsonding frequencies after the computation is done.
+    `)
+/*    alert(`
 Programmet kommer nu att göra ett svep av olika frekvenser infallandes mot en sfär med en 2 meters radie. Svepet består av ${num_calc} olika beräkningar, och kan därför ta lite tid. Webläsarfönstret kan temporärt frysa under tiden beräkningarna görs. Efter att beräkningarna är klara kommer en json fil med frekvenser och beräknad TS att laddas ner. 
-    `);
+    `); */
     
     const freqs = linspace(1,Math.log10(50000),num_calc).map((v) => 10**v);
     const wavelengths = freqs.map((f) => 1500/f);
