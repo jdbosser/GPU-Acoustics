@@ -102,7 +102,7 @@ dman.addModelRotationChangeListener((x,y,z) => {
 const routineFolder = gui.addFolder("Routines");
 routineFolder.add(controller, 'r2mSphereTest').name("r = 2m sphere test");
 routineFolder.add(controller, 'rotationTS').name("TS for every degree of rotation");
-routineFolder.add(controller, 'sweepTS').name("TS for wavelength sweep");
+routineFolder.add(controller, 'sweepTS').name("TS for every wavelength");
 // Upload a model
 // This code selects a file and creates a temporary url for the file on the 
 // computer, and then gives that url as the source for an STL or OBJ. 

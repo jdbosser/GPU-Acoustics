@@ -1,0 +1,18 @@
+#!/bin/bash
+
+FILENAME=$1
+OTHER_DIR=latex-compile-files
+
+NAME=${FILENAME%.tex}
+echo $NAME
+
+mkdir -p latex-misc
+
+pdflatex $FILENAME
+pdflatex $FILENAME
+
+mv $NAME.log $OTHER_DIR
+mv $NAME.aux $OTHER_DIR
+
+
+open $NAME.pdf
