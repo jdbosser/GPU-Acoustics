@@ -21,8 +21,16 @@ other modern browsers should in theory be supported.
 Other dependencies include `python3` to start a server that hosts the 
 application and to plot the produced results. 
 
+## Cloning the project
 
-## Create a python virtualenvironment and run the project
+To get a local copy of the project, you must run
+```
+git clone --recurse-submodules https://github.com/jdbosser/GPU-Acoustics.git
+```
+to ensure that you get all the needed submodules. This can take a while,
+since `three.js` (interface to WebGL) is rather large. 
+
+## Create a python virtual environment and run the project
 
 It is a common practice to create an isolated python environment to install the 
 requirements. To install everything python-related needed to run the project, 
@@ -31,7 +39,14 @@ do the following:
 Create a python environment named `env`:
 ```
 python3 -m venv env
+```
+On linux/macOS with bash:
+```
 source env/bin/activate
+```
+On windows:
+```
+.\env\Scripts\activate
 ```
 To install the requirements to run the project
 ```
@@ -40,21 +55,21 @@ pip install -r requirements.txt
 
 You should now be able to run the project:
 ```
-./run.sh
+python3 -m http.server
 ```
-and open the project in a webbrowser. If you have firefox, you can run:
+and open the project in a web browser. If you have firefox, you can run:
 ```
 firefox localhost:8000
 ```
 
-To leave the virtualenvironment when you are done with your experiments, run
+To leave the virtual environment when you are done with your experiments, run
 ```
 deactivate
 ```
 
 ## Usage
 
-The program shows two different views. 
+The application shows two different views. 
 + Left: **Control view**. Here, you can view your uploaded module, zoom in and out, and rotate. Note that you are actually not rotating the model in relation to the incoming acoustic signal. You are only viewing the geometry from a different angle. 
 + Right: **Computation view**. This image is the actual image used to compute the target strength, see equation (2) in the [conference paper](https://asa.scitation.org/doi/abs/10.1121/2.0001301).
 
@@ -94,7 +109,7 @@ python polarplot.py <filename>.json
 python sweeplot.py <filename>.json 
 ```
 
-Some premade calculations exists in the `results/precalculated`-folder. These
+Some premade calculations exist in the `results/precalculated`-folder. These
 can be plotted by running 
 ```
 python plot_precalculated.py
@@ -103,6 +118,14 @@ python plot_precalculated.py
 ### Change model
 
 You can change the model by clicking "Upload 3D-model" in the top left corner. Only `.stl` files are supported currently. 
+
+
+# Bugs
+
+Sometimes, the model wont show up in the left panel. This can be fixed
+by refreshing the page a couple of times. 
+Why this happens stochastically, I have no idea ¯\_(ツ)_/¯ 
+
 
 # Citation
 
