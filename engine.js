@@ -926,7 +926,7 @@ const getTS = () => {
 };
 
 // Add a default model to our scene. 
-replaceModelSTL('./ShaderFood/Russian_fine.stl', () => {
+replaceModelSTL('./Russian_fine.stl', () => {
     
     console.log("Default model added to scene");
     renderOutputBufferCameraInTinyWindow();    
