@@ -504,9 +504,25 @@ const complexMaterial = (function() {
        
       // ensure it's normalized
       light = normalize(light);
+	  
+      // Intensity is the cos(theta) between the "light" and the normal 
+      // float intensity = max(0.0, dot(normalize(vNormal), light));
+	  // but in the monostatic case this is already "handled" by the projection 
 
-        // Intensity is the cos(theta) between the "light" and the normal 
-        float intensity = max(0.0, dot(normalize(vNormal), light));
+      float intensity = 1.0;
+	  
+	  // if you want to emphasize which areas that are actually lighted in the moving view
+	  // you can uncomment the following lines. Note that this does not affect the result
+	  /*
+	  if (dot(vNormal, light) >= 0.0) {
+		  intensity = 1.0;
+	  }
+	  else {
+	    intensity = 0.0;
+	  }
+	  */
+		  
+
 
         // The angle is the distance the sound travels, times 2 pi divided by wavelength
         float angle = 4. * M_PI * dot(vUv, light) / lambda + phase;
